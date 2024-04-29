@@ -1,0 +1,18 @@
+
+  @import 'primeflex/primeflex.scss';
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+ 
+body{
+  background-color: #f4f4f4;
+}
+.Container{
+  width: 100%;
+  max-width: 1640px !important;
+  margin: 0 auto;
+  padding: 0 20px;
+ 
+}
