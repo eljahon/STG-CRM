@@ -4,9 +4,12 @@ import { Menu } from 'primereact/menu';
 import { MenuItem } from 'primereact/menuitem';
 import { Link } from "react-router-dom"
 
+
+import {filteredRoutes} from '../../../../modules/index.tsx'
+
 export default function RouterDemo() {
     const itemRenderer = (item) => (
-        <div className='p-menuitem-content '>
+        item.hideIfchildern&&  <div className='p-menuitem-content '>
             <Link to={item.url} className="flex align-items-center p-menuitem-link">
                 <span className={item.icon} />
                 <span className="mx-2">{item.label}</span>
@@ -27,24 +30,31 @@ export default function RouterDemo() {
                 );
             }
         },
-        {
-            label: 'Router Link',
-            icon: 'pi pi-palette',
-            url: '/unstyled',
-            template: itemRenderer
-        },
-        {
-            label: 'Programmatic',
-            icon: 'pi pi-link',
-            url: '/',
-            template: itemRenderer
-        },
-        {
-            label: 'External',
-            icon: 'pi pi-home',
-            url: 'https://react.dev/',
-            template: itemRenderer
-        }
+        // {
+        //     label: 'Router Link',
+        //     icon: 'pi pi-palette',
+        //     url: '/unstyled',
+        //     template: itemRenderer
+        // },
+        // {
+        //     label: 'Programmatic',
+        //     icon: 'pi pi-link',
+        //     url: '/',
+        //     template: itemRenderer
+        // },
+        // {
+        //     label: 'External',
+        //     icon: 'pi pi-home',
+        //     url: 'https://react.dev/',
+        //     template: itemRenderer
+        // }
+
+        ...filteredRoutes.map(el => (
+            {
+                ...el,
+                template: (item) => itemRenderer(item)
+            }
+        ))
     ];
 
     return (

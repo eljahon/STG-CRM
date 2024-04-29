@@ -1,20 +1,31 @@
+import {React} from 'react'
 import { Routes, Route } from "react-router-dom";
 import { filteredRoutes } from "../modules/index";
 import { Fragment } from "react";
 import { authRoute } from "../modules/auth/route";
 import MainLayout from "../layouts/main-layout/index";
+interface Imeta  {
+     role: Set<string>
+}
 
+interface IRouter  {
+    url: string;
+    Element: any;
+    children?: IRouter[],
+    meta?: Imeta ,
+    hideIfchildern?: boolean
+}
 const nestedRoutes = (routes: any) =>
-    routes.map(({ Element, path, children = [] }: any) => {
+    routes.map(({ Element, url, children}: IRouter) => {
         if (children?.length) {
             return (
-                <Fragment key={path}>
-                    <Route key={path} path={path} element={<Element />} />
+                <Fragment key={url}>
+                    <Route key={url} path={url} element={<Element />} />
                     {nestedRoutes(children)}
                 </Fragment>
             );
         }
-        return <Route key={path} path={path} element={<Element />} />;
+        return <Route key={url} path={url} element={<Element />} />;
     });
 
 export const AuthorizedRoutes = () => {
@@ -31,8 +42,8 @@ export const AuthorizedRoutes = () => {
 export const UnAuthorizedRoutes = () => (
     <Routes>
         {/* <Route path="*" element={<Loading />} /> */}
-        {authRoute.map(({ Element, path }: any) => (
-            <Route key={path} path={path} element={<Element />} />
+        {authRoute.map(({ Element, url }: IRouter) => (
+            <Route key={url} path={url} element={<Element />} />
         ))}
     </Routes>
 );
