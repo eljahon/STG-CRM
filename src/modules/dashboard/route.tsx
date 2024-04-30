@@ -2,12 +2,12 @@ import DashboardPage from "./page/login";
 
 export const DashboardRoute = [
   {
-    path: "/dashboard",
+    url: "/dashboard",
     Element: DashboardPage,
-    name: "Dashboard",
+    label: "Dashboard",
     icon: "",
     children: [],
     meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
-    hideIfchildern: false,
+    hideIfchildern: true,
   },
 ];

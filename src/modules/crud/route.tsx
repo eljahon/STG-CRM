@@ -2,12 +2,12 @@ import CrudPage from "./page/crud";
 
 export const CrudRoute = [
   {
-    path: "/crud",
+    url: "/crud",
     Element: CrudPage,
-    name: "Crud",
-    icon: "",
+    label: "Crud",
+    icon: 'pi pi-palette',
     children: [],
     meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
-    hideIfchildern: false,
+    hideIfchildern: true,
   },
 ];
