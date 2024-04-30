@@ -1,23 +1,34 @@
 import { useEffect, useState } from "react";
 import { AuthorizedRoutes, UnAuthorizedRoutes } from "./router/index";
 import { GetMe } from "./service/global";
-
+import { useLocation, useNavigate } from "react-router-dom";
 
 
 function App() {
-  const [user, setUser] = useState()
+  const [isAuth, setIsAtuh] = useState<boolean>()
+  const navigate = useNavigate()
+  const pashName = useLocation()
   useEffect(() => {
     const fetchData = async () => {
       await GetMe()
-        .then((data) => console.log(data))
-        .catch((error) => console.log(error))
-
+        .then((res) => {
+          if (res.status == '200') {
+            setIsAtuh(true)
+          }
+        })
+        .catch((error) => {
+          if (error?.response?.status == '403') {
+            navigate('/auth/login')
+            window.location.reload()
+          }
+        })
     }
 
-    fetchData()
-  }, [])
+    if (pashName.pathname != '/auth/login')
+      fetchData()
+  }, [pashName])
 
-  return false ? <AuthorizedRoutes /> : <UnAuthorizedRoutes />;
+  return isAuth ? <AuthorizedRoutes /> : <UnAuthorizedRoutes />;
 }
 
 export default App

@@ -43,6 +43,6 @@ export const DeleteData = async (url:string, id:string) => {
 };
 
 export const GetMe = async () => {
-  const res = await api.get('/user')
+  const res = await api.get('/users/me')
   return res
 }

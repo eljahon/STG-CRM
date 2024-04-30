@@ -5,11 +5,11 @@ import { MenuItem } from 'primereact/menuitem';
 import { Link } from "react-router-dom"
 
 
-import {filteredRoutes} from '../../../../modules/index.tsx'
+import { filteredRoutes } from '../../../../modules/index.tsx'
 
 export default function RouterDemo() {
     const itemRenderer = (item) => (
-        item.hideIfchildern&&  <div className='p-menuitem-content '>
+        item.hideIfchildern && <div className='p-menuitem-content '>
             <Link to={item.url} className="flex align-items-center p-menuitem-link">
                 <span className={item.icon} />
                 <span className="mx-2">{item.label}</span>
@@ -58,7 +58,7 @@ export default function RouterDemo() {
     ];
 
     return (
-        <div className='min-w-20rem '>
+        <div className='w-full max-w-15rem'>
             <Menu model={items} className='w-full ' style={{ "height": '96vh' }} />
         </div>
     )

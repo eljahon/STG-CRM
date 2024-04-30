@@ -12,6 +12,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config:any) => {
     const isPublicApi = Cookies.get('authToken');
+    console.log(isPublicApi)
     if (isPublicApi) {
       config.headers["Authorization"] = `Bearer ${isPublicApi}`;
     }

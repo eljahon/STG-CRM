@@ -7,7 +7,7 @@ import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 
 
-import {isFunction} from '../../type-check'
+import { isFunction } from '../../type-check'
 // import { FileUpload } from 'primereact/fileupload';
 import { Rating } from 'primereact/rating';
 import { Toolbar } from 'primereact/toolbar';
@@ -36,13 +36,13 @@ interface Column {
     title: string,
     dataIndex?: string,
     key?: string,
-    ItemRender?: (el:Product,e: Column, index: number) => React.ReactNode,
-    sort?: boolean ,
+    ItemRender?: (el: Product, e: Column, index: number) => React.ReactNode,
+    sort?: boolean,
 }
 
 interface ITable {
     data: Product[],
-    columns: Column[]|[],
+    columns: Column[] | [],
     editFunction: () => void,
     deleteFunction: () => void,
     showFunction: () => void,
@@ -51,11 +51,11 @@ interface ITable {
     newAdd: () => void
 
 }
-export default function Table (props:ITable) {
-    const {data,columns,editFunction,deleteFunction,showFunction, newAdd,tableTile,checked} = props;
+export default function Table(props: ITable) {
+    const { data, columns, editFunction, deleteFunction, showFunction, newAdd, tableTile, checked } = props;
     const isCheckEvent = () => {
 
-        return isFunction(editFunction) || isFunction(deleteFunction)||isFunction(showFunction)||false
+        return isFunction(editFunction) || isFunction(deleteFunction) || isFunction(showFunction) || false
     }
     let emptyProduct: Product = {
         id: null,
@@ -70,8 +70,8 @@ export default function Table (props:ITable) {
         inventoryStatus: 'INSTOCK',
     };
 
-    console.log(props);
-    
+
+
 
     const [products, setProducts] = useState<Product[]>([{
         id: "dsds",
@@ -88,36 +88,36 @@ export default function Table (props:ITable) {
 
 
     const [columnsList, setColumns] = useState([
-        isFunction(checked) && 
+        isFunction(checked) &&
         {
             id: 5678,
             selectionMode: 'multiple',
-           exportable: false,
+            exportable: false,
 
         },
         ...columns,
-        isCheckEvent() &&    {
-            id: columns.length+1,
+        isCheckEvent() && {
+            id: columns.length + 1,
             // sortable: true,
             exportable: false,
             body: (itemData) => {
                 return (
-                
+
                     <React.Fragment>
-                            {isFunction(editFunction)&&<Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editFunction(itemData)} />}
-                            {isFunction(deleteFunction)&&<Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => deleteFunction(itemData)} />}
-                        </React.Fragment>
-                    
-                    
-                    );
-                
+                        {isFunction(editFunction) && <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editFunction(itemData)} />}
+                        {isFunction(deleteFunction) && <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => deleteFunction(itemData)} />}
+                    </React.Fragment>
+
+
+                );
+
             }
-        
-        
+
+
             // style
-        
+
             // sort
-        
+
             // ItemRender: (itemData, itemcoulmns,index) => {}
         }
     ])
@@ -319,10 +319,10 @@ export default function Table (props:ITable) {
 
     const header = (
         <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            {tableTile &&<h4 className="m-0">{tableTile}</h4>}
+            {tableTile && <h4 className="m-0">{tableTile}</h4>}
             <div className="flex flex-wrap gap-2">
-                {isFunction(newAdd)&&<Button label="New" icon="pi pi-plus" severity="success" onClick={newAdd} />}
-                {isFunction(checked)&&<Button label="Delete" icon="pi pi-trash" severity="danger" onClick={checked} disabled={!selectedProducts || !selectedProducts.length} />}
+                {isFunction(newAdd) && <Button label="New" icon="pi pi-plus" severity="success" onClick={newAdd} />}
+                {isFunction(checked) && <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={checked} disabled={!selectedProducts || !selectedProducts.length} />}
             </div>
         </div>
     );
@@ -360,7 +360,7 @@ export default function Table (props:ITable) {
                             setSelectedProducts(e.value)
 
                         }
-                    } : () => {}}
+                    } : () => { }}
                     dataKey="id" paginator rows={1} rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" globalFilter={globalFilter} header={header}
@@ -368,10 +368,10 @@ export default function Table (props:ITable) {
                 >
                     {/* <Column selectionMode="multiple" exportable={false}></Column> */}
 
-                      {  columnsList?.map((e:any) => (
-                           
-                            <Column key={e.id} {...e}></Column>
-                        ))}
+                    {columnsList?.map((e: any) => (
+
+                        <Column key={e.id} {...e}></Column>
+                    ))}
 
 
                     {/* <Column field="code" header="Code" sortable style={{ minWidth: '12rem' }}></Column> */}

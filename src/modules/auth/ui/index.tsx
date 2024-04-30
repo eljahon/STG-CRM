@@ -10,7 +10,7 @@ import { AuthLogin } from '../../../service/auth';
 import Loader from '../../../ui/loader/index';
 
 type FormValues = {
-    login: string
+    phone: string
     password: string
 }
 
@@ -28,16 +28,14 @@ export default function LoginFrom() {
 
     const handleAuth = async (data: FormValues) => {
         setLoader(true);
-        console.log(data)
         await AuthLogin(data)
             .then((response: any) => {
-                console.log(response)
-
-                toast.seccess("login seccess!")
+                Cookies.set('authToken', response?.data?.token);
+                navigate(`/dashboard`);
+                // toast.seccess("login seccess!")
             })
             .catch((error: any) => {
-                console.log(error)
-                toast.error(error?.response?.data)
+                toast.error(error?.response?.data?.error?.message)
             })
             .finally(() => setLoader(false))
             ;
@@ -56,7 +54,7 @@ export default function LoginFrom() {
                             variant="success"
                             id="username"
                             type="text"
-                            {...register(`login`, { required: true })}
+                            {...register(`phone`, { required: true })}
                         />
                     </label>
                     <label className='block mb-4'>
