@@ -1,10 +1,5 @@
-import React from "react";
-import ProductsDemo from "../ui/index";
-import { Button } from 'primereact/button';
-import Table from "../../../ui/tabel";
-
-    
-
+import { useNavigate } from "react-router-dom";
+import GolabTable from "../../ui/tabel";
 
 const data = [{
     id: "1",
@@ -59,9 +54,9 @@ const data = [{
 ]
 
 
-export default function CrudPage() {
+export default function ProductPage() {
+    const navigate = useNavigate()
     const columns = [
-   
         {
         header: 'Code',
         field: 'code',
@@ -110,16 +105,15 @@ export default function CrudPage() {
 
     return (
         <>
-            <Table
+            <GolabTable
                 data={data} 
                 columns={columns} 
                 tableTile="title"
-                editFunction={(rowItem) => {console.log(rowItem);
-                }} 
+                url={'/product'}
                 checked={(value) => {console.log(value);
                 }}
                 deleteFunction={(rowItem) => {console.log(rowItem)}}    
-                newAdd={() => console.log("ok")}
+                newAdd={() => navigate('/product/new')}
             />
         </>
     )

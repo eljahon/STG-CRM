@@ -6,7 +6,10 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider } from 'react-query'
 import App from './App.tsx'
 import './index.css'
-import 'primereact/resources/themes/lara-light-teal/theme.css'; //theme
+
+import "primereact/resources/themes/lara-light-cyan/theme.css";
+
+// import 'primereact/resources/themes/lara-light-teal/theme.css'; //theme
 import 'primereact/resources/primereact.min.css'; //core css
 import 'primeicons/primeicons.css'; //icons
 import 'primeflex/primeflex.css'; // flex

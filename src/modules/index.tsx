@@ -1,6 +1,7 @@
 
 import { CrudRoute } from "./crud/route";
 import { DashboardRoute } from "./dashboard/route";
+import { ProductActionRoute, ProductRoute } from "./product/route";
 // const notFound = [
 //   {
 //     path: "*",
@@ -13,7 +14,9 @@ import { DashboardRoute } from "./dashboard/route";
 const routes = [
     //   ...notFound,
     ...DashboardRoute,
-    ...CrudRoute
+    // ...CrudRoute,
+    ...ProductRoute,
+    ...ProductActionRoute
 ];
 const rolename = "SuperAdmin";
 export const filteredRoutes = routes.filter(async (el) => {

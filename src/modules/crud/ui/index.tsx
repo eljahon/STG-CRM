@@ -5,6 +5,9 @@ import { Column } from 'primereact/column';
 // import { ProductService } from './service/ProductService';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
+
+
+import { isFunction } from '../../../type-check'
 // import { FileUpload } from 'primereact/fileupload';
 import { Rating } from 'primereact/rating';
 import { Toolbar } from 'primereact/toolbar';
@@ -14,6 +17,7 @@ import { InputNumber, InputNumberValueChangeEvent } from 'primereact/inputnumber
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
+import { Checkbox } from 'primereact/checkbox';
 
 interface Product {
     id: string | null;
@@ -28,7 +32,31 @@ interface Product {
     rating: number;
 }
 
-export default function ProductsDemo() {
+interface Column {
+    title: string,
+    dataIndex?: string,
+    key?: string,
+    ItemRender?: (el: Product, e: Column, index: number) => React.ReactNode,
+    sort?: boolean,
+}
+
+interface ITable {
+    data: Product[],
+    columns: Column[] | [],
+    editFunction: () => void,
+    deleteFunction: () => void,
+    showFunction: () => void,
+    checked: () => void,
+    tableTile?: string,
+    newAdd: () => void
+
+}
+export default function Table(props: ITable) {
+    const { data, columns, editFunction, deleteFunction, showFunction, newAdd, tableTile, checked } = props;
+    const isCheckEvent = () => {
+
+        return isFunction(editFunction) || isFunction(deleteFunction) || isFunction(showFunction) || false
+    }
     let emptyProduct: Product = {
         id: null,
         code: '',
@@ -42,6 +70,9 @@ export default function ProductsDemo() {
         inventoryStatus: 'INSTOCK',
     };
 
+
+
+
     const [products, setProducts] = useState<Product[]>([{
         id: "dsds",
         code: 'ds',
@@ -54,6 +85,42 @@ export default function ProductsDemo() {
         rating: 0,
         inventoryStatus: 'INSTOCK',
     }]);
+
+
+    const [columnsList, setColumns] = useState([
+        isFunction(checked) &&
+        {
+            id: 5678,
+            selectionMode: 'multiple',
+            exportable: false,
+
+        },
+        ...columns,
+        isCheckEvent() && {
+            id: columns.length + 1,
+            // sortable: true,
+            exportable: false,
+            body: (itemData) => {
+                return (
+
+                    <React.Fragment>
+                        {isFunction(editFunction) && <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editFunction(itemData)} />}
+                        {isFunction(deleteFunction) && <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => deleteFunction(itemData)} />}
+                    </React.Fragment>
+
+
+                );
+
+            }
+
+
+            // style
+
+            // sort
+
+            // ItemRender: (itemData, itemcoulmns,index) => {}
+        }
+    ])
     const [productDialog, setProductDialog] = useState<boolean>(false);
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false);
     const [deleteProductsDialog, setDeleteProductsDialog] = useState<boolean>(false);
@@ -234,15 +301,6 @@ export default function ProductsDemo() {
         return <Tag value={rowData.inventoryStatus} severity={getSeverity(rowData)}></Tag>;
     };
 
-    const actionBodyTemplate = (rowData: Product) => {
-        return (
-            <React.Fragment>
-                <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editProduct(rowData)} />
-                <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
-            </React.Fragment>
-        );
-    };
-
     const getSeverity = (product: Product) => {
         switch (product.inventoryStatus) {
             case 'INSTOCK':
@@ -261,10 +319,10 @@ export default function ProductsDemo() {
 
     const header = (
         <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <h4 className="m-0">Manage Products</h4>
+            {tableTile && <h4 className="m-0">{tableTile}</h4>}
             <div className="flex flex-wrap gap-2">
-                <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} />
-                <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+                {isFunction(newAdd) && <Button label="New" icon="pi pi-plus" severity="success" onClick={newAdd} />}
+                {isFunction(checked) && <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={checked} disabled={!selectedProducts || !selectedProducts.length} />}
             </div>
         </div>
     );
@@ -293,26 +351,36 @@ export default function ProductsDemo() {
             <div className="card mt-4" >
                 {/* <Toolbar className='pt-2 pb-3 border-0' left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar> */}
 
-                <DataTable ref={dt} value={products} selection={selectedProducts}
-                    onSelectionChange={(e) => {
+                <DataTable ref={dt} value={data} selection={selectedProducts}
+                    onSelectionChange={isFunction(checked) ? (e) => {
                         if (Array.isArray(e.value)) {
-                            setSelectedProducts(e.value);
+
+                            checked(e.value)
+
+                            setSelectedProducts(e.value)
+
                         }
-                    }}
-                    dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+                    } : () => { }}
+                    dataKey="id" paginator rows={1} rowsPerPageOptions={[5, 10, 25]}
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" globalFilter={globalFilter} header={header}
                     selectionMode="multiple"
                 >
-                    <Column selectionMode="multiple" exportable={false}></Column>
-                    <Column field="code" header="Code" sortable style={{ minWidth: '12rem' }}></Column>
-                    <Column field="name" header="Name" sortable style={{ minWidth: '16rem' }}></Column>
-                    {/* <Column field="image" header="Image" body={imageBodyTemplate}></Column> */}
+                    {/* <Column selectionMode="multiple" exportable={false}></Column> */}
+
+                    {columnsList?.map((e: any) => (
+
+                        <Column key={e.id} {...e}></Column>
+                    ))}
+
+
+                    {/* <Column field="code" header="Code" sortable style={{ minWidth: '12rem' }}></Column> */}
+                    {/* <Column field="name" header="Name" sortable style={{ minWidth: '16rem' }}></Column>
                     <Column field="price" header="Price" body={priceBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
                     <Column field="category" header="Category" sortable style={{ minWidth: '10rem' }}></Column>
-                    <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable style={{ minWidth: '12rem' }}></Column>
-                    <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable style={{ minWidth: '12rem' }}></Column>
-                    <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                    <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable style={{ minWidth: '12rem' }}></Column> */}
+                    {/* <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable style={{ minWidth: '12rem' }}></Column> */}
+                    {/* <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column> */}
                 </DataTable>
             </div>
 
