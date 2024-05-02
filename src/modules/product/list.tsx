@@ -108,7 +108,7 @@ export default function ProductPage() {
             <GolabTable
                 data={data} 
                 columns={columns} 
-                tableTile="title"
+                tableTile="Products"
                 url={'/product'}
                 checked={(value) => {console.log(value);
                 }}

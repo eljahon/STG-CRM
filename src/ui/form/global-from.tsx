@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useQueryClient } from 'react-query';
-import { useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import paramsToObject  from "../../hooks/paramsToObject"
 import { AddData, UpdateData } from '../../service/global';
@@ -12,10 +12,7 @@ interface IForm {
   reset?: () => any,
   setfile?:any,
   url: string,
-  type?:string
-  onedataId?: string,
-  id?: string,
-
+  title?:string,
 }
 export default function GlobalFrom({
     children,
@@ -23,17 +20,15 @@ export default function GlobalFrom({
     reset,
     setfile,
     url,
-    onedataId,
-    type,
-    id,
+    title
   }:IForm)  {
-
+    const {id} = useParams()
     const queryClient = useQueryClient()
     const [params, setSearchParams] = useSearchParams();
     const [loader,setLoader] = useState<boolean>(false)
     const handleAdd = async (data:any) => {
       setLoader(true)
-      if (type == "post") {
+      if (id == "new") {
           await AddData(url, data)
             .then((response) => {
               toast.success("seccessfully create")
@@ -54,9 +49,8 @@ export default function GlobalFrom({
 
             })
             .finally(()=> setLoader(false));
-        }
-    if (type == "put") {
-      await UpdateData(url, data, onedataId)
+        } else  {
+      await UpdateData(url, data, id)
         .then((response) => {
           toast.success("seccessfully update")
           queryClient.invalidateQueries([url])
@@ -83,9 +77,14 @@ export default function GlobalFrom({
   return (
     <form  onSubmit={handleSubmit(handleAdd) }
     >
-      {children}
+    <div className='flex w-full justify-content-between align-items-center px-4 py-1 my-2 my-4 mb-6 bg-white border-round-md'> 
+      <h3>{title}</h3>
+      <div className='flex gap-2 '>
       <Button label="Add" type='submit' />
       <Button label="Cancel" severity="secondary"  type='button'/>
+      </div>
+    </div>
+      {children}
     </form>
   )
 }

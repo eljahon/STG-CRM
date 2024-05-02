@@ -5,12 +5,12 @@ import TemplateDemo from "./ui/site-bar/index";
 
 export default function MainLayout() {
   return (
-    <div className='flex gap-4 Container'>
+    <div className='flex gap-4 Container h-screen '>
       <TemplateDemo />
-      <div className='w-full'>
+      <div className='w-full overflow-scroll sroll'>
         <Header />
-        <Outlet />
 
+        <Outlet />
       </div>
     </div >
 

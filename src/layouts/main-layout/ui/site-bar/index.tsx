@@ -58,7 +58,7 @@ export default function RouterDemo() {
     ];
 
     return (
-        <div className='w-full max-w-15rem'>
+        <div className='w-full max-w-15rem '>
             <Menu model={items} className='w-full ' style={{ "height": '96vh' }} />
         </div>
     )

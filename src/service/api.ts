@@ -16,6 +16,12 @@ api.interceptors.request.use(
     if (isPublicApi) {
       config.headers["Authorization"] = `Bearer ${isPublicApi}`;
     }
+    console.log(config,"helo")
+    // if (config.params) {
+    //   config.paramsSerializer = function(params) {
+    //     return qs.stringify(params, { encodeValuesOnly: true })
+    //   }
+    // }
     return config;
   },
   (error:any) => {

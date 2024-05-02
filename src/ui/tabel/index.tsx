@@ -150,8 +150,8 @@ export default function GolabTable(props: ITable) {
                         
                         <Column key={e.id} {...e}></Column>
                     ))}
-                    <Column header="Agent" filterField="representative" showFilterMatchModes={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
-                     filter filterElement={representativeFilterTemplate} />
+                    {/* <Column header="Agent" filterField="representative" showFilterMatchModes={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
+                     filter filterElement={representativeFilterTemplate} /> */}
 
                 </DataTable>
             </div>

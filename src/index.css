@@ -16,3 +16,7 @@ body{
   padding: 0 20px;
  
 }
+
+.sroll::-webkit-scrollbar {
+  width: 0px;
+}

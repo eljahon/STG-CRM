@@ -3,7 +3,8 @@ import api from "./api";
 export const GetAllData = async (url:string, query:any) => {
   try {
     const params = new URLSearchParams(query);
-    const response = await api.get(`/${url}?${params.toString()}`);
+ 
+    const response = await api.get(`/${url}${query ? "?" + params.toString():''}`);
     return response?.data;
   } catch (error) {
     console.log(error);
