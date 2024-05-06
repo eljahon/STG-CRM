@@ -12,6 +12,7 @@ import { Dialog } from 'primereact/dialog';
 
 import { MultiSelect } from 'primereact/multiselect';
 import { useNavigate } from 'react-router-dom';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 
 interface Product {
     id: string | null;
@@ -42,11 +43,13 @@ interface ITable {
     checked: () => void,
     tableTile?: string,
     url?:string,
-    newAdd: () => void
-
+    newAdd: () => void,
+    totalProduct:any,
+    pageChange:() => void,
+    currentPage:number,
 }
 export default function GolabTable(props: ITable) {
-    const { data, columns, deleteFunction, showFunction, newAdd,url, tableTile, checked } = props;
+    const { data, columns, deleteFunction, showFunction, newAdd,url, tableTile,totalProduct,currentPage,pageChange, checked } = props;
     const navigate = useNavigate()
     const isCheckEvent = () => {
 
@@ -86,6 +89,8 @@ export default function GolabTable(props: ITable) {
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
     const [globalFilter, setGlobalFilter] = useState<string>('');
     const toast = useRef<Toast>(null);
+ 
+
     const dt = useRef<DataTable<Product[]>>(null);
 
 
@@ -131,18 +136,16 @@ export default function GolabTable(props: ITable) {
         <div>
             <Toast ref={toast} />
             <div className="card mt-4" >
-             
                 <DataTable ref={dt} value={data} selection={selectedProducts}
                     onSelectionChange={isFunction(checked) ? (e) => {
                         if (Array.isArray(e.value)) {
                             checked(e.value)
                             setSelectedProducts(e.value)
-
                         }
                     } : () => { }}
-                    dataKey="id" paginator rows={1} rowsPerPageOptions={[5, 10, 25]}
-                    paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" globalFilter={globalFilter} header={header}
+                    dataKey="id"  
+                    globalFilter={globalFilter} 
+                    header={header}
                     selectionMode="multiple"
                 >
 
@@ -154,11 +157,14 @@ export default function GolabTable(props: ITable) {
                      filter filterElement={representativeFilterTemplate} /> */}
 
                 </DataTable>
+                <div className="card">
+                    <Paginator first={currentPage} rows={10}  totalRecords={totalProduct} onPageChange={pageChange}/>
+                </div>
             </div>
 
             <Dialog
              visible={deleteProductDialog} 
-            style={{ width: '32rem' }}
+                style={{ width: '32rem' }}
              breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
              header="Confirm" 
              modal 

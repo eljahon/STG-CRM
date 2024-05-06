@@ -1,116 +1,74 @@
 import { useNavigate } from "react-router-dom";
 import GolabTable from "../../ui/tabel";
-
-const data = [{
-    id: "1",
-    code: 'ds',
-    name: 'dsds',
-    image: "null",
-    description: '',
-    category: null,
-    price: 0,
-    quantity: 0,
-    rating: 0,
-    inventoryStatus: 'INSTOCK',
-},
+import { useQuery, useQueryClient } from "react-query";
+import { GetAllData } from "../../service/global";
+import { useState } from "react";
 
 
-{
-    id: "2",
-    code: 'ds',
-    name: 'dsds',
-    image: "null",
-    description: '',
-    category: null,
-    price: 0,
-    quantity: 0,
-    rating: 0,
-    inventoryStatus: 'INSTOCK',
-},
-{
-    id: "3",
-    code: 'ds',
-    name: 'dsds',
-    image: "null",
-    description: '',
-    category: null,
-    price: 0,
-    quantity: 0,
-    rating: 0,
-    inventoryStatus: 'INSTOCK',
-},
-{
-    id: "4",
-    code: 'ds',
-    name: 'dsds',
-    image: "null",
-    description: '',
-    category: null,
-    price: 0,
-    quantity: 0,
-    rating: 0,
-    inventoryStatus: 'INSTOCK',
-},
-]
 
 
 export default function ProductPage() {
     const navigate = useNavigate()
+    const [page,setPage] = useState<Number>(0)
+    
+    const { data: product } = useQuery(["product",page], () => GetAllData("products/distribute", {limit:10,page:page / 10 +1}));
     const columns = [
         {
-        header: 'Code',
-        field: 'code',
+            header: 'Image',
+            field: 'image.aws_path',
+            id: 3,
+            // sortable: true,
+            exportable: false,
+            body: (itemData) => {
+                return <img  src={import.meta.env.VITE_APP_AWS_PATH + itemData?.image?.aws_path} width={50} height={50} />
+                
+            }
+            // ItemRender: (itemData, itemcoulmns,index) => {}
+        },
+        {
+        header: 'Title',
+        field: 'title',
         id: 1,
-        // sortable: true,
         exportable: false,
         style:{ minWidth: '12rem' },
-        // body: (itemData) => {
-        //     console.log(itemData);
-            
-        // }
-        // style
+      
     
-        // sort
-    
-        // ItemRender: (itemData, itemcoulmns,index) => {}
     },
     {
-        header: 'Name',
-        field: 'name',
+        header: 'Description',
+        field: 'description',
         id: 2,
-        // sortable: true,
         exportable: false,
-        // body: (itemData) => {
-        //     console.log(itemData);
-            
-        // }
-    
-    
-        // style
-    
-        // sort
     },
     {
-        header: 'Name',
-        field: 'name',
-        id: 3,
-        // sortable: true,
+        header: 'Price',
+        field: 'price',
+        id: 4,
         exportable: false,
-        // body: (itemData) => {
-        //     console.log(itemData);
-            
-        // }
-    }
+    },
+    {
+        header: 'Type',
+        field: 'state.type',
+        id: 4,
+        exportable: false,
+    },
+    
+    
     ]
 
     return (
         <>
             <GolabTable
-                data={data} 
+                data={product?.data?.items} 
                 columns={columns} 
+                totalProduct={product?.data?.meta?.total}
+                currentPage={page}
                 tableTile="Products"
                 url={'/product'}
                 checked={(value) => {console.log(value);
+                }}
+                pageChange={(event)=> {
+                    setPage(event.first)
                 }}
                 deleteFunction={(rowItem) => {console.log(rowItem)}}    
                 newAdd={() => navigate('/product/new')}

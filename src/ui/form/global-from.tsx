@@ -33,10 +33,7 @@ export default function GlobalFrom({
             .then((response) => {
               toast.success("seccessfully create")
               queryClient.invalidateQueries([url])
-              setSearchParams({
-                ...paramsToObject(params.entries()),
-                openMadal: "",
-              })
+              navigator
               reset()
               if(setfile?.length){
                 setfile(null)

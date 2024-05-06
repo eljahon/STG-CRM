@@ -11,9 +11,10 @@ export const GetAllData = async (url:string, query:any) => {
   }
 };
 
-export const GetByIdData = async (url:string, id:string) => {
+export const GetByIdData = async (url:string, id:string, query:any) => {
   try {
-    const response = await api.get(`/${url}/${id}`);
+    const params = new URLSearchParams(query);
+    const response = await api.get(`/${url}/${id}${query ? "?" + params.toString():''}`);
     return response?.data;
   } catch (error) {
     console.log(error);
@@ -47,3 +48,4 @@ export const GetMe = async () => {
   const res = await api.get('/users/me')
   return res
 }
+

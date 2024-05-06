@@ -2,12 +2,14 @@
 import React from 'react';
 import { Menu } from 'primereact/menu';
 import { MenuItem } from 'primereact/menuitem';
-import { Link } from "react-router-dom"
-
+import { Link, useNavigate } from "react-router-dom"
+import Cookies from 'js-cookie';
 
 import { filteredRoutes } from '../../../../modules/index.tsx'
 
 export default function RouterDemo() {
+    const navigate = useNavigate()
+
     const itemRenderer = (item) => (
         item.hideIfchildern && <div className='p-menuitem-content '>
             <Link to={item.url} className="flex align-items-center p-menuitem-link">
@@ -36,30 +38,31 @@ export default function RouterDemo() {
         //     url: '/unstyled',
         //     template: itemRenderer
         // },
-        // {
-        //     label: 'Programmatic',
-        //     icon: 'pi pi-link',
-        //     url: '/',
-        //     template: itemRenderer
-        // },
-        // {
-        //     label: 'External',
-        //     icon: 'pi pi-home',
-        //     url: 'https://react.dev/',
-        //     template: itemRenderer
-        // }
-
+   
         ...filteredRoutes.map(el => (
             {
                 ...el,
                 template: (item) => itemRenderer(item)
             }
-        ))
+        )),
+        {
+            template: () => {
+                return (
+                   <div className='mt-auto mx-4 cursor-pointer'  onClick={()=>{
+                        window.localStorage.clear('authToken')
+                        window.location.reload();
+                     }}>
+                      <span className='pi pi-sign-out'/>
+                       <span className='ml-1 '> Log out</span> 
+                    </div>
+                );
+            }
+        },
     ];
 
     return (
         <div className='w-full max-w-15rem '>
-            <Menu model={items} className='w-full ' style={{ "height": '96vh' }} />
+            <Menu model={items} className='w-full' style={{ "height": '96vh' }} />
         </div>
     )
 }

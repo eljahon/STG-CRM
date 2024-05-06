@@ -30,7 +30,7 @@ export default function LoginFrom() {
         setLoader(true);
         await AuthLogin(data)
             .then((response: any) => {
-                Cookies.set('authToken', response?.data?.token);
+                window.localStorage.setItem('authToken',response?.data?.token)
                 navigate(`/dashboard`);
                 // toast.seccess("login seccess!")
             })

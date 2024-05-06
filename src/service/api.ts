@@ -11,12 +11,11 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config:any) => {
-    const isPublicApi = Cookies.get('authToken');
+    const isPublicApi = window.localStorage.getItem("authToken")
     console.log(isPublicApi)
     if (isPublicApi) {
       config.headers["Authorization"] = `Bearer ${isPublicApi}`;
     }
-    console.log(config,"helo")
     // if (config.params) {
     //   config.paramsSerializer = function(params) {
     //     return qs.stringify(params, { encodeValuesOnly: true })
