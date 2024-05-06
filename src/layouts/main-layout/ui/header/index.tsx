@@ -4,7 +4,7 @@ import { InputText } from "primereact/inputtext";
 
 export default function Header() {
     return (
-        <div className='flex align-items-center justify-content-between ' >
+        <div className='flex align-items-center justify-content-between   ' >
             <IconField className='w-full' iconPosition="left">
                 <InputIcon className="pi pi-search"> </InputIcon>
                 <InputText v-model="value1" placeholder="Search" />

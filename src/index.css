@@ -16,3 +16,18 @@ body{
   padding: 0 20px;
  
 }
+
+.sroll::-webkit-scrollbar {
+  width: 0px;
+}
+.imageFlex{
+  overflow: hidden;
+ 
+}
+.imageFlex div{
+  top: 200px !important;
+  transition: all 0.3s ease;
+}
+.imageFlex:hover div{
+  top: 0 !important;
+}
