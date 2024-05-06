@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useQueryClient } from 'react-query';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import paramsToObject  from "../../hooks/paramsToObject"
 import { AddData, UpdateData } from '../../service/global';
@@ -13,6 +13,7 @@ interface IForm {
   setfile?:any,
   url: string,
   title?:string,
+  navUrl?:string
 }
 export default function GlobalFrom({
     children,
@@ -20,12 +21,14 @@ export default function GlobalFrom({
     reset,
     setfile,
     url,
-    title
+    title,
+    navUrl
   }:IForm)  {
     const {id} = useParams()
     const queryClient = useQueryClient()
     const [params, setSearchParams] = useSearchParams();
     const [loader,setLoader] = useState<boolean>(false)
+    const navigate = useNavigate()
     const handleAdd = async (data:any) => {
       setLoader(true)
       if (id == "new") {
@@ -33,7 +36,7 @@ export default function GlobalFrom({
             .then((response) => {
               toast.success("seccessfully create")
               queryClient.invalidateQueries([url])
-              navigator
+              navigate(navUrll)
               reset()
               if(setfile?.length){
                 setfile(null)
@@ -55,6 +58,7 @@ export default function GlobalFrom({
             ...paramsToObject(params.entries()),
             openMadal: "",
           })
+          navigate(navUrl)
           reset()
           if(setfile?.length){
             setfile(null)

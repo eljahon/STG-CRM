@@ -159,6 +159,7 @@ export default function ProductAction() {
         handleSubmit={handleSubmit}
         reset={reset}
         url={"products"}
+        navUrl={'/product'}
         title={`Product ${id == "new" ? "Add" : "Update"}`}
       >
         <div className="flex gap-4 ">
