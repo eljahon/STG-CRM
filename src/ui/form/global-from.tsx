@@ -35,25 +35,17 @@ export default function GlobalFrom({
           await AddData(url, data)
             .then((response) => {
               toast.success("seccessfully create")
-              queryClient.invalidateQueries([url])
-              navigate(navUrll)
+              navigate(navUrl)
               reset()
-              if(setfile?.length){
-                setfile(null)
-              }
-              
-            
             })
             .catch((error:any) => {
               toast.error(error?.response?.data?.message ||"Error creating")
-
             })
             .finally(()=> setLoader(false));
         } else  {
       await UpdateData(url, data, id)
         .then((response) => {
           toast.success("seccessfully update")
-          queryClient.invalidateQueries([url])
           setSearchParams({
             ...paramsToObject(params.entries()),
             openMadal: "",
@@ -63,9 +55,6 @@ export default function GlobalFrom({
           if(setfile?.length){
             setfile(null)
           }
-        
-         
-         
         })
         .catch((error) => {
           

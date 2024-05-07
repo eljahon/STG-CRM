@@ -33,7 +33,7 @@ export default function ProductAction() {
   const { id } = useParams();
   const [diseases, setdiseases] = useState<any>([]);
   const [index, setIndex] = useState<any>(1);
-  const [indexArr, setIndexArr] = useState<any>([1]);
+  const [indexArr, setIndexArr] = useState<any>([]);
   const [image, setImage] = useState<any>();
   const [imageMulti, setImageMulti] = useState<any>([]);
   const [imageSer, setImageSer] = useState<any>();
@@ -50,7 +50,9 @@ export default function ProductAction() {
   const watchedFiles = watch();
   const { data: crops } = useQuery("crops", () => GetAllData("crops"));
   const { data: units } = useQuery("units", () => GetAllData("units"));
-
+  const { data: drugCategory } = useQuery("drugCategory", () => GetAllData("drug-categories"));
+  const { data: fertilizerCategory } = useQuery("fertilizerCategory", () => GetAllData("fertilizer-categories"));
+console.log(watchedFiles)
   const getDiseesesByCrop = async (crop: string) => {
     await GetAllData(`diseases${crop && `?filters[crop]=${crop}`}`)
       .then((e) => {
@@ -65,17 +67,22 @@ export default function ProductAction() {
   }, []);
 
   useEffect(() => {
-      if(id != "new" && id){
+
+    if ( id == "new" ) {
+      setIndexArr([1])
+  }else{
+   
         GetByIdData("products",id,{populate:"*"})
         .then((e) => {
-          // console.log(e?.data?.state?.items)
+          setIndexArr([])
             setValue('title',e?.data?.title)
             setValue('description',e?.data?.description)
             setValue('unit',e?.data?.unit?.id)
+            if(e?.data?.drug_category) setValue('drug_category',e?.data?.drug_category?.id)
+              if(e?.data?.fertilizer_category) setValue('fertilizer_category',e?.data?.fertilizer_category?.id)
             setValue('price',e?.data?.price)
             setValue('state.type',e?.data?.state?.type)
-
-            console.log(e?.data?.gallery)
+            
             if(e?.data?.cer){
               setValue('cer',e?.data?.cer?.id)
               setImageSer(e?.data?.cer?.aws_path)
@@ -88,10 +95,9 @@ export default function ProductAction() {
               setValue('gallery',e?.data?.gallery?.map((e:any)=>e?.id))
               setImageMulti(e?.data?.gallery?.map((e:any)=>e?.aws_path))
             }
-            
             e?.data?.state?.items?.length && e?.data?.state?.items?.forEach((el, i) => {
-              if(!indexArr.length) setIndexArr(state=>[i+1,...state])
-              if(e?.data?.state?.items?.[i]?.crop) setValue(`state.items[${i}].crop`,e?.data?.state?.items?.[i]?.crop)
+              if(!indexArr.length) setIndexArr(state=> [i+1,...state])
+              if(e?.data?.state?.items?.[i]?.crop) setValue(`state.items[${i}].crop`,e?.data?.state?.items?.[i]?.crop?.id)
               if(e?.data?.state?.items?.[i]?.description) setValue(`state.items[${i}].description`, e?.data?.state?.items?.[i]?.description)
               if(e?.data?.state?.items?.[i]?.disease) setValue(`state.items[${i}].disease`, e?.data?.state?.items?.[i]?.disease?.id)
               if(e?.data?.state?.items?.[i]?.dose_max)  setValue(`state.items[${i}].dose_max`, e?.data?.state?.items?.[i]?.dose_max)
@@ -99,19 +105,21 @@ export default function ProductAction() {
               if(e?.data?.state?.items?.[i]?.unit)setValue(`state.items[${i}].unit`, e?.data?.state?.items?.[i]?.unit?.id)
               if(e?.data?.state?.items?.[i]?.use_count)setValue(`state.items[${i}].use_count`, e?.data?.state?.items?.[i]?.use_count)
               if(e?.data?.state?.items?.[i]?.method)setValue(`state.items[${i}].method`, e?.data?.state?.items?.[i]?.method)
-              
-         })
 
+         })
         })
         .catch((errors) => console.log(errors));
   
       }
   }, [id]);
 
-  // console.log(watchedFiles,indexArr)
- 
   const hendleimg = async (e: any, type: string) => {
-    setLoading(type)
+    // setLoading(type)
+    setValue('image',2984)
+    setValue('cer',2984)
+    setValue('gallery',[2984])
+    
+    return
     if (e.target.files[0]) {
       const res = await ImageUpload(e.target.files[0], {type:"image",folder:"other"}).finally(()=>setLoading(false))
       if(type == "image"){
@@ -151,8 +159,6 @@ export default function ProductAction() {
       }
   };
 
-
-
   return (
     <div>
       <GlobalFrom
@@ -164,29 +170,32 @@ export default function ProductAction() {
       >
         <div className="flex gap-4 ">
           <div className="w-8 bg-white border-round-sm">
-            <div className="w-full flex gap-4 flex-wrap p-4  align-items-start ">
+            <div className="w-full flex gap-6 flex-wrap p-4  align-items-start ">
               <div className="w-full flex gap-4 align-items-start">
-                <FloatLabel className="w-full">
+                <FloatLabel className="w-full relative">
                   <InputText
                     className=" mr-2 w-full"
                     id="title"
                     placeholder="title"
                     aria-label="title"
-                    {...register(`title`, { required: true })}
+                    {...register(`title`, { required: "title is required" })}
+                    invalid={errors?.title?.message?true:false}
                     value={watchedFiles?.title || ""}
                   />
+                 { errors?.title?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.title?.message}</p>}
                   <label htmlFor="title">Title</label>
                 </FloatLabel>
-                <FloatLabel className="w-full">
+                <FloatLabel className="w-full relative">
                   <InputText
                     type="number"
                     className="mr-2 w-full"
                     id="price"
                     placeholder="price"
-                    // {...register(`price`, {required: true })}
+                    {...register(`price`, {required: "price is required" ,valueAsNumber: true})}
                     value={watchedFiles?.price || ""}
-                    onChange={(e)=> setValue('price', +e.target.value)}
+                    invalid={errors?.price?.message?true:false}
                   />
+                  { errors?.title?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.title?.message}</p>}
                   <label htmlFor="price">Price</label>
                 </FloatLabel>
               </div>
@@ -194,45 +203,104 @@ export default function ProductAction() {
                 <FloatLabel className="w-full">
                   <Dropdown
                     className=" mr-2 w-full md:w-full"
-                    onChange={(e) => setValue("state.type", e.value)}
+                    
+                    onChange={(e) => {
+                      setValue("state.type", e.value)
+                      setIndex(1)
+                      setIndexArr([1])
+                      setValue("state.items", [])
+                    }}
                     options={typeArr}
                     optionLabel="name"
                     disabled={id != "new"}
                     optionValue="name"
                     value={watchedFiles?.state?.type}
                     placeholder={"Select Type"}
+                    
                   />
                   <label htmlFor="Type"> Type </label>
                 </FloatLabel>
-                <FloatLabel className="w-full">
+                <FloatLabel className="w-full relative">
                   <Dropdown
                     filter
                     id="unit"
                     className=" mr-2 w-full md:w-full"
+                    // {...register(`unit`, { required: "unit is required" })}
                     onChange={(e) => setValue(`unit`, e.value)}
+                    invalid={errors?.unit?.message?true:false}
                     placeholder={"Select Units"}
-                    value={watchedFiles?.unit}
+                    value={watchedFiles?.unit|| ""}
                     options={units?.data}
                     optionValue="id"
                     optionLabel="name"
                     // checkmark={true}
                     highlightOnSelect={false}
                   />
+                   { errors?.unit?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.unit?.message}</p>}
                   <label htmlFor="unit">Units </label>
                 </FloatLabel>
               </div>
-              <FloatLabel className="w-full">
+             
+
+              {  watchedFiles?.state?.type == "drug" &&
+          
+              <FloatLabel className="w-full relative">
+              <Dropdown
+                filter
+                id="drug_category"
+                className=" mr-2 w-full md:w-full"
+                // {...register(`drug_category`, { required: "drug category is required" })}
+                invalid={errors?.drug_category?.message?true:false}
+                onChange={(e) => setValue(`drug_category`, e.value)}
+                placeholder={"Select drugs category"}
+                value={watchedFiles?.drug_category}
+                options={drugCategory?.data}
+                optionValue="id"
+                optionLabel="name"
+                // checkmark={true}
+                highlightOnSelect={false}
+              />
+               { errors?.drug_category?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.drug_category?.message}</p>}
+              <label htmlFor="drug_category">Drugs category  </label>
+            </FloatLabel>
+                }
+                {
+                   watchedFiles?.state?.type == "fertilizer" &&
+                  <FloatLabel className="w-full relative">
+                  <Dropdown
+                    filter
+                    id="fertilizer"
+                    className=" mr-2 w-full md:w-full"
+                    // {...register(`fertilizer_category`, { required: "fertilizer category is required" })}
+                    invalid={errors?.fertilizer_category?.message?true:false}
+                    onChange={(e) => setValue(`fertilizer_category`, e.value)}
+                    placeholder={"Select fertilizer category"}
+                    value={watchedFiles?.fertilizer_category}
+                    options={fertilizerCategory?.data}
+                    optionValue="id"
+                    optionLabel="name"
+                    // checkmark={true}
+                    highlightOnSelect={false}
+                  />
+                  { errors?.fertilizer_category?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.fertilizer_category?.message}</p>}
+                  <label htmlFor="fertilizer">Fertilizer category  </label>
+                </FloatLabel>
+                }
+              <FloatLabel className="w-full relative">
                 <InputTextarea
                   className=" mr-2 w-full"
                   id="description"
                   placeholder="description"
                   rows={7}
                   cols={20}
-                  {...register(`description`, { required: true })}
+                  {...register(`description`, { required: "description is required" })}
+                  invalid={errors?.description?.message?true:false}
                   value={watchedFiles?.description || ""}
                 />
                 <label htmlFor="description">Description</label>
+                { errors?.description?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.description?.message}</p>}
               </FloatLabel>
+           
             <div className="w-full">
               <label className="w-6 ">
                 <div className="w-6 p-3 bg-primary border-round-md cursor-pointer flex align-items-center justify-content-center gap-2">
@@ -447,16 +515,17 @@ export default function ProductAction() {
             <div key={i} className="flex align-items-center gap-6 mb-4">
               <div className="w-10">
                 <div className="flex mb-4 gap-2">
+                  
                   <FloatLabel className="w-full">
                     <Dropdown
                       filter
                       id="crop"
                       className=" mr-2 w-full md:w-full"
                       onChange={(e) => {
-                        setValue(`state.items[${i}].crop`, e.value);
+                        if(watchedFiles?.state?.type == "fertilizer") setValue(`state.items[${i}].crop`, e.value);
                         getDiseesesByCrop(e.value);
                       }}
-                      value={watchedFiles?.state?.items?.[i]?.crop}
+                      value={watchedFiles?.state?.items?.[i]?.crop  }
                       placeholder={"Select Crops"}
                       optionValue="id"
                       options={crops?.data}
@@ -466,80 +535,96 @@ export default function ProductAction() {
                     />
                     <label htmlFor="crop"> Crops</label>
                   </FloatLabel>
+                  
                   {watchedFiles?.state?.type == "drug" && (
-                    <FloatLabel className="w-full">
-                      <Dropdown
-                        filter
-                        id="disease"
-                        className=" mr-2 w-full md:w-full"
-                        onChange={(e) =>
-                          setValue(`state.items[${i}].disease`, e.value)
-                        }
-                        placeholder={"Select Diseases"}
-                        value={watchedFiles?.state?.items?.[i]?.disease}
-                        optionValue="id"
-                        optionLabel="name"
-                        options={diseases}
-                        checkmark={true}
-                        highlightOnSelect={false}
-                      />
-                      <label htmlFor="disease">Diseases </label>
-                    </FloatLabel>
+                        <FloatLabel className="w-full relative">
+                        <Dropdown
+                          filter
+                          id="disease"
+                          className=" mr-2 w-full"
+                          // {...register(`state.items[${i}].disease`, { required: "disease is required" })}
+                          invalid={errors?.state?.items?.[i]?.disease?.message?true:false}
+                          onChange={(e) =>
+                            setValue(`state.items[${i}].disease`, e.value)
+                          }
+                          value={watchedFiles?.state?.items?.[i]?.disease}
+                          placeholder={"Select Diseases"}
+                          optionValue="id"
+                          options={diseases}
+                          optionLabel="name"
+                          checkmark={true}
+                          highlightOnSelect={false}
+                        />
+                          { errors?.state?.items?.[i]?.disease?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{errors?.state?.items?.[i]?.disease?.message}</p>}
+                          <label htmlFor="disease">Diseases </label>
+                      </FloatLabel>
                   )}
+                   <FloatLabel className="w-full relative">
+                    <InputText
+                      type="number"
+                      className="mr-2 w-full pb-3"
+                      id="dose_max"
+                      placeholder="dose_max"
+                      {...register(`state.items[${i}].dose_max`, {required: "dose_max is required" ,valueAsNumber: true})}
+                      value={watchedFiles?.state?.items?.[i]?.dose_max || ""}
+                      invalid={errors?.state?.items?.[i]?.dose_max?.message?true:false}
+                    />
+                    { errors?.state?.items?.[i]?.dose_max?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.state?.items?.[i]?.dose_max?.message}</p>}
+                    <label htmlFor="dose_max">Dose_max</label>
+                  </FloatLabel>
+
+                  <FloatLabel className="w-full relative">
                   <InputText
-                    className=" mr-2 w-full"
-                    id="dose_max"
-                    type="number"
-                    placeholder="dose_max"
-                    aria-label="dose_max"
-                    // {...register(`state.items[${i}].dose_max`, {
-                    //   required: true,
-                    // })}
-                    onChange={(e)=>  setValue(`state.items[${i}].dose_max`, +e.target.value)}
-                    value={watchedFiles?.state?.items?.[i]?.dose_max || ""}
-                  />
-                  <InputText
-                    className="mr-2 w-full"
+                    className="mr-2 w-full pb-3"
                     id="dose_min"
                     type="number"
                     placeholder="dose_min"
                     aria-label="dose_min"
-                    // {...register(`state.items[${i}].dose_min`, {
-                    //   required: true
-                    // })}
-                    onChange={(e)=> setValue(`state.items[${i}].dose_min`, +e.target.value)}
+                    {...register(`state.items[${i}].dose_min`, {required: "dose_min is required" ,valueAsNumber: true})}
+                    invalid={errors?.state?.items?.[i]?.dose_min?.message?true:false}
                     value={watchedFiles?.state?.items?.[i]?.dose_min || ""}
                   />
-                  <FloatLabel className="w-full">
-                    <Dropdown
-                      filter
-                      id="unit"
-                      className=" mr-2 w-full md:w-full"
-                      onChange={(e) =>
-                        setValue(`state.items[${i}].unit`, e.value)
-                      }
-                      placeholder={"Select Units"}
-                      value={watchedFiles?.state?.items?.[i]?.unit}
-                      options={units?.data}
-                      optionValue="id"
-                      optionLabel="name"
-                      // checkmark={true}
-                      highlightOnSelect={false}
-                    />
-                    <label htmlFor="unit">Units </label>
+                   { errors?.state?.items?.[i]?.dose_min?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.state?.items?.[i]?.dose_min?.message}</p>}
+                    <label htmlFor="dose_min">dose_min</label>
                   </FloatLabel>
+                 
+                  <FloatLabel className="w-full relative">
+                        <Dropdown
+                          filter
+                          id="unit"
+                          className=" mr-2 w-full"
+                          // {...register(`state.items[${i}].unit`, { required: "unit is required" })}
+                          invalid={errors?.state?.items?.[i]?.unit?.message?true:false}
+                          onChange={(e) =>
+                            setValue(`state.items[${i}].unit`, e.value)
+                          }
+                          value={watchedFiles?.state?.items?.[i]?.unit}
+                          placeholder={"Select Units"}
+                          optionValue="id"
+                          options={units?.data}
+                          optionLabel="name"
+                          checkmark={true}
+                          highlightOnSelect={false}
+                        />
+                          { errors?.state?.items?.[i]?.unit?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{errors?.state?.items?.[i]?.unit?.message}</p>}
+                          <label htmlFor="unit">Units </label>
+                      </FloatLabel>
                   {watchedFiles?.state?.type == "fertilizer" && (
+                  
+                    <FloatLabel className="w-full relative">
                     <InputText
-                      type="number"
-                      className="mr-2 w-full"
+                      className="mr-2 w-full pb-3"
                       id="use_count"
+                      type="number"
                       placeholder="use_count"
-                      aria-label="use_count"
-                      {...register(`state.items[${i}].use_count`, {
-                        required: true,
-                      })}
+                      aria-label="dose_min"
+                      {...register(`state.items[${i}].use_count`, {required: "use_count is required" ,valueAsNumber: true})}
+                      invalid={errors?.state?.items?.[i]?.use_count?.message?true:false}
                       value={watchedFiles?.state?.items?.[i]?.use_count || ""}
                     />
+                     { errors?.state?.items?.[i]?.use_count?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.state?.items?.[i]?.use_count?.message}</p>}
+                      <label htmlFor="use_count">use_count</label>
+                    </FloatLabel>
                   )}
                 </div>
                 <FloatLabel className="w-full">
@@ -547,14 +632,16 @@ export default function ProductAction() {
                     <>
                       <InputTextarea
                         className=" mr-2 w-full"
-                        id="description"
+                        id="descriptionitems"
                         placeholder="description"
                         rows={4}
                         cols={20}
-                        {...register(`state.items[${i}].description`)}
+                        {...register(`state.items[${i}].description` ,{ required: "description is required" })}
                         value={watchedFiles?.state?.items?.[i]?.description}
+                        invalid={errors?.state?.items?.[i]?.description?.message?true:false}
                       />
-                      <label htmlFor="description">description</label>
+                      <label htmlFor="descriptionitems">description</label>
+                      { errors?.state?.items?.[i]?.description?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.state?.items?.[i]?.description?.message}</p>}
                     </>
                   ) : watchedFiles?.state?.type == "fertilizer"?  (
                     <>
@@ -564,10 +651,12 @@ export default function ProductAction() {
                         placeholder="method"
                         rows={4}
                         cols={20}
-                        {...register(`state.items[${i}].method`)}
+                        {...register(`state.items[${i}].method` ,{ required: "method is required" })}
                         value={watchedFiles?.state?.items?.[i]?.method || ""}
+                        invalid={errors?.state?.items?.[i]?.method?.message?true:false}
                       />
                       <label htmlFor="method">method</label>
+                      { errors?.state?.items?.[i]?.method?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.state?.items?.[i]?.method?.message}</p>}
                     </>
                   ):''}
                 </FloatLabel>
@@ -580,6 +669,7 @@ export default function ProductAction() {
                 icon="pi pi-trash"
                 onClick={() => {
                   // setValue('price', watchedFiles.price?.filter((al,index) => index !== i))
+                  // setValue(`state.items`,watchedFiles?.state?.items?.filter((al,index) => index !== i))
                   setIndexArr((state: any) =>
                     state.length > 1 ? state?.slice(0, -1) : state
                   );
