@@ -6,19 +6,13 @@ import { InputText } from "primereact/inputtext";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
-// import { FileUpload } from 'primereact/fileupload';
-// import { Toast } from 'primereact/toast';
 import { Button } from "primereact/button";
 import { useQuery } from "react-query";
-import { AddData, GetAllData, GetByIdData, UploadFile } from "../../service/global";
-import { ImageUpload } from "../../utils/uplaoadFile";
-const cities: any = [
-  { name: "New York", code: "NY" },
-  { name: "Rome", code: "RM" },
-  { name: "London", code: "LDN" },
-  { name: "Istanbul", code: "IST" },
-  { name: "Paris", code: "PRS" },
-];
+import {  GetAllData, GetByIdData } from "../../service/global";
+
+import UploadFile from "../../ui/uploadFile";
+import UploadFileMulty from "../../ui/uploadFileMulty";
+
 const typeArr: any = [
   {
     code: "drug",
@@ -33,24 +27,27 @@ export default function ProductAction() {
   const { id } = useParams();
   const [diseases, setdiseases] = useState<any>([]);
   const [index, setIndex] = useState<any>(1);
-  const [indexArr, setIndexArr] = useState<any>([1]);
+  const [indexArr, setIndexArr] = useState<any>([]);
   const [image, setImage] = useState<any>();
   const [imageMulti, setImageMulti] = useState<any>([]);
   const [imageSer, setImageSer] = useState<any>();
-  const [loadingFile, setLoading] = useState<any>(false);
+  
   const {
     register,
     handleSubmit,
     setError,
     setValue,
+    clearErrors,
     reset,
     watch,
     formState: { errors },
   } = useForm();
+
   const watchedFiles = watch();
   const { data: crops } = useQuery("crops", () => GetAllData("crops"));
-  const { data: units } = useQuery("units", () => GetAllData("units"));
-
+  const { data: units } = useQuery("units", () => GetAllData("units", {fields: 'name'}));
+  const { data: drugCategory } = useQuery("drugCategory", () => GetAllData("drug-categories"));
+  const { data: fertilizerCategory } = useQuery("fertilizerCategory", () => GetAllData("fertilizer-categories"));
   const getDiseesesByCrop = async (crop: string) => {
     await GetAllData(`diseases${crop && `?filters[crop]=${crop}`}`)
       .then((e) => {
@@ -65,17 +62,21 @@ export default function ProductAction() {
   }, []);
 
   useEffect(() => {
-      if(id != "new" && id){
+    if ( id == "new" ) {
+      setIndexArr([1])
+      }
+      else{
         GetByIdData("products",id,{populate:"*"})
         .then((e) => {
-          // console.log(e?.data?.state?.items)
+          setIndexArr([])
             setValue('title',e?.data?.title)
             setValue('description',e?.data?.description)
             setValue('unit',e?.data?.unit?.id)
+            if(e?.data?.drug_category) setValue('drug_category',e?.data?.drug_category?.id)
+              if(e?.data?.fertilizer_category) setValue('fertilizer_category',e?.data?.fertilizer_category?.id)
             setValue('price',e?.data?.price)
             setValue('state.type',e?.data?.state?.type)
-
-            console.log(e?.data?.gallery)
+            
             if(e?.data?.cer){
               setValue('cer',e?.data?.cer?.id)
               setImageSer(e?.data?.cer?.aws_path)
@@ -86,12 +87,11 @@ export default function ProductAction() {
             }
             if(e?.data?.gallery?.length){
               setValue('gallery',e?.data?.gallery?.map((e:any)=>e?.id))
-              setImageMulti(e?.data?.gallery?.map((e:any)=>e?.aws_path))
+              setImageMulti(e?.data?.gallery)
             }
-            
             e?.data?.state?.items?.length && e?.data?.state?.items?.forEach((el, i) => {
-              if(!indexArr.length) setIndexArr(state=>[i+1,...state])
-              if(e?.data?.state?.items?.[i]?.crop) setValue(`state.items[${i}].crop`,e?.data?.state?.items?.[i]?.crop)
+              if(!indexArr.length) setIndexArr(state=> [i+1,...state])
+              if(e?.data?.state?.items?.[i]?.crop) setValue(`state.items[${i}].crop`,e?.data?.state?.items?.[i]?.crop?.id)
               if(e?.data?.state?.items?.[i]?.description) setValue(`state.items[${i}].description`, e?.data?.state?.items?.[i]?.description)
               if(e?.data?.state?.items?.[i]?.disease) setValue(`state.items[${i}].disease`, e?.data?.state?.items?.[i]?.disease?.id)
               if(e?.data?.state?.items?.[i]?.dose_max)  setValue(`state.items[${i}].dose_max`, e?.data?.state?.items?.[i]?.dose_max)
@@ -99,62 +99,14 @@ export default function ProductAction() {
               if(e?.data?.state?.items?.[i]?.unit)setValue(`state.items[${i}].unit`, e?.data?.state?.items?.[i]?.unit?.id)
               if(e?.data?.state?.items?.[i]?.use_count)setValue(`state.items[${i}].use_count`, e?.data?.state?.items?.[i]?.use_count)
               if(e?.data?.state?.items?.[i]?.method)setValue(`state.items[${i}].method`, e?.data?.state?.items?.[i]?.method)
-              
-         })
 
         })
+        })
         .catch((errors) => console.log(errors));
-  
       }
   }, [id]);
-
-  // console.log(watchedFiles,indexArr)
- 
-  const hendleimg = async (e: any, type: string) => {
-    setLoading(type)
-    if (e.target.files[0]) {
-      const res = await ImageUpload(e.target.files[0], {type:"image",folder:"other"}).finally(()=>setLoading(false))
-      if(type == "image"){
-        setValue('image',res?.data?.media?.id)
-        setImage(res?.data?.media?.aws_path)
-      }
-      if(type == "sertificate"){
-        setValue('cer',res?.data?.media?.id)
-        setImageSer(res?.data?.media?.aws_path)
-      }
-      if(type == "imageMilti"){
-        if(watchedFiles?.gallery?.length){
-          setValue('gallery',[res?.data?.media?.id,...watchedFiles?.gallery])
-          setImageMulti((state:any)=> [res?.data?.media?.aws_path, ...state])
-        } else{
-          setValue('gallery',[res?.data?.media?.id])
-          setImageMulti( [res?.data?.media?.aws_path]) 
-        }
-      }
-    }
-  
-  };
-  const hendleRemoveimg = async (e: any, type: string) => {
-      if(type == "image"){
-        setValue('image',null)
-        setImage(null)
-      }
-
-      if(type == "sertificate"){
-        setValue('cer',null)
-        setImageSer(null)
-      }
-
-      if(type == "imageMilti"){
-        setImageMulti((state:any)=>state.filter((aE:any)=>aE != e))
-        setValue('gallery',watchedFiles?.gallery?.filter((aE:any)=>aE != e))
-      }
-  };
-
-
-
   return (
-    <div>
+  
       <GlobalFrom
         handleSubmit={handleSubmit}
         reset={reset}
@@ -163,30 +115,33 @@ export default function ProductAction() {
         title={`Product ${id == "new" ? "Add" : "Update"}`}
       >
         <div className="flex gap-4 ">
-          <div className="w-8 bg-white border-round-sm">
-            <div className="w-full flex gap-4 flex-wrap p-4  align-items-start ">
+          <div className="w-8 bg-white border-round-3xl ">
+            <div className="w-full flex gap-6 flex-wrap p-4  align-items-start">
               <div className="w-full flex gap-4 align-items-start">
-                <FloatLabel className="w-full">
+                <FloatLabel className="w-full relative">
                   <InputText
                     className=" mr-2 w-full"
                     id="title"
                     placeholder="title"
                     aria-label="title"
-                    {...register(`title`, { required: true })}
+                    {...register(`title`, { required: "title is required" })}
+                    invalid={errors?.title?.message?true:false}
                     value={watchedFiles?.title || ""}
                   />
+                 { errors?.title?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.title?.message}</p>}
                   <label htmlFor="title">Title</label>
                 </FloatLabel>
-                <FloatLabel className="w-full">
+                <FloatLabel className="w-full relative">
                   <InputText
                     type="number"
                     className="mr-2 w-full"
                     id="price"
                     placeholder="price"
-                    // {...register(`price`, {required: true })}
+                    {...register(`price`, {required: "price is required" ,valueAsNumber: true})}
                     value={watchedFiles?.price || ""}
-                    onChange={(e)=> setValue('price', +e.target.value)}
+                    invalid={errors?.price?.message?true:false}
                   />
+                  { errors?.price?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.price?.message}</p>}
                   <label htmlFor="price">Price</label>
                 </FloatLabel>
               </div>
@@ -194,255 +149,140 @@ export default function ProductAction() {
                 <FloatLabel className="w-full">
                   <Dropdown
                     className=" mr-2 w-full md:w-full"
-                    onChange={(e) => setValue("state.type", e.value)}
+                    onChange={(e) => {
+                      setValue("state.type", e.value)
+                      setIndex(1)
+                      setIndexArr([1])
+                      setValue("state.items", null)
+                      clearErrors()
+                    }}
                     options={typeArr}
                     optionLabel="name"
                     disabled={id != "new"}
                     optionValue="name"
                     value={watchedFiles?.state?.type}
                     placeholder={"Select Type"}
+                    
                   />
                   <label htmlFor="Type"> Type </label>
                 </FloatLabel>
-                <FloatLabel className="w-full">
+                <FloatLabel className="w-full relative">
                   <Dropdown
                     filter
                     id="unit"
                     className=" mr-2 w-full md:w-full"
-                    onChange={(e) => setValue(`unit`, e.value)}
+                    {...{...register('unit',{required:"unit is required"}),
+                    onChange:function(el){
+                      setValue('unit', el.value)
+                      clearErrors('unit'); 
+                       return el.value
+                      },onBlur:function(){}}
+                    }
+                    invalid={errors?.unit?.message?true:false}
                     placeholder={"Select Units"}
-                    value={watchedFiles?.unit}
+                    value={watchedFiles?.unit|| ""}
                     options={units?.data}
                     optionValue="id"
                     optionLabel="name"
                     // checkmark={true}
                     highlightOnSelect={false}
                   />
+                   { errors?.unit?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.unit?.message}</p>}
                   <label htmlFor="unit">Units </label>
                 </FloatLabel>
               </div>
-              <FloatLabel className="w-full">
+              { watchedFiles?.state?.type == "drug" &&
+              <FloatLabel className="w-full relative">
+              <Dropdown
+                filter
+                id="drug_category"
+                className=" mr-2 w-full md:w-full"
+                {...{...register('drug_category',{required:"drug_category is required"}),
+                onChange:function(el){
+                  setValue('drug_category', el.value)
+                  clearErrors('drug_category'); 
+                   return el.value
+                  },onBlur:function(){}}
+                }
+                invalid={errors?.drug_category?.message?true:false}
+                placeholder={"Select drugs category"}
+                value={watchedFiles?.drug_category}
+                options={drugCategory?.data}
+                optionValue="id"
+                optionLabel="name"
+                // checkmark={true}
+                highlightOnSelect={false}
+              />
+               { errors?.drug_category?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.drug_category?.message}</p>}
+              <label htmlFor="drug_category">Drugs category  </label>
+            </FloatLabel>
+                }
+                {
+                   watchedFiles?.state?.type == "fertilizer" &&
+                  <FloatLabel className="w-full relative">
+                  <Dropdown
+                    filter
+                    id="fertilizer"
+                    className=" mr-2 w-full md:w-full"
+                    {...{...register('fertilizer_category',{required:"fertilizer_category is required"}),
+                    onChange:function(el){
+                      setValue('fertilizer_category', el.value)
+                      clearErrors('fertilizer_category')
+                       return el.value
+                      },onBlur:function(){}}
+                    }
+                    invalid={errors?.fertilizer_category?.message?true:false}
+                    placeholder={"Select fertilizer category"}
+                    value={watchedFiles?.fertilizer_category}
+                    options={fertilizerCategory?.data}
+                    optionValue="id"
+                    optionLabel="name"
+                    // checkmark={true}
+                    highlightOnSelect={false}
+                  />
+                  { errors?.fertilizer_category?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.fertilizer_category?.message}</p>}
+                  <label htmlFor="fertilizer">Fertilizer category  </label>
+                </FloatLabel>
+                }
+              <FloatLabel className="w-full relative">
                 <InputTextarea
                   className=" mr-2 w-full"
                   id="description"
                   placeholder="description"
                   rows={7}
                   cols={20}
-                  {...register(`description`, { required: true })}
+                  {...register(`description`, { required: "description is required" })}
+                  invalid={errors?.description?.message?true:false}
                   value={watchedFiles?.description || ""}
                 />
                 <label htmlFor="description">Description</label>
+                { errors?.description?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.description?.message}</p>}
               </FloatLabel>
-            <div className="w-full">
-              <label className="w-6 ">
-                <div className="w-6 p-3 bg-primary border-round-md cursor-pointer flex align-items-center justify-content-center gap-2">
-                  <i className="pi pi-upload" style={{ fontSize: "1rem" }} />
-                  upload
-                </div>
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => hendleimg(e, "imageMilti")}
-                />
-              </label>
-              {
-                imageMulti.length ? 
-                <div className="flex  flex=wrap gap-2 mt-3">
-                    {
-                      loadingFile== 'imageMilti' && <div>loading</div>
-                    }
-                    {
-                      imageMulti && imageMulti?.map((e,i)=>(
-                     <div key={i} className="w-full relative imageFlex" style={{"maxWidth":"200px"}}>
-                         <div className="absolute top-0 left-0 w-full h-full bg-black-alpha-50 flex align-items-center justify-content-center gap-4"> 
-                          <span className="cursor-pointer">
-                          <i className="pi pi-eye"  style={{ fontSize: "1.4rem" ,color:"white"}} />
-                          </span>
-                          <span className="cursor-pointer" 
-                            onClick={()=>hendleRemoveimg(e,"imageMilti")}
-                          >
-                          <i className="pi pi-trash" style={{ fontSize: "1.4rem",color:"white" }} />
-                          </span>
-                         </div>
-                         <img  className="w-full" style={{"maxWidth":"200px"}} src={import.meta.env.VITE_APP_AWS_PATH + e} width={200} height={120} />
-                     </div>
-                      ))
-                    }
-                </div>: 
-                loadingFile== 'imageMilti' 
-                ? <div>loading</div>:
-                <div className="flex align-items-center flex-column mt-4">
-                  <i
-                    className="pi pi-image mt-2 p-5"
-                    style={{
-                      fontSize: "3em",
-                      borderRadius: "50%",
-                      backgroundColor: "var(--surface-b)",
-                      color: "var(--surface-d)",
-                    }}
-                  ></i>
-                  <span
-                    style={{
-                      fontSize: "1em",
-                      color: "var(--text-color-secondary)",
-                    }}
-                    className="my-3"
-                  >
-                    Drag and Drop Image Here
-                  </span>
-                </div>
-              }
-            </div>
+           
+              <UploadFileMulty 
+               className={"mb-4"}
+              setValue={setValue}
+              value={imageMulti || []}
+              valueId={watchedFiles?.gallery || []}
+              fieldName={"gallery"} />
             </div>
           </div>
-            <div className="w-4 p-4 bg-white border-round-md">
-            {loadingFile == "image" ? (
-              <div>loading</div>
-            ) : image ? (
-              <div className="w-full flex align-items-center justify-content-center   flex-column">
-                <div  className="w-full relative imageFlex" style={{"maxWidth":"200px"}}>
-                      <div className="absolute top-0 left-0 w-full h-full bg-black-alpha-50 flex align-items-center justify-content-center gap-4"> 
-                      <span className="cursor-pointer">
-                      <i className="pi pi-eye"  style={{ fontSize: "1.4rem" ,color:"white"}} />
-                      </span>
-                      <span className="cursor-pointer" 
-                        onClick={()=>hendleRemoveimg(image,"imageMilti")}
-                      >
-                      <i className="pi pi-trash" style={{ fontSize: "1.4rem",color:"white" }} />
-                      </span>
-                      </div>
-                      <img  className="w-full" style={{"maxWidth":"200px"}} src={import.meta.env.VITE_APP_AWS_PATH + image} width={200} height={120} />
-                  </div>
-                <span
-                  style={{
-                    fontSize: "1em",
-                    color: "var(--text-color-secondary)",
-                  }}
-                  className="my-3"
-                >
-                  Drag and Drop Image Here
-                </span>
-              </div>
-            ) : (
-              <div className="flex align-items-center flex-column">
-                <i
-                  className="pi pi-image mt-2 p-5"
-                  style={{
-                    fontSize: "3em",
-                    borderRadius: "50%",
-                    backgroundColor: "var(--surface-b)",
-                    color: "var(--surface-d)",
-                  }}
-                ></i>
-                <span
-                  style={{
-                    fontSize: "1em",
-                    color: "var(--text-color-secondary)",
-                  }}
-                  className="my-3"
-                >
-                  Drag and Drop Image Here
-                </span>
-              </div>
-            )}
-            <div className="flex gap-2">
-              <label className="w-full ">
-                <div className="w-full p-3 bg-primary border-round-md cursor-pointer flex align-items-center justify-content-center gap-2">
-                  <i className="pi pi-upload" style={{ fontSize: "1rem" }} />
-                  upload
-                </div>
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => hendleimg(e, "image")}
+            <div className="w-4 p-4 bg-white border-round-3xl">
+              <UploadFile
+                className={"mb-4"}
+                setValue={setValue}
+                value={image}
+                fieldName={"image"}
                 />
-              </label>
-              {image && (
-                <Button
-                  className="w-full "
-                  label="Delete"
-                  type="button"
-                  severity="danger"
-                  icon="pi pi-trash"
+                <UploadFile
+                setValue={setValue}
+                fieldName={"cer"}
+                value={imageSer}
                 />
-              )}
-            </div>
-
-            {loadingFile == "sertificate" ? (
-              <div className="mt-4">loading</div>
-            ) : imageSer ? (
-              <div className="w-full flex align-items-center justify-content-center  mt-4 flex-column">
-                <div  className="w-full relative imageFlex" style={{"maxWidth":"200px"}}>
-                      <div className="absolute top-0 left-0 w-full h-full bg-black-alpha-50 flex align-items-center justify-content-center gap-4"> 
-                      <span className="cursor-pointer">
-                      <i className="pi pi-eye"  style={{ fontSize: "1.4rem" ,color:"white"}} />
-                      </span>
-                      <span className="cursor-pointer" 
-                        onClick={()=>hendleRemoveimg(imageSer,"imageMilti")}
-                      >
-                      <i className="pi pi-trash" style={{ fontSize: "1.4rem",color:"white" }} />
-                      </span>
-                      </div>
-                      <img  className="w-full" style={{"maxWidth":"200px"}} src={import.meta.env.VITE_APP_AWS_PATH + imageSer} width={200} height={120} />
-                  </div>
-                <span
-                  style={{
-                    fontSize: "1em",
-                    color: "var(--text-color-secondary)",
-                  }}
-                  className="my-3"
-                >
-                  Drag and Drop Sertificate Here
-                </span>
-              </div>
-            ) : (
-              <div className="flex align-items-center flex-column mt-4">
-                <i
-                  className="pi pi-image mt-2 p-5"
-                  style={{
-                    fontSize: "3em",
-                    borderRadius: "50%",
-                    backgroundColor: "var(--surface-b)",
-                    color: "var(--surface-d)",
-                  }}
-                ></i>
-                <span
-                  style={{
-                    fontSize: "1em",
-                    color: "var(--text-color-secondary)",
-                  }}
-                  className="my-3"
-                >
-                  Drag and Drop Sertificate Here
-                </span>
-              </div>
-            )}
-            <div className="flex gap-2">
-              <label className="w-full ">
-                <div className="w-full p-3 bg-primary border-round-md cursor-pointer flex align-items-center justify-content-center gap-2">
-                  <i className="pi pi-upload" style={{ fontSize: "1rem" }} />
-                  upload
-                </div>
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(e) => hendleimg(e, "sertificate")}
-                />
-              </label>
-              {imageSer && (
-                <Button
-                  className="w-full "
-                  label="Delete"
-                  type="button"
-                  severity="danger"
-                  icon="pi pi-trash"
-                />
-              )}
-            </div>
           </div>
         </div>
 
-        <div className="p-4 bg-white border-round-sm mt-4">
+        <div className="p-4 bg-white border-round-3xl mt-4">
           {indexArr?.map((e, i) => (
             <div key={i} className="flex align-items-center gap-6 mb-4">
               <div className="w-10">
@@ -453,10 +293,10 @@ export default function ProductAction() {
                       id="crop"
                       className=" mr-2 w-full md:w-full"
                       onChange={(e) => {
-                        setValue(`state.items[${i}].crop`, e.value);
+                        if(watchedFiles?.state?.type == "fertilizer") setValue(`state.items[${i}].crop`, e.value);
                         getDiseesesByCrop(e.value);
                       }}
-                      value={watchedFiles?.state?.items?.[i]?.crop}
+                      value={watchedFiles?.state?.items?.[i]?.crop  }
                       placeholder={"Select Crops"}
                       optionValue="id"
                       options={crops?.data}
@@ -466,95 +306,120 @@ export default function ProductAction() {
                     />
                     <label htmlFor="crop"> Crops</label>
                   </FloatLabel>
+                  
                   {watchedFiles?.state?.type == "drug" && (
-                    <FloatLabel className="w-full">
-                      <Dropdown
-                        filter
-                        id="disease"
-                        className=" mr-2 w-full md:w-full"
-                        onChange={(e) =>
-                          setValue(`state.items[${i}].disease`, e.value)
-                        }
-                        placeholder={"Select Diseases"}
-                        value={watchedFiles?.state?.items?.[i]?.disease}
-                        optionValue="id"
-                        optionLabel="name"
-                        options={diseases}
-                        checkmark={true}
-                        highlightOnSelect={false}
-                      />
-                      <label htmlFor="disease">Diseases </label>
-                    </FloatLabel>
+                        <FloatLabel className="w-full relative">
+                        <Dropdown
+                          filter
+                          id="disease"
+                          className=" mr-2 w-full"
+                          {...{...register(`state.items[${i}].disease`,{required:"disease is required"}),
+                          onChange:function(el){
+                            setValue(`state.items[${i}].disease`, el.value)
+                            clearErrors(`state.items[${i}].disease`)
+                             return el.value
+                            },onBlur:function(){}}
+                          }
+                          invalid={errors?.state?.items?.[i]?.disease?.message?true:false}
+                          value={watchedFiles?.state?.items?.[i]?.disease}
+                          placeholder={"Select Diseases"}
+                          optionValue="id"
+                          options={diseases}
+                          optionLabel="name"
+                          checkmark={true}
+                          highlightOnSelect={false}
+                        />
+                          { errors?.state?.items?.[i]?.disease?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{errors?.state?.items?.[i]?.disease?.message}</p>}
+                          <label htmlFor="disease">Diseases </label>
+                      </FloatLabel>
                   )}
+                   <FloatLabel className="w-full relative">
+                    <InputText
+                      type="number"
+                      className="mr-2 w-full pb-3"
+                      id="dose_max"
+                      placeholder="dose_max"
+                      {...register(`state.items[${i}].dose_max`, {required: "dose_max is required" ,valueAsNumber: true})}
+                      value={watchedFiles?.state?.items?.[i]?.dose_max || ""}
+                      invalid={errors?.state?.items?.[i]?.dose_max?.message?true:false}
+                    />
+                    { errors?.state?.items?.[i]?.dose_max?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.state?.items?.[i]?.dose_max?.message}</p>}
+                    <label htmlFor="dose_max">Dose_max</label>
+                  </FloatLabel>
+
+                  <FloatLabel className="w-full relative">
                   <InputText
-                    className=" mr-2 w-full"
-                    id="dose_max"
-                    type="number"
-                    placeholder="dose_max"
-                    aria-label="dose_max"
-                    // {...register(`state.items[${i}].dose_max`, {
-                    //   required: true,
-                    // })}
-                    onChange={(e)=>  setValue(`state.items[${i}].dose_max`, +e.target.value)}
-                    value={watchedFiles?.state?.items?.[i]?.dose_max || ""}
-                  />
-                  <InputText
-                    className="mr-2 w-full"
+                    className="mr-2 w-full pb-3"
                     id="dose_min"
                     type="number"
                     placeholder="dose_min"
                     aria-label="dose_min"
-                    // {...register(`state.items[${i}].dose_min`, {
-                    //   required: true
-                    // })}
-                    onChange={(e)=> setValue(`state.items[${i}].dose_min`, +e.target.value)}
+                    {...register(`state.items[${i}].dose_min`, {required: "dose_min is required" ,valueAsNumber: true})}
+                    invalid={errors?.state?.items?.[i]?.dose_min?.message?true:false}
                     value={watchedFiles?.state?.items?.[i]?.dose_min || ""}
                   />
-                  <FloatLabel className="w-full">
-                    <Dropdown
-                      filter
-                      id="unit"
-                      className=" mr-2 w-full md:w-full"
-                      onChange={(e) =>
-                        setValue(`state.items[${i}].unit`, e.value)
-                      }
-                      placeholder={"Select Units"}
-                      value={watchedFiles?.state?.items?.[i]?.unit}
-                      options={units?.data}
-                      optionValue="id"
-                      optionLabel="name"
-                      // checkmark={true}
-                      highlightOnSelect={false}
-                    />
-                    <label htmlFor="unit">Units </label>
+                   { errors?.state?.items?.[i]?.dose_min?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.state?.items?.[i]?.dose_min?.message}</p>}
+                    <label htmlFor="dose_min">dose_min</label>
                   </FloatLabel>
+                 
+                  <FloatLabel className="w-full relative">
+                        <Dropdown
+                          filter
+                          id="unit"
+                          className=" mr-2 w-full"
+                          {...{...register(`state.items[${i}].unit`,{required:"unit is required"}),
+                          onChange:function(el){
+                            setValue(`state.items[${i}].unit`, el.value)
+                            clearErrors(`state.items[${i}].unit`)
+                             return el.value
+                            },
+                            onBlur:function(){}}
+                          }
+                          invalid={errors?.state?.items?.[i]?.unit?.message?true:false}
+                          value={watchedFiles?.state?.items?.[i]?.unit}
+                          placeholder={"Select Units"}
+                          optionValue="id"
+                          options={units?.data}
+                          optionLabel="name"
+                          checkmark={true}
+                          highlightOnSelect={false}
+                        />
+                          { errors?.state?.items?.[i]?.unit?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{errors?.state?.items?.[i]?.unit?.message}</p>}
+                          <label htmlFor="unit">Units </label>
+                      </FloatLabel>
                   {watchedFiles?.state?.type == "fertilizer" && (
+                  
+                    <FloatLabel className="w-full relative">
                     <InputText
-                      type="number"
-                      className="mr-2 w-full"
+                      className="mr-2 w-full pb-3"
                       id="use_count"
+                      type="number"
                       placeholder="use_count"
-                      aria-label="use_count"
-                      {...register(`state.items[${i}].use_count`, {
-                        required: true,
-                      })}
+                      aria-label="dose_min"
+                      {...register(`state.items[${i}].use_count`, {required: "use_count is required" ,valueAsNumber: true})}
+                      invalid={errors?.state?.items?.[i]?.use_count?.message?true:false}
                       value={watchedFiles?.state?.items?.[i]?.use_count || ""}
                     />
+                     { errors?.state?.items?.[i]?.use_count?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.state?.items?.[i]?.use_count?.message}</p>}
+                      <label htmlFor="use_count">use_count</label>
+                    </FloatLabel>
                   )}
                 </div>
-                <FloatLabel className="w-full">
+                <FloatLabel className="w-full relative">
                   {watchedFiles?.state?.type == "drug" ? (
                     <>
                       <InputTextarea
                         className=" mr-2 w-full"
-                        id="description"
+                        id="descriptionitems"
                         placeholder="description"
                         rows={4}
                         cols={20}
                         {...register(`state.items[${i}].description`)}
                         value={watchedFiles?.state?.items?.[i]?.description}
+                        invalid={errors?.state?.items?.[i]?.description?.message?true:false}
                       />
-                      <label htmlFor="description">description</label>
+                      <label htmlFor="descriptionitems">description</label>
+                      { errors?.state?.items?.[i]?.description?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.state?.items?.[i]?.description?.message}</p>}
                     </>
                   ) : watchedFiles?.state?.type == "fertilizer"?  (
                     <>
@@ -566,20 +431,23 @@ export default function ProductAction() {
                         cols={20}
                         {...register(`state.items[${i}].method`)}
                         value={watchedFiles?.state?.items?.[i]?.method || ""}
+                        invalid={errors?.state?.items?.[i]?.method?.message?true:false}
                       />
                       <label htmlFor="method">method</label>
+                      { errors?.state?.items?.[i]?.method?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.state?.items?.[i]?.method?.message}</p>}
                     </>
                   ):''}
                 </FloatLabel>
               </div>
               <Button
-                className="w-2 max-w-10rem"
+                className="w-2 max-w-10rem border-round-3xl"
                 label="Delete"
                 type="button"
                 severity="danger"
                 icon="pi pi-trash"
                 onClick={() => {
                   // setValue('price', watchedFiles.price?.filter((al,index) => index !== i))
+                  // setValue(`state.items`,watchedFiles?.state?.items?.filter((al,index) => index !== i))
                   setIndexArr((state: any) =>
                     state.length > 1 ? state?.slice(0, -1) : state
                   );
@@ -591,6 +459,8 @@ export default function ProductAction() {
           <Button
             label="Add"
             type="button"
+            severity="success" 
+            className="border-round-3xl px-5"
             onClick={() => {
               setIndex(index + 1);
               setIndexArr((state) => [index + 1, ...state]);
@@ -598,6 +468,5 @@ export default function ProductAction() {
           />
         </div>
       </GlobalFrom>
-    </div>
   );
 }

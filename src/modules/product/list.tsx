@@ -11,7 +11,7 @@ export default function ProductPage() {
     const navigate = useNavigate()
     const [page,setPage] = useState<Number>(0)
     
-    const { data: product } = useQuery(["product",page], () => GetAllData("products/distribute", {limit:10,page:page / 10 +1}));
+    const { data: product } = useQuery(["products",page], () => GetAllData("products/distribute", {limit:10,page:page / 10 +1}));
     const columns = [
         {
             header: 'Image',
@@ -53,7 +53,6 @@ export default function ProductPage() {
         exportable: false,
     },
     
-    
     ]
 
     return (
@@ -65,6 +64,7 @@ export default function ProductPage() {
                 currentPage={page}
                 tableTile="Products"
                 url={'/product'}
+                deleteUrl={'products'}
                 checked={(value) => {console.log(value);
                 }}
                 pageChange={(event)=> {

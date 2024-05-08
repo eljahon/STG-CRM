@@ -4,7 +4,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-
+import { toast } from 'react-toastify';
 
 import { isFunction } from '../../type-check'
 
@@ -13,6 +13,8 @@ import { Dialog } from 'primereact/dialog';
 import { MultiSelect } from 'primereact/multiselect';
 import { useNavigate } from 'react-router-dom';
 import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
+import { DeleteData, DeleteDataId } from '../../service/global';
+import { useQueryClient } from 'react-query';
 
 interface Product {
     id: string | null;
@@ -43,21 +45,23 @@ interface ITable {
     checked: () => void,
     tableTile?: string,
     url?:string,
+    deleteUrl?:string,
     newAdd: () => void,
     totalProduct:any,
     pageChange:() => void,
     currentPage:number,
 }
 export default function GolabTable(props: ITable) {
-    const { data, columns, deleteFunction, showFunction, newAdd,url, tableTile,totalProduct,currentPage,pageChange, checked } = props;
+    const { data, columns, deleteFunction, showFunction, newAdd,url, deleteUrl,tableTile,totalProduct,currentPage,pageChange, checked } = props;
     const navigate = useNavigate()
+    const queryClient = useQueryClient()
     const isCheckEvent = () => {
 
         return isFunction(deleteFunction) || isFunction(showFunction) || false
     }
 
 
-
+    const [deleteId,setDeleteId] = useState(false)
     const [columnsList, setColumns] = useState([
         isFunction(checked) &&
         {
@@ -75,8 +79,11 @@ export default function GolabTable(props: ITable) {
                 return (
                     <React.Fragment >
                         <div className='flex'>
-                        {  <Button icon="pi pi-pencil" rounded outlined className="mr-2 ml-auto" onClick={() =>navigate(url+'/'+itemData?.id)} />}
-                        {isFunction(deleteFunction) && <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => setDeleteProductDialog(true)} />}
+                        {  <Button icon="pi pi-pencil" rounded outlined className="mr-2 ml-auto h-2rem w-2rem" onClick={() =>navigate(url+'/'+itemData?.id)} />}
+                        {isFunction(deleteFunction) && <Button icon="pi pi-trash" className='h-2rem w-2rem' rounded outlined severity="danger" onClick={() => {
+                            setDeleteProductDialog(true)
+                            setDeleteId(itemData?.id)
+                            }} />}
                         </div>
                     </React.Fragment>
 
@@ -88,18 +95,18 @@ export default function GolabTable(props: ITable) {
     const [deleteProductDialog, setDeleteProductDialog] = useState<boolean>(false);
     const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
     const [globalFilter, setGlobalFilter] = useState<string>('');
-    const toast = useRef<Toast>(null);
+    const toasts = useRef<Toast>(null);
  
 
     const dt = useRef<DataTable<Product[]>>(null);
 
 
     const header = (
-        <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            {tableTile && <h4 className="m-0">{tableTile}</h4>}
-            <div className="flex flex-wrap gap-2">
-                {isFunction(newAdd) && <Button label="New" icon="pi pi-plus" severity="success" onClick={newAdd} />}
-                {isFunction(checked) && <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={() => setDeleteProductDialog(true)} disabled={!selectedProducts || !selectedProducts.length} />}
+        <div className="flex flex-wrap gap-2 align-items-center justify-content-between border-none">
+            {tableTile && <h4 className="m-0 text-3xl">{tableTile}</h4>}
+            <div className="flex flex-wrap gap-2  ">
+                {isFunction(newAdd) && <Button className='border-round-3xl px-4' label="New" icon="pi pi-plus" severity="success" onClick={newAdd} />}
+                {/* {isFunction(checked) && <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={() => setDeleteProductDialog(true)} disabled={!selectedProducts || !selectedProducts.length} />} */}
             </div>
         </div>
     );
@@ -107,36 +114,28 @@ export default function GolabTable(props: ITable) {
     const deleteProductDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined   onClick={()=>setDeleteProductDialog(false)}  />
-            <Button label="Yes" icon="pi pi-check" severity="danger"  onClick={()=>console.log("deleted")}  />
+            <Button label="Yes" icon="pi pi-check" severity="danger"  onClick={async (e)=>{
+                await DeleteDataId(deleteUrl,deleteId)
+                .then(()=>{
+                    toast.success("deleted")
+                    setDeleteProductDialog(false)
+                    queryClient.invalidateQueries([deleteUrl])
+                })
+                .catch(()=>toast.error('something want wrong'))
+            }}  />
         </React.Fragment>
     );
 
-    const representativesItemTemplate = (option:any) => {
-        return (
-            <div className="flex align-items-center gap-2">
-                   {option.name}
-            </div>
-        );
-    };
+
  
-
-    const representativeFilterTemplate = (options: any) => {
-        return <MultiSelect
-         value={options.value} 
-         options={[{id:1,name:'hello'},{id:1,name:'hello'},{id:1,name:'hello'}]}
-          itemTemplate={representativesItemTemplate} 
-          onChange={(e)=>console.log(e)} 
-          optionLabel="name"
-           placeholder="Any"
-            className="p-column-filter"
-             />;
-    };
-
     return (
         <div>
-            <Toast ref={toast} />
+            <Toast ref={toasts} />
             <div className="card mt-4" >
-                <DataTable ref={dt} value={data} selection={selectedProducts}
+                <DataTable 
+                    ref={dt} 
+                    value={data}
+                    selection={selectedProducts} 
                     onSelectionChange={isFunction(checked) ? (e) => {
                         if (Array.isArray(e.value)) {
                             checked(e.value)
@@ -148,9 +147,7 @@ export default function GolabTable(props: ITable) {
                     header={header}
                     selectionMode="multiple"
                 >
-
                     {columnsList?.map((e: any) => (
-                        
                         <Column key={e.id} {...e}></Column>
                     ))}
                     {/* <Column header="Agent" filterField="representative" showFilterMatchModes={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
@@ -163,19 +160,20 @@ export default function GolabTable(props: ITable) {
             </div>
 
             <Dialog
-             visible={deleteProductDialog} 
+                visible={deleteProductDialog} 
                 style={{ width: '32rem' }}
-             breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
-             header="Confirm" 
-             modal 
-             footer={deleteProductDialogFooter}
+                breakpoints={{ '960px': '75vw', '641px': '90vw' }} 
+                header="Confirm" 
+                modal 
+                footer={deleteProductDialogFooter}
                 onHide={()=>setDeleteProductDialog(false)}
+                
               >
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     {true && (
                         <span>
-                            Are you sure you want to delete <b>product.name</b>?
+                            Are you sure you want to delete  this product
                         </span>
                     )}
                 </div>
