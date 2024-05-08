@@ -10,7 +10,7 @@ import { useState } from "react";
 export default function ProductPage() {
     const navigate = useNavigate()
     const [page,setPage] = useState<Number>(0)
-    
+    const company = window.localStorage.getItem('company')
     const { data: product } = useQuery(["products",page], () => GetAllData("products/distribute", {limit:10,page:page / 10 +1}));
     const columns = [
         {
@@ -71,7 +71,14 @@ export default function ProductPage() {
                     setPage(event.first)
                 }}
                 deleteFunction={(rowItem) => {console.log(rowItem)}}    
-                newAdd={() => navigate('/product/new')}
+                newAdd={() => {
+                    if(company  && company !="undefined"){
+                        navigate('/product/new')
+                    } else{
+                        navigate('/compony/new')
+                    }
+                  
+                }}
             />
         </>
     )

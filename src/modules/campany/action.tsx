@@ -24,24 +24,24 @@ export default function CampanySetPage() {
 
   const watchedFiles = watch();
   const [image, setImage] = useState<any>();
-
-  const { data } = useQuery("meFor", () => GetAllData("users/me",{populate:"*"}));
-  const companies = data?.companies?.[0]
+  const company = window.localStorage.getItem('company')
+  const { data:companies } = useQuery("meFor", () => GetAllData("my-company",{populate:"*"}));
+  console.log(companies)
   useEffect(()=>{
      setValue("description",companies?.description)
      setValue("name",companies?.name)
      setValue("phone",companies?.phone)
     if(companies?.logo) {
-      setValue("logo",companies?.logo)
-      // setImage(companies?.logo)
+      setValue("logo",companies?.logo?.id)
+      setImage(companies?.logo?.aws_path)
     }
   },[companies])
   return (
       <GlobalFrom
         handleSubmit={handleSubmit}
         reset={reset}
-        url={"company"}
-        navUrl={'/company/new'}
+        url={company  && company !="undefined"? "update-company" :"create-company"}
+        navUrl={ '/compony/old'}
         title={`Company`}
       >
     <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 justify-content-between">
@@ -97,7 +97,7 @@ export default function CampanySetPage() {
          fieldName={"logo"}
         />
       </div>
-      <FloatLabel className="w-full relative">
+      {/* <FloatLabel className="w-full relative">
           <InputTextarea
             className=" mr-2 w-full"
             id="about"
@@ -111,7 +111,7 @@ export default function CampanySetPage() {
           <label htmlFor="about">about</label>
           { errors?.about?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.about?.message}</p>}
                  
-        </FloatLabel>
+        </FloatLabel> */}
     </div>
   </GlobalFrom>
   )

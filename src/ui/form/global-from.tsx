@@ -3,7 +3,7 @@ import { useQueryClient } from 'react-query';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import paramsToObject  from "../../hooks/paramsToObject"
-import { AddData, UpdateData } from '../../service/global';
+import { AddData, UpdateData, UpdateDataOne } from '../../service/global';
 import { Button } from 'primereact/button';
 
 interface IForm {
@@ -36,20 +36,32 @@ export default function GlobalFrom({
             .then((response) => {
               toast.success("seccessfully create")
               navigate(navUrl)
-              reset()
+              // reset()
             })
             .catch((error:any) => {
               toast.error(error?.response?.data?.error?.message)
             })
             .finally(()=> setLoader(false));
+        }else if(id =="old"){
+          await UpdateDataOne(url, data)
+        .then((response) => {
+          toast.success("seccessfully update")
+        
+          navigate(navUrl)
+          if(setfile?.length){
+            setfile(null)
+          }
+        })
+        .catch((error) => {
+          
+          toast.error(error?.response?.data?.error?.message)
+        })
+        .finally(()=> setLoader(false));
         } else  {
       await UpdateData(url, data, id)
         .then((response) => {
           toast.success("seccessfully update")
-          setSearchParams({
-            ...paramsToObject(params.entries()),
-            openMadal: "",
-          })
+      
           navigate(navUrl)
           reset()
           if(setfile?.length){
@@ -77,3 +89,4 @@ export default function GlobalFrom({
     </form>
   )
 }
+

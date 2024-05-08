@@ -31,7 +31,7 @@ export default function LoginFrom() {
         await AuthLogin(data)
             .then((response: any) => {
                 window.localStorage.setItem('authToken',response?.data?.token)
-                navigate(`/dashboard`);
+                navigate(`/product`);
                 // toast.seccess("login seccess!")
             })
             .catch((error: any) => {

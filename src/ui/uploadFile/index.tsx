@@ -20,11 +20,10 @@ export default function UploadFile({setValue,fieldName,value,className}:any) {
   };
 
   const hendleRemoveimg = async (e: any) => {
-        setValue(fieldName,null)
-        setImage(null)
-
-    
+      setValue(fieldName,null)
+      setImage(null)
   };
+  
   return (
     <div className={`w-full ${className && className}`}>
       {loadingFile  ? (
@@ -42,7 +41,7 @@ export default function UploadFile({setValue,fieldName,value,className}:any) {
                       <i className="pi pi-trash" style={{ fontSize: "1.4rem",color:"white" }} />
                       </span>
                       </div>
-                      <img  className="w-full" style={{"maxWidth":"200px"}} src={import.meta.env.VITE_APP_AWS_PATH + image} width={200} height={120} />
+                      <img  className="w-full" style={{"maxWidth":"200px","objectFit":"contain"}} src={import.meta.env.VITE_APP_AWS_PATH + image} width={200} height={120} />
                   </div>
                 <span
                   style={{

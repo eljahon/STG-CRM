@@ -32,6 +32,10 @@ export const UpdateData = async (url:string, data:any, id:any) => {
   const response = await api.put(`/${url}/${id}`, data);
   return response;
 };
+export const UpdateDataOne = async (url:string, data:any) => {
+  const response = await api.put(`/${url}`, data);
+  return response;
+};
 
 export const DeleteDataId = async (url:string, id:string) => {
     const response = await api.delete(`/${url}/${id}`,);

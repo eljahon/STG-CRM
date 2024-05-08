@@ -14,7 +14,7 @@ import { ProductActionRoute, ProductRoute } from "./product/route";
 
 const routes = [
     //   ...notFound,
-    ...DashboardRoute,
+    // ...DashboardRoute,
     // ...CrudRoute,
     ...ProductRoute,
     ...ProductActionRoute,

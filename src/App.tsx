@@ -20,12 +20,13 @@ function App() {
           if (res.status == '200') {
             setIsAtuh(true)
           }
+          window.localStorage.setItem('company',res?.data?.company)
         })
         .catch((error) => {
-          if (error?.response?.status == '403') {
-            navigate('/auth/login')
-            window.location.reload()
-          }
+          navigate('/auth/login')
+          window.location.reload()
+          // if (error?.response?.status == '403') {
+          // }
         })
         .finally(()=>setLoading(false))
     }
@@ -34,11 +35,11 @@ function App() {
       fetchData()
   }, [pashName])
 
- 
+
   return (
     <>
      {isAuth ? <AuthorizedRoutes /> : <UnAuthorizedRoutes />}
-    {loading? <Loader/>:""}
+      {loading? <Loader/>:""}
     </>
      
     );

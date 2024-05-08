@@ -10,7 +10,8 @@ import { Link } from "react-router-dom";
 export default function Header() {
     const [open,setOpen] = useState(false)
     const [openmadal,setOpenmadal] = useState(false)
-    
+    const company = window.localStorage.getItem('company')
+  
   useEffect(() => {
       window.addEventListener('click', ()=>setOpen(false));
   }, []);
@@ -46,7 +47,7 @@ export default function Header() {
                     <i className="pi  pi-angle-down" style={{ fontSize: '1.2rem', color: 'black' }}></i>
                     <div className={`${open? "block":"hidden"} absolute  left-0 bg-white border-round-2xl  py-2 w-full`} style={{"top":"55px","zIndex":5}}>
                         <Link to={'/'} className="no-underline " style={{"color":"black"}}><p className="py-2 px-4 m-0 hover:bg-blue-50">Profile</p></Link>
-                        <Link to={'/compony/new'} className=" no-underline " style={{"color":"black"}}><p className="py-2 px-4 m-0 hover:bg-blue-50">Compony</p></Link>
+                        <Link to={company  && company !="undefined"? '/compony/old':"/compony/new"} className=" no-underline " style={{"color":"black"}}><p className="py-2 px-4 m-0 hover:bg-blue-50">Compony</p></Link>
                         <p className="py-2 px-4 m-0 hover:bg-blue-50" onClick={()=>setOpenmadal(true)}>log out</p>
                         
                     </div>
