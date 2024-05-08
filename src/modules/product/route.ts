@@ -7,7 +7,7 @@ export const ProductRoute = [
     url: "/product",
     Element: ProductPage,
     label: "Product",
-    icon: 'pi pi-palette',
+    icon: 'pi pi-bars',
     children: [],
     meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
     hideIfchildern: true,
