@@ -26,6 +26,9 @@ const typeArr: any = [
 export default function ProductAction() {
   const { id } = useParams();
   const [diseases, setdiseases] = useState<any>([]);
+  const [cropsSet, setCropsSet] = useState<any>('');
+  const [unitsSet, setUnitsSet] = useState<any>('');
+  const [categorySet, setcategorySet] = useState<any>();
   const [index, setIndex] = useState<any>(1);
   const [indexArr, setIndexArr] = useState<any>([]);
   const [image, setImage] = useState<any>();
@@ -44,8 +47,8 @@ export default function ProductAction() {
   } = useForm();
 
   const watchedFiles = watch();
-  const { data: crops } = useQuery("crops", () => GetAllData("crops"));
-  const { data: units } = useQuery("units", () => GetAllData("units", {fields: 'name'}));
+  const { data: crops } = useQuery(["crops",cropsSet], () => GetAllData(`crops${cropsSet && `?filters[name][$contains]=${cropsSet}`}`));
+  const { data: units } = useQuery(["units",unitsSet], () => GetAllData(`units${unitsSet && `?filters[name][$contains]=${unitsSet}`}`, ));
   const { data: drugCategory } = useQuery("drugCategory", () => GetAllData("drug-categories"));
   const { data: fertilizerCategory } = useQuery("fertilizerCategory", () => GetAllData("fertilizer-categories"));
   const getDiseesesByCrop = async (crop: string) => {
@@ -156,6 +159,7 @@ export default function ProductAction() {
                       setValue("state.items", null)
                       clearErrors()
                     }}
+                    
                     options={typeArr}
                     optionLabel="name"
                     disabled={id != "new"}
@@ -178,6 +182,7 @@ export default function ProductAction() {
                        return el.value
                       },onBlur:function(){}}
                     }
+                    onFilter={(e)=>console.log(e?.filter)}
                     invalid={errors?.unit?.message?true:false}
                     placeholder={"Select Units"}
                     value={watchedFiles?.unit|| ""}
@@ -296,12 +301,14 @@ export default function ProductAction() {
                         if(watchedFiles?.state?.type == "fertilizer") setValue(`state.items[${i}].crop`, e.value);
                         getDiseesesByCrop(e.value);
                       }}
+                      onFilter={(e)=>setCropsSet(e.filter)}
                       value={watchedFiles?.state?.items?.[i]?.crop  }
                       placeholder={"Select Crops"}
                       optionValue="id"
                       options={crops?.data}
                       optionLabel="name"
                       checkmark={true}
+                      
                       highlightOnSelect={false}
                     />
                     <label htmlFor="crop"> Crops</label>
@@ -327,6 +334,7 @@ export default function ProductAction() {
                           options={diseases}
                           optionLabel="name"
                           checkmark={true}
+                          
                           highlightOnSelect={false}
                         />
                           { errors?.state?.items?.[i]?.disease?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{errors?.state?.items?.[i]?.disease?.message}</p>}
@@ -376,12 +384,14 @@ export default function ProductAction() {
                             onBlur:function(){}}
                           }
                           invalid={errors?.state?.items?.[i]?.unit?.message?true:false}
-                          value={watchedFiles?.state?.items?.[i]?.unit}
+                          value={watchedFiles?.state?.items?.[i]?.unit }
+                          
                           placeholder={"Select Units"}
                           optionValue="id"
                           options={units?.data}
                           optionLabel="name"
                           checkmark={true}
+                          onFilter={(e)=>setUnitsSet(e.filter)}
                           highlightOnSelect={false}
                         />
                           { errors?.state?.items?.[i]?.unit?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{errors?.state?.items?.[i]?.unit?.message}</p>}
