@@ -1,6 +1,5 @@
 import axios from "axios";
 import { QueryClient } from "react-query";
-import Cookies from 'js-cookie';
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BACKEND_URL,
   headers: {
@@ -12,7 +11,6 @@ const api = axios.create({
 api.interceptors.request.use(
   (config:any) => {
     const isPublicApi = window.localStorage.getItem("authToken")
-    console.log(isPublicApi)
     if (isPublicApi) {
       config.headers["Authorization"] = `Bearer ${isPublicApi}`;
     }

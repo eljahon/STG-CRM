@@ -7,14 +7,14 @@
 }
  
 body{
-  background-color: #f4f4f4;
+  background-color: #F4F9FD;
+  padding-top: 20px;
 }
 .Container{
   width: 100%;
   max-width: 1640px !important;
   margin: 0 auto;
   padding: 0 20px;
- 
 }
 
 .sroll::-webkit-scrollbar {
@@ -30,4 +30,22 @@ body{
 }
 .imageFlex:hover div{
   top: 0 !important;
+}
+.p-datatable-header{
+  border: none !important;
+  background: transparent !important;
+}
+
+.p-datatable-thead > tr > th{
+  background: white !important;
+  padding-top: 25px !important;
+  padding-bottom: 25px !important;
+}
+.p-datatable-wrapper{
+  border-top-left-radius: 20px !important;
+  border-top-right-radius: 20px!important;
+}
+.p-paginator{
+  border-bottom-left-radius: 20px !important;
+  border-bottom-right-radius: 20px!important;
 }

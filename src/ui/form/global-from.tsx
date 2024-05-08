@@ -39,7 +39,7 @@ export default function GlobalFrom({
               reset()
             })
             .catch((error:any) => {
-              toast.error(error?.response?.data?.message ||"Error creating")
+              toast.error(error?.response?.data?.error?.message)
             })
             .finally(()=> setLoader(false));
         } else  {
@@ -58,8 +58,7 @@ export default function GlobalFrom({
         })
         .catch((error) => {
           
-          console.log(error)
-          toast.error(error?.response?.data?.message)
+          toast.error(error?.response?.data?.error?.message)
         })
         .finally(()=> setLoader(false));
     }
@@ -67,11 +66,11 @@ export default function GlobalFrom({
   return (
     <form  onSubmit={handleSubmit(handleAdd) }
     >
-    <div className='flex w-full justify-content-between align-items-center px-4 py-1 my-2 my-4 mb-6 bg-white border-round-md'> 
-      <h3>{title}</h3>
-      <div className='flex gap-2 '>
-      <Button label="Add" type='submit' />
-      <Button label="Cancel" severity="secondary"  type='button'/>
+      <div className='flex w-full justify-content-between align-items-center  px-2  mt-5 mb-4'> 
+      <h3 className="m-0 text-2xl">{title}</h3>
+      <div className='flex gap-2  '>
+      <Button className='border-round-3xl px-4' label="Add" type='submit'  severity="success" />
+      <Button className='border-round-3xl px-4'  label="Cancel" severity="secondary"  type='button' onClick={()=> navigate(navUrl)}/>
       </div>
     </div>
       {children}

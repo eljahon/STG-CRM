@@ -45,24 +45,12 @@ export default function RouterDemo() {
                 template: (item) => itemRenderer(item)
             }
         )),
-        {
-            template: () => {
-                return (
-                   <div className='mt-auto mx-4 cursor-pointer'  onClick={()=>{
-                        window.localStorage.clear('authToken')
-                        window.location.reload();
-                     }}>
-                      <span className='pi pi-sign-out'/>
-                       <span className='ml-1 '> Log out</span> 
-                    </div>
-                );
-            }
-        },
+      
     ];
 
     return (
-        <div className='w-full max-w-15rem '>
-            <Menu model={items} className='w-full' style={{ "height": '96vh' }} />
+        <div className='w-full max-w-13rem '>
+            <Menu model={items} className='w-full border-round-3xl  border-none' style={{ "height": '96vh' }} />
         </div>
     )
 }

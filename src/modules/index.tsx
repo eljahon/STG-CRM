@@ -1,4 +1,5 @@
 
+import { CampanyActionRoute } from "./campany/route";
 import { CrudRoute } from "./crud/route";
 import { DashboardRoute } from "./dashboard/route";
 import { ProductActionRoute, ProductRoute } from "./product/route";
@@ -16,7 +17,8 @@ const routes = [
     ...DashboardRoute,
     // ...CrudRoute,
     ...ProductRoute,
-    ...ProductActionRoute
+    ...ProductActionRoute,
+    ...CampanyActionRoute
 ];
 const rolename = "SuperAdmin";
 export const filteredRoutes = routes.filter(async (el) => {

@@ -79,8 +79,8 @@ export default function GolabTable(props: ITable) {
                 return (
                     <React.Fragment >
                         <div className='flex'>
-                        {  <Button icon="pi pi-pencil" rounded outlined className="mr-2 ml-auto" onClick={() =>navigate(url+'/'+itemData?.id)} />}
-                        {isFunction(deleteFunction) && <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => {
+                        {  <Button icon="pi pi-pencil" rounded outlined className="mr-2 ml-auto h-2rem w-2rem" onClick={() =>navigate(url+'/'+itemData?.id)} />}
+                        {isFunction(deleteFunction) && <Button icon="pi pi-trash" className='h-2rem w-2rem' rounded outlined severity="danger" onClick={() => {
                             setDeleteProductDialog(true)
                             setDeleteId(itemData?.id)
                             }} />}
@@ -102,10 +102,10 @@ export default function GolabTable(props: ITable) {
 
 
     const header = (
-        <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            {tableTile && <h4 className="m-0">{tableTile}</h4>}
-            <div className="flex flex-wrap gap-2">
-                {isFunction(newAdd) && <Button label="New" icon="pi pi-plus" severity="success" onClick={newAdd} />}
+        <div className="flex flex-wrap gap-2 align-items-center justify-content-between border-none">
+            {tableTile && <h4 className="m-0 text-3xl">{tableTile}</h4>}
+            <div className="flex flex-wrap gap-2  ">
+                {isFunction(newAdd) && <Button className='border-round-3xl px-4' label="New" icon="pi pi-plus" severity="success" onClick={newAdd} />}
                 {/* {isFunction(checked) && <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={() => setDeleteProductDialog(true)} disabled={!selectedProducts || !selectedProducts.length} />} */}
             </div>
         </div>
@@ -119,39 +119,23 @@ export default function GolabTable(props: ITable) {
                 .then(()=>{
                     toast.success("deleted")
                     setDeleteProductDialog(false)
-                    queryClient.invalidateQueries([urdeleteUrll])
+                    queryClient.invalidateQueries([deleteUrl])
                 })
                 .catch(()=>toast.error('something want wrong'))
             }}  />
         </React.Fragment>
     );
 
-    const representativesItemTemplate = (option:any) => {
-        return (
-            <div className="flex align-items-center gap-2">
-                   {option.name}
-            </div>
-        );
-    };
+
  
-
-    const representativeFilterTemplate = (options: any) => {
-        return <MultiSelect
-         value={options.value} 
-         options={[{id:1,name:'hello'},{id:1,name:'hello'},{id:1,name:'hello'}]}
-          itemTemplate={representativesItemTemplate} 
-          onChange={(e)=>console.log(e)} 
-          optionLabel="name"
-           placeholder="Any"
-            className="p-column-filter"
-             />;
-    };
-
     return (
         <div>
             <Toast ref={toasts} />
             <div className="card mt-4" >
-                <DataTable ref={dt} value={data} selection={selectedProducts}
+                <DataTable 
+                    ref={dt} 
+                    value={data}
+                    selection={selectedProducts} 
                     onSelectionChange={isFunction(checked) ? (e) => {
                         if (Array.isArray(e.value)) {
                             checked(e.value)
@@ -163,9 +147,7 @@ export default function GolabTable(props: ITable) {
                     header={header}
                     selectionMode="multiple"
                 >
-
                     {columnsList?.map((e: any) => (
-                        
                         <Column key={e.id} {...e}></Column>
                     ))}
                     {/* <Column header="Agent" filterField="representative" showFilterMatchModes={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
@@ -191,7 +173,7 @@ export default function GolabTable(props: ITable) {
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     {true && (
                         <span>
-                            Are you sure you want to delete <b>product.name</b>?
+                            Are you sure you want to delete  this product
                         </span>
                     )}
                 </div>
