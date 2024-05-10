@@ -27,4 +27,4 @@ jobs:
           REMOTE_USER: ${{ secrets.USERNAME }}
           REMOTE_PORT: ${{ secrets.PORT }}
           SOURCE: "dist/"
-          TARGET: "/var/www/marker_admin_develop"
+          TARGET: "/var/www/market_admin_develop"
