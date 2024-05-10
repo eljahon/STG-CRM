@@ -3,7 +3,6 @@ import { Dialog } from "primereact/dialog";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
-import { PanelMenu } from "primereact/panelmenu";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -21,7 +20,7 @@ export default function Header() {
     <React.Fragment>
         <Button label="No" icon="pi pi-times" outlined   onClick={()=>setOpenmadal(false)}  />
         <Button label="Yes" icon="pi pi-check" severity="danger"  onClick={()=>{
-                        window.localStorage.clear('authToken')
+                        window.localStorage.removeItem('authToken')
                         window.location.reload();
                      }}  />
     </React.Fragment>

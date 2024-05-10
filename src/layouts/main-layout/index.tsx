@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import HeadlessDemo from "./ui/app-topbar/index";
 import Header from "./ui/header/index";
 import TemplateDemo from "./ui/site-bar/index";
 

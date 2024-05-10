@@ -1,4 +1,3 @@
-import {React} from 'react'
 import { Routes, Route } from "react-router-dom";
 import { filteredRoutes } from "../modules/index";
 import { Fragment } from "react";

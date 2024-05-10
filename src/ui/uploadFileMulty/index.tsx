@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { ImageUpload } from '../../utils/uplaoadFile';
 
 export default function UploadFileMulty({setValue,fieldName,value=[],valueId=[],className}:any) {

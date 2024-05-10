@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { AuthorizedRoutes, UnAuthorizedRoutes } from "./router/index";
 import { GetMe } from "./service/global";
 import { useLocation, useNavigate } from "react-router-dom";
-import GlobalLoader from "./ui/global-loader";
 import Loader from "./ui/loader";
 
 

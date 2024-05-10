@@ -1,7 +1,4 @@
-
 import { CampanyActionRoute } from "./campany/route";
-import { CrudRoute } from "./crud/route";
-import { DashboardRoute } from "./dashboard/route";
 import { ProductActionRoute, ProductRoute } from "./product/route";
 // const notFound = [
 //   {
@@ -13,14 +10,14 @@ import { ProductActionRoute, ProductRoute } from "./product/route";
 // ];
 
 const routes = [
-    //   ...notFound,
-    // ...DashboardRoute,
-    // ...CrudRoute,
-    ...ProductRoute,
-    ...ProductActionRoute,
-    ...CampanyActionRoute
+  //   ...notFound,
+  // ...DashboardRoute,
+  // ...CrudRoute,
+  ...ProductRoute,
+  ...ProductActionRoute,
+  ...CampanyActionRoute
 ];
 const rolename = "SuperAdmin";
 export const filteredRoutes = routes.filter(async (el) => {
-    return await el?.meta?.role?.has(rolename);
+  return await el?.meta?.role?.has(rolename);
 });

@@ -1,6 +1,5 @@
-import React from 'react'
 import cls from "./loader.module.scss"
-export default function Loader({ onClick }: any) {
+export default function Loader() {
     return (
         <div className={cls.Loader}>
              <div>

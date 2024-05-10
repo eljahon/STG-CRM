@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function GlobalLoader() {
   return (
     <div className='h-screen w-full flex 	justify-content-center align-items-center bg-green-300'>
