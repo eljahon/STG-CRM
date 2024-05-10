@@ -17,12 +17,12 @@ function App() {
       setLoading(true)
       await GetMe()
         .then((res) => {
-          if (res.status == '200') {
+          if (res.status ==200) {
             setIsAtuh(true)
           }
           window.localStorage.setItem('company',res?.data?.company)
         })
-        .catch((error) => {
+        .catch(() => {
           navigate('/auth/login')
           window.location.reload()
           // if (error?.response?.status == '403') {
