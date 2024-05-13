@@ -1,16 +1,17 @@
+@import 'primeflex/primeflex.scss';
 
-  @import 'primeflex/primeflex.scss';
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 }
- 
-body{
+
+body {
   background-color: #F4F9FD;
   padding-top: 20px;
 }
-.Container{
+
+.Container {
   width: 100%;
   max-width: 1640px !important;
   margin: 0 auto;
@@ -20,32 +21,52 @@ body{
 .sroll::-webkit-scrollbar {
   width: 0px;
 }
-.imageFlex{
+
+.imageFlex {
   overflow: hidden;
- 
+
 }
-.imageFlex div{
+
+.imageFlex div {
   top: 200px !important;
   transition: all 0.3s ease;
 }
-.imageFlex:hover div{
+
+.imageFlex:hover div {
   top: 0 !important;
 }
-.p-datatable-header{
+
+.p-datatable-header {
   border: none !important;
   background: transparent !important;
 }
 
-.p-datatable-thead > tr > th{
+.p-datatable-thead>tr>th {
   background: white !important;
   padding-top: 25px !important;
   padding-bottom: 25px !important;
 }
-.p-datatable-wrapper{
+
+.p-datatable-wrapper {
   border-top-left-radius: 20px !important;
-  border-top-right-radius: 20px!important;
+  border-top-right-radius: 20px !important;
 }
-.p-paginator{
+
+.p-paginator {
   border-bottom-left-radius: 20px !important;
-  border-bottom-right-radius: 20px!important;
+  border-bottom-right-radius: 20px !important;
+}
+
+.p-password-show-icon {
+  right: 10px !important;
+}
+
+.label-my {
+  margin-bottom: 5px;
+  margin-top: 0;
+  font-size: 15px;
+}
+
+.p-password-hide-icon {
+  right: 10px !important;
 }
