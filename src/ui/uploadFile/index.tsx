@@ -5,6 +5,7 @@ export default function UploadFile({
   setValue,
   fieldName,
   value,
+  logo,
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
@@ -38,14 +39,20 @@ export default function UploadFile({
       ) : image ? (
         <div className="w-full flex align-items-center justify-content-center   flex-column">
           <div
-            className="w-full relative imageFlex"
-            style={{ maxWidth: "200px" }}
+            className={`w-full relative imageFlex ${
+              logo ? "border-round-2xl" : ""
+            }`}
+            style={{ maxWidth: logo ? "80px" : "200px" }}
           >
-            <div className="absolute top-0 left-0 w-full h-full bg-black-alpha-50 flex align-items-center justify-content-center gap-4">
+            <div
+              className={`absolute top-0 left-0 w-full h-full bg-black-alpha-50 flex align-items-center justify-content-center  ${
+                logo ? "gap-3" : "gap-4"
+              }`}
+            >
               <span className="cursor-pointer">
                 <i
                   className="pi pi-eye"
-                  style={{ fontSize: "1.4rem", color: "white" }}
+                  style={{ fontSize: logo ? "1em" : "1.4em", color: "white" }}
                 />
               </span>
               <span
@@ -54,16 +61,19 @@ export default function UploadFile({
               >
                 <i
                   className="pi pi-trash"
-                  style={{ fontSize: "1.4rem", color: "white" }}
+                  style={{ fontSize: logo ? "1em" : "1.4em", color: "white" }}
                 />
               </span>
             </div>
             <img
-              className="w-full"
-              style={{ maxWidth: "200px", objectFit: "contain" }}
+              className={`w-full ${logo ? "border-round-2xl" : ""}`}
+              style={{
+                maxWidth: logo ? "80px" : "200px",
+                objectFit: "cover"
+              }}
               src={import.meta.env.VITE_APP_AWS_PATH + image}
               width={200}
-              height={120}
+              height={logo ? 80 : 120}
             />
           </div>
           <span

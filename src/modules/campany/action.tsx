@@ -29,7 +29,7 @@ export default function CampanySetPage() {
   const { data: companies } = useQuery("meFor", () =>
     GetAllData("my-company", { populate: "*" })
   );
-  console.log(companies);
+
   useEffect(() => {
     setValue("description", companies?.description);
     setValue("name", companies?.name);
@@ -43,6 +43,8 @@ export default function CampanySetPage() {
     <GlobalFrom
       handleSubmit={handleSubmit}
       reset={reset}
+      btntext={"Save"}
+      cancel={"Cancel"}
       url={
         company && company != "undefined" ? "update-company" : "create-company"
       }
@@ -52,8 +54,8 @@ export default function CampanySetPage() {
       <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 justify-content-between">
         <div className="w-8 ">
           <div className="flex gap-3 w-full mb-5">
-            {/* FloatLabel */}
             <div className="w-full relative">
+              <p className="label-my">Company name</p>
               <InputText
                 className=" mr-2 w-full"
                 id="name"
@@ -68,10 +70,9 @@ export default function CampanySetPage() {
                   {errors?.name?.message}
                 </p>
               )}
-              {/* <label htmlFor="name">Company name</label> */}
             </div>
-            {/* FloatLabel */}
             <div className="w-full relative">
+              <p className="label-my">Phone number</p>
               <InputText
                 className=" mr-2 w-full"
                 id="phone"
@@ -86,11 +87,10 @@ export default function CampanySetPage() {
                   {errors?.phone?.message}
                 </p>
               )}
-              {/* <label htmlFor="phone">Company phone</label> */}
             </div>
           </div>
-          {/* FloatLabel */}
           <div className="w-full relative">
+            <p className="label-my">Description</p>
             <InputTextarea
               className=" mr-2 w-full"
               id="description"
@@ -101,7 +101,6 @@ export default function CampanySetPage() {
               value={watchedFiles?.description || ""}
               invalid={errors?.description?.message ? true : false}
             />
-            {/* <label htmlFor="description">description</label> */}
             {errors?.description?.message && (
               <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
                 {errors?.description?.message}
@@ -110,24 +109,8 @@ export default function CampanySetPage() {
           </div>
         </div>
         <div className="flex gap-3 w-3">
-          <UploadFile setValue={setValue} value={image} fieldName={"logo"} />
+          <UploadFile setValue={setValue} logo={true} value={image} fieldName={"logo"} />
         </div>
-        {/* FloatLabel{/*  */}
-        {/* <div className="w-full relative">
-          <InputTextarea
-            className=" mr-2 w-full"
-            id="about"
-            placeholder="about"
-            rows={4}
-            cols={20}
-            {...register(`about`)}
-            value={watchedFiles?.about || ""}
-            invalid={errors?.about?.message?true:false}
-          />
-          <label htmlFor="about">about</label>
-          { errors?.about?.message &&<p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">{ errors?.about?.message}</p>}
-                 
-        </div>  */}
       </div>
     </GlobalFrom>
   );

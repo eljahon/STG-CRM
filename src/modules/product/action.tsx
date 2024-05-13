@@ -184,6 +184,7 @@ export default function ProductAction() {
       reset={reset}
       url={"products"}
       navUrl={"/product"}
+      cancel={"Cancel"}
       title={`Product ${id == "new" ? "Add" : "Update"}`}
     >
       <div className="flex gap-4 ">

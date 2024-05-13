@@ -12,6 +12,8 @@ interface IForm {
   url: string;
   title?: string;
   navUrl?: any;
+  btntext?: any;
+  cancel?: any;
 }
 export default function GlobalFrom({
   children,
@@ -20,7 +22,9 @@ export default function GlobalFrom({
   setfile,
   url,
   title,
-  navUrl
+  navUrl,
+  cancel,
+  btntext
 }: IForm) {
   const { id } = useParams();
   const [loader, setLoader] = useState<boolean>(false);
@@ -28,7 +32,7 @@ export default function GlobalFrom({
   const navigate = useNavigate();
   const handleAdd = async (data: any) => {
     setLoader(true);
-    if (id == "new") {
+    if (id == "new" || !id) {
       await AddData(url, data)
         .then(() => {
           toast.success("seccessfully create");
@@ -43,7 +47,6 @@ export default function GlobalFrom({
       await UpdateDataOne(url, data)
         .then(() => {
           toast.success("seccessfully update");
-
           navigate(navUrl);
           if (setfile?.length) {
             setfile(null);
@@ -77,17 +80,19 @@ export default function GlobalFrom({
         <div className="flex gap-2  ">
           <Button
             className="border-round-3xl px-4"
-            label="Add"
+            label={btntext || "Add"}
             type="submit"
             severity="success"
           />
-          <Button
-            className="border-round-3xl px-4"
-            label="Cancel"
-            severity="secondary"
-            type="button"
-            onClick={() => navigate(navUrl)}
-          />
+          {cancel && (
+            <Button
+              className="border-round-3xl px-4"
+              label={cancel}
+              severity="secondary"
+              type="button"
+              onClick={() => navigate(navUrl)}
+            />
+          )}
         </div>
       </div>
       {children}
