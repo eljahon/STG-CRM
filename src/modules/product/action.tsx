@@ -71,14 +71,27 @@ export default function ProductAction() {
     formState: { errors }
   } = useForm<FormData>();
 
+  const debounce = <F extends (...args: any[]) => any>(
+    func: F,
+    delay: number
+  ): ((...args: Parameters<F>) => void) => {
+    let timerId: any;
+    return (...args: Parameters<F>) => {
+      clearTimeout(timerId);
+      timerId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
+
   const { setValue: setValuetest, watch: watchTest } = useForm<any>();
   const watchedFiles = watch();
   const watchedTestFiles = watchTest();
   const { data: crops } = useQuery(["crops", cropsSet], () =>
-    GetAllData(`crops${cropsSet && `?filters[name][$contains]=${cropsSet}`}`)
+    GetAllData(`crops${cropsSet && `?filters[name][$containsi]=${cropsSet}`}`)
   );
   const { data: units } = useQuery(["units", unitsSet], () =>
-    GetAllData(`units${unitsSet && `?filters[name][$contains]=${unitsSet}`}`)
+    GetAllData(`units${unitsSet && `?filters[name][$containsi]=${unitsSet}`}`)
   );
   const { data: drugCategory } = useQuery("drugCategory", () =>
     GetAllData("drug-categories")
@@ -86,8 +99,16 @@ export default function ProductAction() {
   const { data: fertilizerCategory } = useQuery("fertilizerCategory", () =>
     GetAllData("fertilizer-categories")
   );
-  const getDiseesesByCrop = async (crop: string) => {
-    await GetAllData(`diseases${crop && `?filters[crop]=${crop}`}`)
+  const getDiseesesByCrop = async (crop?: string, diseases?: string) => {
+    await GetAllData(
+      `diseases${
+        crop
+          ? `?filters[crop]=${crop}`
+          : diseases
+          ? `?filters[name][$containsi]=${diseases}`
+          : ""
+      }`
+    )
       .then((e) => {
         setdiseases(e?.data);
       })
@@ -282,7 +303,13 @@ export default function ProductAction() {
                     },
                     onBlur: function () {}
                   }}
-                  onFilter={(e) => console.log(e?.filter)}
+                  filterTemplate={() => (
+                    <InputText
+                      onChange={debounce((e) => {
+                        setUnitsSet(e.target.value);
+                      }, 700)}
+                    />
+                  )}
                   invalid={errors?.unit?.message ? true : false}
                   placeholder={"Select Units"}
                   value={watchedFiles?.unit || ""}
@@ -412,7 +439,7 @@ export default function ProductAction() {
         </div>
       </div>
 
-      <div className="p-4 bg-white border-round-3xl mt-4">
+      <div className="p-4 bg-white border-round-3xl mt-4 mb-8">
         {indexArr?.map((_: any, i: any) => {
           return (
             <div key={i} className="flex align-items-center gap-6 mb-4">
@@ -432,7 +459,13 @@ export default function ProductAction() {
                           setValuetest(`state.items[${i}].crop`, e.value);
                         }
                       }}
-                      onFilter={(e) => setCropsSet(e.filter)}
+                      filterTemplate={() => (
+                        <InputText
+                          onChange={debounce((e) => {
+                            setCropsSet(e.target.value);
+                          }, 700)}
+                        />
+                      )}
                       value={
                         watchedFiles?.state?.items?.[i]?.crop ||
                         watchedTestFiles?.state?.items?.[i]?.crop
@@ -453,6 +486,13 @@ export default function ProductAction() {
                       <Dropdown
                         filter
                         id="disease"
+                        filterTemplate={() => (
+                          <InputText
+                            onChange={debounce((e) => {
+                              getDiseesesByCrop("", e.target.value);
+                            }, 700)}
+                          />
+                        )}
                         className=" mr-2 w-full"
                         {...{
                           ...register(`state.items[${i}].disease`, {
@@ -579,7 +619,13 @@ export default function ProductAction() {
                       options={units?.data}
                       optionLabel="name"
                       checkmark={true}
-                      onFilter={(e) => setUnitsSet(e.filter)}
+                      filterTemplate={() => (
+                        <InputText
+                          onChange={debounce((e) => {
+                            setUnitsSet(e.target.value);
+                          }, 700)}
+                        />
+                      )}
                       highlightOnSelect={false}
                     />
                     {(errors as any)?.state?.items?.[i]?.unit?.message && (
