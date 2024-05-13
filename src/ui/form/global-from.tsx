@@ -28,7 +28,6 @@ export default function GlobalFrom({
 }: IForm) {
   const { id } = useParams();
   const [loader, setLoader] = useState<boolean>(false);
-  console.log(loader);
   const navigate = useNavigate();
   const handleAdd = async (data: any) => {
     setLoader(true);
@@ -96,6 +95,7 @@ export default function GlobalFrom({
         </div>
       </div>
       {children}
+      {loader && "."}
     </form>
   );
 }

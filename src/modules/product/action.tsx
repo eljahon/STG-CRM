@@ -71,7 +71,9 @@ export default function ProductAction() {
     formState: { errors }
   } = useForm<FormData>();
 
+  const { setValue: setValuetest, watch: watchTest } = useForm<any>();
   const watchedFiles = watch();
+  const watchedTestFiles = watchTest();
   const { data: crops } = useQuery(["crops", cropsSet], () =>
     GetAllData(`crops${cropsSet && `?filters[name][$contains]=${cropsSet}`}`)
   );
@@ -133,51 +135,64 @@ export default function ProductAction() {
             e?.data?.state?.items?.forEach((_: any, i: number) => {
               if (!indexArr.length)
                 setIndexArr((state: any) => [i + 1, ...state]);
-              if (e?.data?.state?.items?.[i]?.crop)
+              if (e?.data?.state?.items?.[i]?.crop) {
                 setValue(
                   `state.items[${i}].crop`,
                   e?.data?.state?.items?.[i]?.crop?.id
                 );
-              if (e?.data?.state?.items?.[i]?.description)
+              }
+              if (e?.data?.state?.items?.[i]?.description) {
                 setValue(
                   `state.items[${i}].description`,
                   e?.data?.state?.items?.[i]?.description
                 );
-              if (e?.data?.state?.items?.[i]?.disease)
+              }
+              if (e?.data?.state?.items?.[i]?.disease) {
                 setValue(
                   `state.items[${i}].disease`,
                   e?.data?.state?.items?.[i]?.disease?.id
                 );
-              if (e?.data?.state?.items?.[i]?.dose_max)
+              }
+              setValuetest(
+                `state.items[${i}].disease`,
+                e?.data?.state?.items?.[i]?.disease
+              );
+              if (e?.data?.state?.items?.[i]?.dose_max) {
                 setValue(
                   `state.items[${i}].dose_max`,
                   e?.data?.state?.items?.[i]?.dose_max
                 );
-              if (e?.data?.state?.items?.[i]?.dose_min)
+              }
+              if (e?.data?.state?.items?.[i]?.dose_min) {
                 setValue(
                   `state.items[${i}].dose_min`,
                   e?.data?.state?.items?.[i]?.dose_min
                 );
-              if (e?.data?.state?.items?.[i]?.unit)
+              }
+              if (e?.data?.state?.items?.[i]?.unit) {
                 setValue(
                   `state.items[${i}].unit`,
                   e?.data?.state?.items?.[i]?.unit?.id
                 );
-              if (e?.data?.state?.items?.[i]?.use_count)
+              }
+              if (e?.data?.state?.items?.[i]?.use_count) {
                 setValue(
                   `state.items[${i}].use_count`,
                   e?.data?.state?.items?.[i]?.use_count
                 );
-              if (e?.data?.state?.items?.[i]?.method)
+              }
+              if (e?.data?.state?.items?.[i]?.method) {
                 setValue(
                   `state.items[${i}].method`,
                   e?.data?.state?.items?.[i]?.method
                 );
+              }
             });
         })
         .catch((errors) => console.log(errors));
     }
   }, [id]);
+
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
@@ -398,259 +413,290 @@ export default function ProductAction() {
       </div>
 
       <div className="p-4 bg-white border-round-3xl mt-4">
-        {indexArr?.map((_: any, i: any) => (
-          <div key={i} className="flex align-items-center gap-6 mb-4">
-            <div className="w-10">
-              <div className="flex mb-4 gap-2">
-                {/* floatLabel */}
-                <div className="w-full">
-                  <Dropdown
-                    filter
-                    id="crop"
-                    className=" mr-2 w-full md:w-full"
-                    onChange={(e) => {
-                      if (watchedFiles?.state?.type == "fertilizer")
-                        setValue(`state.items[${i}].crop`, e.value);
-                      getDiseesesByCrop(e.value);
-                    }}
-                    onFilter={(e) => setCropsSet(e.filter)}
-                    value={watchedFiles?.state?.items?.[i]?.crop}
-                    placeholder={"Select Crops"}
-                    optionValue="id"
-                    options={crops?.data}
-                    optionLabel="name"
-                    checkmark={true}
-                    highlightOnSelect={false}
-                  />
-                  {/* <label htmlFor="crop"> Crops</label> */}
-                </div>
+        {indexArr?.map((_: any, i: any) => {
+          return (
+            <div key={i} className="flex align-items-center gap-6 mb-4">
+              <div className="w-10">
+                <div className="flex mb-4 gap-2">
+                  {/* floatLabel */}
+                  <div className="w-full">
+                    <Dropdown
+                      filter
+                      id="crop"
+                      className=" mr-2 w-full md:w-full"
+                      onChange={(e) => {
+                        if (watchedFiles?.state?.type == "fertilizer") {
+                          setValue(`state.items[${i}].crop`, e.value);
+                        } else {
+                          getDiseesesByCrop(e.value);
+                          setValuetest(`state.items[${i}].crop`, e.value);
+                        }
+                      }}
+                      onFilter={(e) => setCropsSet(e.filter)}
+                      value={
+                        watchedFiles?.state?.items?.[i]?.crop ||
+                        watchedTestFiles?.state?.items?.[i]?.crop
+                      }
+                      placeholder={"Select Crops"}
+                      optionValue="id"
+                      options={crops?.data}
+                      optionLabel="name"
+                      checkmark={true}
+                      highlightOnSelect={false}
+                    />
+                    {/* <label htmlFor="crop"> Crops</label> */}
+                  </div>
 
-                {watchedFiles?.state?.type == "drug" && (
-                  // floatLabel
+                  {watchedFiles?.state?.type == "drug" && (
+                    // floatLabel
+                    <div className="w-full relative">
+                      <Dropdown
+                        filter
+                        id="disease"
+                        className=" mr-2 w-full"
+                        {...{
+                          ...register(`state.items[${i}].disease`, {
+                            required: "disease is required"
+                          }),
+                          onChange: function (el) {
+                            setValue(`state.items[${i}].disease`, el.value);
+                            clearErrors(`state.items[${i}].disease`);
+
+                            setValuetest(
+                              `state.items[${i}].disease`,
+                              diseases.find((de: any) => de?.id == el.value)
+                            );
+                            return el.value;
+                          },
+                          onBlur: function () {}
+                        }}
+                        invalid={
+                          (errors as any)?.state?.items?.[i]?.disease?.message
+                            ? true
+                            : false
+                        }
+                        value={watchedFiles?.state?.items?.[i]?.disease}
+                        placeholder={"Select Diseases"}
+                        optionValue="id"
+                        options={
+                          watchedTestFiles?.state?.items?.[i]?.disease
+                            ? [
+                                ...diseases,
+                                watchedTestFiles?.state?.items?.[i]?.disease
+                              ]
+                            : diseases
+                        }
+                        optionLabel="name"
+                        checkmark={true}
+                        highlightOnSelect={false}
+                      />
+                      {(errors as any)?.state?.items?.[i]?.disease?.message && (
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {(errors as any)?.state?.items?.[i]?.disease?.message}
+                        </p>
+                      )}
+                      {/* <label htmlFor="disease">Diseases </label> */}
+                    </div>
+                  )}
+                  {/* floatLabel */}
+                  <div className="w-full relative">
+                    <InputText
+                      type="number"
+                      className="mr-2 w-full pb-3"
+                      id="dose_max"
+                      placeholder="dose_max"
+                      {...register(`state.items[${i}].dose_max`, {
+                        required: "dose_max is required",
+                        valueAsNumber: true
+                      })}
+                      value={watchedFiles?.state?.items?.[i]?.dose_max || ""}
+                      invalid={
+                        (errors as any)?.state?.items?.[i]?.dose_max?.message
+                          ? true
+                          : false
+                      }
+                    />
+                    {(errors as any)?.state?.items?.[i]?.dose_max?.message && (
+                      <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                        {(errors as any)?.state?.items?.[i]?.dose_max?.message}
+                      </p>
+                    )}
+                    {/* <label htmlFor="dose_max">Dose_max</label> */}
+                  </div>
+
+                  {/* floatLabel */}
+                  <div className="w-full relative">
+                    <InputText
+                      className="mr-2 w-full pb-3"
+                      id="dose_min"
+                      type="number"
+                      placeholder="dose_min"
+                      aria-label="dose_min"
+                      {...register(`state.items[${i}].dose_min`, {
+                        required: "dose_min is required",
+                        valueAsNumber: true
+                      })}
+                      invalid={
+                        (errors as any)?.state?.items?.[i]?.dose_min?.message
+                          ? true
+                          : false
+                      }
+                      value={watchedFiles?.state?.items?.[i]?.dose_min || ""}
+                    />
+                    {(errors as any)?.state?.items?.[i]?.dose_min?.message && (
+                      <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                        {(errors as any)?.state?.items?.[i]?.dose_min?.message}
+                      </p>
+                    )}
+                    {/* <label htmlFor="dose_min">dose_min</label> */}
+                  </div>
+
+                  {/* floatLabel */}
                   <div className="w-full relative">
                     <Dropdown
                       filter
-                      id="disease"
-                      className=" mr-2 w-full"
+                      id="unit"
+                      className="mr-2 w-full"
                       {...{
-                        ...register(`state.items[${i}].disease`, {
-                          required: "disease is required"
+                        ...register(`state.items[${i}].unit`, {
+                          required: "unit is required"
                         }),
                         onChange: function (el) {
-                          setValue(`state.items[${i}].disease`, el.value);
-                          clearErrors(`state.items[${i}].disease`);
+                          setValue(`state.items[${i}].unit`, el.value);
+                          clearErrors(`state.items[${i}].unit`);
                           return el.value;
                         },
                         onBlur: function () {}
                       }}
                       invalid={
-                        (errors as any)?.state?.items?.[i]?.disease?.message
+                        (errors as any)?.state?.items?.[i]?.unit?.message
                           ? true
                           : false
                       }
-                      value={watchedFiles?.state?.items?.[i]?.disease}
-                      placeholder={"Select Diseases"}
+                      value={watchedFiles?.state?.items?.[i]?.unit}
+                      placeholder={"Select Units"}
                       optionValue="id"
-                      options={diseases}
+                      options={units?.data}
                       optionLabel="name"
                       checkmark={true}
+                      onFilter={(e) => setUnitsSet(e.filter)}
                       highlightOnSelect={false}
                     />
-                    {(errors as any)?.state?.items?.[i]?.disease?.message && (
+                    {(errors as any)?.state?.items?.[i]?.unit?.message && (
                       <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                        {(errors as any)?.state?.items?.[i]?.disease?.message}
+                        {(errors as any)?.state?.items?.[i]?.unit?.message}
                       </p>
                     )}
-                    {/* <label htmlFor="disease">Diseases </label> */}
+                    {/* <label htmlFor="unit">Units </label> */}
                   </div>
-                )}
+                  {watchedFiles?.state?.type == "fertilizer" && (
+                    // floatLabel
+                    <div className="w-full relative">
+                      <InputText
+                        className="mr-2 w-full pb-3"
+                        id="use_count"
+                        type="number"
+                        placeholder="use_count"
+                        aria-label="dose_min"
+                        {...register(`state.items[${i}].use_count`, {
+                          required: "use_count is required",
+                          valueAsNumber: true
+                        })}
+                        invalid={
+                          (errors as any)?.state?.items?.[i]?.use_count?.message
+                            ? true
+                            : false
+                        }
+                        value={watchedFiles?.state?.items?.[i]?.use_count || ""}
+                      />
+                      {(errors as any)?.state?.items?.[i]?.use_count
+                        ?.message && (
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {
+                            (errors as any)?.state?.items?.[i]?.use_count
+                              ?.message
+                          }
+                        </p>
+                      )}
+                      {/* <label htmlFor="use_count">use_count</label> */}
+                    </div>
+                  )}
+                </div>
                 {/* floatLabel */}
                 <div className="w-full relative">
-                  <InputText
-                    type="number"
-                    className="mr-2 w-full pb-3"
-                    id="dose_max"
-                    placeholder="dose_max"
-                    {...register(`state.items[${i}].dose_max`, {
-                      required: "dose_max is required",
-                      valueAsNumber: true
-                    })}
-                    value={watchedFiles?.state?.items?.[i]?.dose_max || ""}
-                    invalid={
-                      (errors as any)?.state?.items?.[i]?.dose_max?.message
-                        ? true
-                        : false
-                    }
-                  />
-                  {(errors as any)?.state?.items?.[i]?.dose_max?.message && (
-                    <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                      {(errors as any)?.state?.items?.[i]?.dose_max?.message}
-                    </p>
+                  {watchedFiles?.state?.type == "drug" ? (
+                    <>
+                      <InputTextarea
+                        className=" mr-2 w-full"
+                        id="descriptionitems"
+                        placeholder="description"
+                        rows={4}
+                        cols={20}
+                        {...register(`state.items[${i}].description`)}
+                        value={watchedFiles?.state?.items?.[i]?.description}
+                        invalid={
+                          (errors as any)?.state?.items?.[i]?.description
+                            ?.message
+                            ? true
+                            : false
+                        }
+                      />
+                      {/* <label htmlFor="descriptionitems">description</label> */}
+                      {(errors as any)?.state?.items?.[i]?.description
+                        ?.message && (
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {
+                            (errors as any)?.state?.items?.[i]?.description
+                              ?.message
+                          }
+                        </p>
+                      )}
+                    </>
+                  ) : watchedFiles?.state?.type == "fertilizer" ? (
+                    <>
+                      <InputTextarea
+                        className=" mr-2 w-full"
+                        id="method"
+                        placeholder="method"
+                        rows={4}
+                        cols={20}
+                        {...register(`state.items[${i}].method`)}
+                        value={watchedFiles?.state?.items?.[i]?.method || ""}
+                        invalid={
+                          (errors as any)?.state?.items?.[i]?.method?.message
+                            ? true
+                            : false
+                        }
+                      />
+                      {/* <label htmlFor="method">method</label> */}
+                      {(errors as any)?.state?.items?.[i]?.method?.message && (
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {(errors as any)?.state?.items?.[i]?.method?.message}
+                        </p>
+                      )}
+                    </>
+                  ) : (
+                    ""
                   )}
-                  {/* <label htmlFor="dose_max">Dose_max</label> */}
                 </div>
-
-                {/* floatLabel */}
-                <div className="w-full relative">
-                  <InputText
-                    className="mr-2 w-full pb-3"
-                    id="dose_min"
-                    type="number"
-                    placeholder="dose_min"
-                    aria-label="dose_min"
-                    {...register(`state.items[${i}].dose_min`, {
-                      required: "dose_min is required",
-                      valueAsNumber: true
-                    })}
-                    invalid={
-                      (errors as any)?.state?.items?.[i]?.dose_min?.message
-                        ? true
-                        : false
-                    }
-                    value={watchedFiles?.state?.items?.[i]?.dose_min || ""}
-                  />
-                  {(errors as any)?.state?.items?.[i]?.dose_min?.message && (
-                    <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                      {(errors as any)?.state?.items?.[i]?.dose_min?.message}
-                    </p>
-                  )}
-                  {/* <label htmlFor="dose_min">dose_min</label> */}
-                </div>
-
-                {/* floatLabel */}
-                <div className="w-full relative">
-                  <Dropdown
-                    filter
-                    id="unit"
-                    className=" mr-2 w-full"
-                    {...{
-                      ...register(`state.items[${i}].unit`, {
-                        required: "unit is required"
-                      }),
-                      onChange: function (el) {
-                        setValue(`state.items[${i}].unit`, el.value);
-                        clearErrors(`state.items[${i}].unit`);
-                        return el.value;
-                      },
-                      onBlur: function () {}
-                    }}
-                    invalid={
-                      (errors as any)?.state?.items?.[i]?.unit?.message ? true : false
-                    }
-                    value={watchedFiles?.state?.items?.[i]?.unit}
-                    placeholder={"Select Units"}
-                    optionValue="id"
-                    options={units?.data}
-                    optionLabel="name"
-                    checkmark={true}
-                    onFilter={(e) => setUnitsSet(e.filter)}
-                    highlightOnSelect={false}
-                  />
-                  {(errors as any)?.state?.items?.[i]?.unit?.message && (
-                    <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                      {(errors as any)?.state?.items?.[i]?.unit?.message}
-                    </p>
-                  )}
-                  {/* <label htmlFor="unit">Units </label> */}
-                </div>
-                {watchedFiles?.state?.type == "fertilizer" && (
-                  // floatLabel
-                  <div className="w-full relative">
-                    <InputText
-                      className="mr-2 w-full pb-3"
-                      id="use_count"
-                      type="number"
-                      placeholder="use_count"
-                      aria-label="dose_min"
-                      {...register(`state.items[${i}].use_count`, {
-                        required: "use_count is required",
-                        valueAsNumber: true
-                      })}
-                      invalid={
-                        (errors as any)?.state?.items?.[i]?.use_count?.message
-                          ? true
-                          : false
-                      }
-                      value={watchedFiles?.state?.items?.[i]?.use_count || ""}
-                    />
-                    {(errors as any)?.state?.items?.[i]?.use_count?.message && (
-                      <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                        {(errors as any)?.state?.items?.[i]?.use_count?.message}
-                      </p>
-                    )}
-                    {/* <label htmlFor="use_count">use_count</label> */}
-                  </div>
-                )}
               </div>
-              {/* floatLabel */}
-              <div className="w-full relative">
-                {watchedFiles?.state?.type == "drug" ? (
-                  <>
-                    <InputTextarea
-                      className=" mr-2 w-full"
-                      id="descriptionitems"
-                      placeholder="description"
-                      rows={4}
-                      cols={20}
-                      {...register(`state.items[${i}].description`)}
-                      value={watchedFiles?.state?.items?.[i]?.description}
-                      invalid={
-                        (errors as any)?.state?.items?.[i]?.description?.message
-                          ? true
-                          : false
-                      }
-                    />
-                    {/* <label htmlFor="descriptionitems">description</label> */}
-                    {(errors as any)?.state?.items?.[i]?.description?.message && (
-                      <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                        {(errors as any)?.state?.items?.[i]?.description?.message}
-                      </p>
-                    )}
-                  </>
-                ) : watchedFiles?.state?.type == "fertilizer" ? (
-                  <>
-                    <InputTextarea
-                      className=" mr-2 w-full"
-                      id="method"
-                      placeholder="method"
-                      rows={4}
-                      cols={20}
-                      {...register(`state.items[${i}].method`)}
-                      value={watchedFiles?.state?.items?.[i]?.method || ""}
-                      invalid={
-                        (errors as any)?.state?.items?.[i]?.method?.message
-                          ? true
-                          : false
-                      }
-                    />
-                    {/* <label htmlFor="method">method</label> */}
-                    {(errors as any)?.state?.items?.[i]?.method?.message && (
-                      <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                        {(errors as any)?.state?.items?.[i]?.method?.message}
-                      </p>
-                    )}
-                  </>
-                ) : (
-                  ""
-                )}
-              </div>
+              <Button
+                className="w-2 max-w-10rem border-round-3xl"
+                label="Delete"
+                type="button"
+                severity="danger"
+                icon="pi pi-trash"
+                onClick={() => {
+                  // setValue('price', watchedFiles.price?.filter((al,index) => index !== i))
+                  // setValue(`state.items`,watchedFiles?.state?.items?.filter((al,index) => index !== i))
+                  setIndexArr((state: any) =>
+                    state.length > 1 ? state?.slice(0, -1) : state
+                  );
+                }}
+              />
             </div>
-            <Button
-              className="w-2 max-w-10rem border-round-3xl"
-              label="Delete"
-              type="button"
-              severity="danger"
-              icon="pi pi-trash"
-              onClick={() => {
-                // setValue('price', watchedFiles.price?.filter((al,index) => index !== i))
-                // setValue(`state.items`,watchedFiles?.state?.items?.filter((al,index) => index !== i))
-                setIndexArr((state: any) =>
-                  state.length > 1 ? state?.slice(0, -1) : state
-                );
-              }}
-            />
-          </div>
-        ))}
+          );
+        })}
 
         <Button
           label="Add"
