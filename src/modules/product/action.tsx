@@ -312,6 +312,7 @@ export default function ProductAction() {
                       }, 700)}
                     />
                   )}
+                  onMouseDown={() => setUnitsSet("")}
                   invalid={errors?.unit?.message ? true : false}
                   placeholder={"Select Units"}
                   value={watchedFiles?.unit || ""}
