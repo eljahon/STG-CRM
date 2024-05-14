@@ -70,3 +70,27 @@ body {
 .p-password-hide-icon {
   right: 10px !important;
 }
+
+.myflext {
+  top: 0px;
+  left: 270px;
+  width: calc(100% - 290px);
+  z-index: 8;
+  background-color: #F4F9FD;
+}
+
+.myflext1 {
+  top: 75px;
+  left: 270px;
+  width: calc(100% - 290px);
+  z-index: 5;
+  background-color: #F4F9FD;
+}
+
+.myflext2 {
+  top: 100px;
+  left: 290px;
+  width: calc(100% - 315px);
+  z-index: 5;
+  background-color: #F4F9FD;
+}

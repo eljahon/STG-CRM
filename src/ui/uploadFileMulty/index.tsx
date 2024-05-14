@@ -38,6 +38,7 @@ export default function UploadFileMulty({setValue,fieldName,value=[],valueId=[],
         </div>
         <input
           type="file"
+          accept=".png, .jpg, .jpeg"
           className="hidden"
           onChange={(e) => hendleimg(e)}
         />

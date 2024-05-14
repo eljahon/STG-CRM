@@ -17,10 +17,10 @@ export default function ProfilePasswordPage() {
       handleSubmit={handleSubmit}
       reset={reset}
       url={"users-permissions/change-password"}
-      btntext={"Save"}
       navUrl={"/profile"}
       title={`Password`}
       cancel={false}
+      unfixed={true}
     >
       <div className="w-full bg-white border-round-3xl py-6 px-4 flex gap-5 ">
         <div className="card">

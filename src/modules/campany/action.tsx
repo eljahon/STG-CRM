@@ -43,12 +43,12 @@ export default function CampanySetPage() {
     <GlobalFrom
       handleSubmit={handleSubmit}
       reset={reset}
-      btntext={"Save"}
+      
       cancel={"Cancel"}
       url={
         company && company != "undefined" ? "update-company" : "create-company"
       }
-      navUrl={"/compony/old"}
+      navUrl={"/product"}
       title={`Company`}
     >
       <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 justify-content-between">
@@ -78,7 +78,10 @@ export default function CampanySetPage() {
                 id="phone"
                 placeholder="phone"
                 aria-label="phone"
-                {...register(`phone`, { required: "phone is required" })}
+                {...register(`phone`, { required: "phone is required", pattern: {
+                  value: /^\+998\d{9}$/,
+                  message: "Phone number must start with +998 and followed by 9 digits"
+                } })}
                 invalid={errors?.phone?.message ? true : false}
                 value={watchedFiles?.phone || ""}
               />

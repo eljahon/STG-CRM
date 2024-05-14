@@ -12,6 +12,7 @@ import { GetAllData, GetByIdData } from "../../service/global";
 
 import UploadFile from "../../ui/uploadFile";
 import UploadFileMulty from "../../ui/uploadFileMulty";
+import UploadFileSer from "../../ui/uploadFileSer";
 
 const typeArr: any = [
   {
@@ -214,6 +215,7 @@ export default function ProductAction() {
     }
   }, [id]);
 
+  // console.log(errors, watchedFiles);
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
@@ -405,9 +407,7 @@ export default function ProductAction() {
                 placeholder="description"
                 rows={7}
                 cols={20}
-                {...register(`description`, {
-                  required: "description is required"
-                })}
+                {...register(`description`)}
                 invalid={errors?.description?.message ? true : false}
                 value={watchedFiles?.description || ""}
               />
@@ -435,7 +435,11 @@ export default function ProductAction() {
             value={image}
             fieldName={"image"}
           />
-          <UploadFile setValue={setValue} fieldName={"cer"} value={imageSer} />
+          <UploadFileSer
+            setValue={setValue}
+            fieldName={"cer"}
+            value={imageSer}
+          />
         </div>
       </div>
 
@@ -450,6 +454,8 @@ export default function ProductAction() {
                     <Dropdown
                       filter
                       id="crop"
+                      onMouseDown={() => setCropsSet("")}
+                      onScroll={(e) => console.log(e)}
                       className=" mr-2 w-full md:w-full"
                       onChange={(e) => {
                         if (watchedFiles?.state?.type == "fertilizer") {
@@ -458,7 +464,6 @@ export default function ProductAction() {
                           getDiseesesByCrop(e.value);
                           setValuetest(`state.items[${i}].crop`, e.value);
                         }
-                        setCropsSet("");
                       }}
                       filterTemplate={() => (
                         <InputText
@@ -507,12 +512,15 @@ export default function ProductAction() {
                               `state.items[${i}].disease`,
                               diseases.find((de: any) => de?.id == el.value)
                             );
-                            getDiseesesByCrop(
-                              watchedTestFiles?.state?.items?.[i]?.crop
-                            );
+
                             return el.value;
                           },
                           onBlur: function () {}
+                        }}
+                        onMouseDown={() => {
+                          getDiseesesByCrop(
+                            watchedTestFiles?.state?.items?.[i]?.crop
+                          );
                         }}
                         invalid={
                           (errors as any)?.state?.items?.[i]?.disease?.message
@@ -545,15 +553,45 @@ export default function ProductAction() {
                   {/* floatLabel */}
                   <div className="w-full relative">
                     <InputText
+                      className="mr-2 w-full pb-3"
+                      id="dose_min"
+                      type="number"
+                      placeholder="dose_min"
+                      aria-label="dose_min"
+                      {...register(`state.items[${i}].dose_min`, {
+                        // required: "dose_min is required",
+                        valueAsNumber: true
+                      })}
+                      invalid={
+                        (errors as any)?.state?.items?.[i]?.dose_min?.message
+                          ? true
+                          : false
+                      }
+                      value={
+                        watchedFiles?.state?.items?.[i]?.dose_min || undefined
+                      }
+                    />
+                    {(errors as any)?.state?.items?.[i]?.dose_min?.message && (
+                      <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                        {(errors as any)?.state?.items?.[i]?.dose_min?.message}
+                      </p>
+                    )}
+                    {/* <label htmlFor="dose_min">dose_min</label> */}
+                  </div>
+                  {/* floatLabel */}
+                  <div className="w-full relative">
+                    <InputText
                       type="number"
                       className="mr-2 w-full pb-3"
                       id="dose_max"
                       placeholder="dose_max"
                       {...register(`state.items[${i}].dose_max`, {
-                        required: "dose_max is required",
+                        // required: "dose_max is required",
                         valueAsNumber: true
                       })}
-                      value={watchedFiles?.state?.items?.[i]?.dose_max || ""}
+                      value={
+                        watchedFiles?.state?.items?.[i]?.dose_max || undefined
+                      }
                       invalid={
                         (errors as any)?.state?.items?.[i]?.dose_max?.message
                           ? true
@@ -566,33 +604,6 @@ export default function ProductAction() {
                       </p>
                     )}
                     {/* <label htmlFor="dose_max">Dose_max</label> */}
-                  </div>
-
-                  {/* floatLabel */}
-                  <div className="w-full relative">
-                    <InputText
-                      className="mr-2 w-full pb-3"
-                      id="dose_min"
-                      type="number"
-                      placeholder="dose_min"
-                      aria-label="dose_min"
-                      {...register(`state.items[${i}].dose_min`, {
-                        required: "dose_min is required",
-                        valueAsNumber: true
-                      })}
-                      invalid={
-                        (errors as any)?.state?.items?.[i]?.dose_min?.message
-                          ? true
-                          : false
-                      }
-                      value={watchedFiles?.state?.items?.[i]?.dose_min || ""}
-                    />
-                    {(errors as any)?.state?.items?.[i]?.dose_min?.message && (
-                      <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                        {(errors as any)?.state?.items?.[i]?.dose_min?.message}
-                      </p>
-                    )}
-                    {/* <label htmlFor="dose_min">dose_min</label> */}
                   </div>
 
                   {/* floatLabel */}
@@ -622,6 +633,7 @@ export default function ProductAction() {
                       optionValue="id"
                       options={units?.data}
                       optionLabel="name"
+                      onMouseDown={() => setUnitsSet("")}
                       checkmark={true}
                       filterTemplate={() => (
                         <InputText
@@ -649,7 +661,7 @@ export default function ProductAction() {
                         placeholder="use_count"
                         aria-label="dose_min"
                         {...register(`state.items[${i}].use_count`, {
-                          required: "use_count is required",
+                          // required: "use_count is required",
                           valueAsNumber: true
                         })}
                         invalid={
@@ -737,8 +749,13 @@ export default function ProductAction() {
                 severity="danger"
                 icon="pi pi-trash"
                 onClick={() => {
-                  // setValue('price', watchedFiles.price?.filter((al,index) => index !== i))
-                  // setValue(`state.items`,watchedFiles?.state?.items?.filter((al,index) => index !== i))
+                  clearErrors();
+                  setValue(
+                    `state.items`,
+                    watchedFiles?.state?.items?.filter(
+                      (_: any, index: any) => index !== i
+                    )
+                  );
                   setIndexArr((state: any) =>
                     state.length > 1 ? state?.slice(0, -1) : state
                   );
@@ -756,6 +773,7 @@ export default function ProductAction() {
           onClick={() => {
             setIndex(index + 1);
             setIndexArr((state: any) => [index + 1, ...state]);
+            clearErrors();
           }}
         />
       </div>

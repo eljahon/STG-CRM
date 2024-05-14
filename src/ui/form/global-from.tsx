@@ -12,8 +12,8 @@ interface IForm {
   url: string;
   title?: string;
   navUrl?: any;
-  btntext?: any;
   cancel?: any;
+  unfixed?: any;
 }
 export default function GlobalFrom({
   children,
@@ -24,7 +24,7 @@ export default function GlobalFrom({
   title,
   navUrl,
   cancel,
-  btntext
+  unfixed
 }: IForm) {
   const { id } = useParams();
   const [loader, setLoader] = useState<boolean>(false);
@@ -74,26 +74,36 @@ export default function GlobalFrom({
   };
   return (
     <form onSubmit={handleSubmit(handleAdd)}>
-      <div className="flex w-full justify-content-between align-items-center  px-2  mt-5 mb-4">
-        <h3 className="m-0 text-2xl">{title}</h3>
-        <div className="flex gap-2  ">
-          <Button
-            className="border-round-3xl px-4"
-            label={btntext || "Add"}
-            type="submit"
-            severity="success"
-          />
-          {cancel && (
+      <div
+        style={{
+          borderBottomRightRadius: "16px",
+          borderBottomLeftRadius: "16px"
+        }}
+        className={` bg-white flex  justify-content-between align-items-center px-5 py-3 border-round-2xl px-2  pt-5 mb-4 ${
+          unfixed ? "w-full" : " fixed myflext2"
+        }`}
+      >
+  
+          <h3 className="m-0 text-2xl">{title}</h3>
+          <div className="flex gap-2  ">
             <Button
               className="border-round-3xl px-4"
-              label={cancel}
-              severity="secondary"
-              type="button"
-              onClick={() => navigate(navUrl)}
+              label={id == "new" || !id ? "Save" : "Update"}
+              type="submit"
+              severity="success"
             />
-          )}
+            {cancel && (
+              <Button
+                className="border-round-3xl px-4"
+                label={cancel}
+                severity="secondary"
+                type="button"
+                onClick={() => navigate(navUrl)}
+              />
+            )}
+          </div>
         </div>
-      </div>
+   
       {children}
       {loader && "."}
     </form>

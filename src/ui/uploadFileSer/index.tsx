@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ImageUpload } from "../../utils/uplaoadFile";
 
-export default function UploadFile({
+export default function UploadFileSer({
   setValue,
   fieldName,
   value,
@@ -9,6 +9,7 @@ export default function UploadFile({
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
+  const [file, setfile] = useState<any>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
 
   useEffect(() => {
@@ -19,9 +20,15 @@ export default function UploadFile({
     setLoadingFile(true);
     if (e.target.files[0]) {
       const res = await ImageUpload(e.target.files[0], {
-        type: "image",
+        type: e.target.files[0].type == "application/pdf" ? "pdf" : "image",
         folder: "other"
       }).finally(() => setLoadingFile(false));
+
+      if (e.target.files[0].type == "application/pdf") {
+        setfile(e.target.files[0].name);
+      } else {
+        setfile(false);
+      }
       setValue(fieldName, res?.data?.media?.id);
       setImage(res?.data?.media?.aws_path);
     }
@@ -39,7 +46,7 @@ export default function UploadFile({
       ) : image ? (
         <div className="w-full flex align-items-center justify-content-center   flex-column">
           <div
-            className={`w-full relative imageFlex ${
+            className={`w-full relative imageFlex flex justify-content-center ${
               logo ? "border-round-2xl" : ""
             }`}
             style={{ maxWidth: logo ? "80px" : "200px" }}
@@ -49,7 +56,17 @@ export default function UploadFile({
                 logo ? "gap-3" : "gap-4"
               }`}
             >
-              <span className="cursor-pointer">
+              <span
+                className="cursor-pointer"
+                onClick={() => {
+                  if (file) {
+                    window.open(
+                      import.meta.env.VITE_APP_AWS_PATH + image,
+                      "_blank"
+                    );
+                  }
+                }}
+              >
                 <i
                   className="pi pi-eye"
                   style={{ fontSize: logo ? "1em" : "1.4em", color: "white" }}
@@ -65,16 +82,28 @@ export default function UploadFile({
                 />
               </span>
             </div>
-            <img
-              className={`w-full ${logo ? "border-round-2xl" : ""}`}
-              style={{
-                maxWidth: logo ? "80px" : "200px",
-                objectFit: "cover"
-              }}
-              src={import.meta.env.VITE_APP_AWS_PATH + image}
-              width={200}
-              height={logo ? 80 : 120}
-            />
+            {file ? (
+              <i
+                className="pi pi-file-pdf mt-2 p-5 mx-auto border-circle border-1 border-black"
+                style={{
+                  fontSize: "3em",
+                  borderRadius: "50%",
+                  backgroundColor: "var(--surface-b)",
+                  color: "black"
+                }}
+              ></i>
+            ) : (
+              <img
+                className={`w-full ${logo ? "border-round-2xl" : ""}`}
+                style={{
+                  maxWidth: logo ? "80px" : "200px",
+                  objectFit: "cover"
+                }}
+                src={import.meta.env.VITE_APP_AWS_PATH + image}
+                width={200}
+                height={logo ? 80 : 120}
+              />
+            )}
           </div>
           <span
             style={{
@@ -83,13 +112,13 @@ export default function UploadFile({
             }}
             className="my-3"
           >
-            Drag and Drop Image Here
+            {file ? file : "Drag and Drop certificete Here"}
           </span>
         </div>
       ) : (
         <div className="flex align-items-center flex-column">
           <i
-            className="pi pi-image mt-2 p-5"
+            className="pi pi-file-pdf mt-2 p-5"
             style={{
               fontSize: "3em",
               borderRadius: "50%",
@@ -104,7 +133,7 @@ export default function UploadFile({
             }}
             className="my-3"
           >
-            Drag and Drop Image Here
+            Drag and Drop certificete Here
           </span>
         </div>
       )}
@@ -116,8 +145,8 @@ export default function UploadFile({
           </div>
           <input
             type="file"
-            accept=".png, .jpg, .jpeg"
             className="hidden"
+            accept=".png, .jpg, .jpeg .pdf"
             onChange={(e) => hendleimg(e)}
           />
         </label>

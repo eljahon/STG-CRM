@@ -60,11 +60,10 @@ export default function ProfileSettingPage() {
       reset={reset}
       url={"users-permissions/user-update"}
       cancel={"Cancel"}
-      btntext={"Save"}
-      navUrl={"/profile"}
+      navUrl={"/product"}
       title={`Profile`}
     >
-      <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 justify-content-between">
+      <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 justify-content-between mb-4">
         <div className="w-8 ">
           <div className="flex gap-3 w-full mb-5">
             <div className="w-full relative">

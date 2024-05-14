@@ -36,8 +36,8 @@ export default function Header() {
   );
 
   return (
-    <div className="flex align-items-center justify-content-between px-2">
-      <IconField className="w-full" iconPosition="left">
+    <div className="flex align-items-center justify-content-between px-2 fixed  myflext  pt-4 pb-4">
+      <IconField iconPosition="left">
         <InputIcon className="pi pi-search"> </InputIcon>
         <InputText
           className="border-round-2xl  border-none"
@@ -46,7 +46,7 @@ export default function Header() {
         />
       </IconField>
 
-      <div className="flex align-items-center justify-content-end  gap-2 w-full">
+      <div className="flex align-items-center justify-content-end  gap-2">
         <div className="p-3 pb-2   bg-white border-round-2xl cursor-pointer">
           <i
             className="pi pi-bell"
@@ -73,7 +73,7 @@ export default function Header() {
             className={`${
               open ? "block" : "hidden"
             } absolute  left-0 bg-white border-round-2xl  py-2 w-full`}
-            style={{ top: "55px", zIndex: 5 }}
+            style={{ top: "55px", zIndex: 100 }}
           >
             <Link
               to={"/profile"}

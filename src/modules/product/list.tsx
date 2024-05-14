@@ -2,11 +2,16 @@ import { useNavigate } from "react-router-dom";
 import GolabTable from "../../ui/tabel";
 import { useQuery } from "react-query";
 import { GetAllData } from "../../service/global";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Button } from "primereact/button";
+import { toast } from "react-toastify";
+import { queryClient } from "../../service/api";
+import { Dialog } from "primereact/dialog";
 
 export default function ProductPage() {
   const navigate = useNavigate();
   const [page, setPage] = useState<any>(0);
+  const [opemNavigate, setopemNavigate] = useState<any>(false);
   const company = window.localStorage.getItem("company");
   const { data: product } = useQuery(["products", page], () =>
     GetAllData("products/distribute", { limit: 10, page: page / 10 + 1 })
@@ -15,7 +20,7 @@ export default function ProductPage() {
     {
       header: "Image",
       field: "image.aws_path",
-      id: 3,
+      id: 1,
       // sortable: true,
       exportable: false,
       body: (itemData: any) => {
@@ -32,14 +37,15 @@ export default function ProductPage() {
     {
       header: "Title",
       field: "title",
-      id: 1,
+      id: 2,
       exportable: false,
       style: { minWidth: "12rem" }
     },
+
     {
       header: "Description",
       field: "description",
-      id: 2,
+      id: 3,
       exportable: false
     },
     {
@@ -51,10 +57,28 @@ export default function ProductPage() {
     {
       header: "Type",
       field: "state.type",
-      id: 4,
+      id: 5,
       exportable: false
     }
   ];
+  const NavigateDialog = (
+    <React.Fragment>
+      <Button
+        label="No"
+        icon="pi pi-times"
+        outlined
+        onClick={() => setopemNavigate(false)}
+      />
+      <Button
+        label="Yes"
+        icon="pi pi-check"
+        severity="danger"
+        onClick={async () => {
+          navigate("/compony/new");
+        }}
+      />
+    </React.Fragment>
+  );
 
   return (
     <>
@@ -79,10 +103,28 @@ export default function ProductPage() {
           if (company && company != "undefined") {
             navigate("/product/new");
           } else {
-            navigate("/compony/new");
+            setopemNavigate(true);
           }
         }}
       />
+
+      <Dialog
+        visible={opemNavigate}
+        style={{ width: "32rem" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        header="Confirm"
+        modal
+        footer={NavigateDialog}
+        onHide={() => setopemNavigate(false)}
+      >
+        <div className="confirmation-content">
+          <i
+            className="pi pi-exclamation-triangle mr-3"
+            style={{ fontSize: "2rem" }}
+          />
+          <span>you don't have campony,please create campony</span>
+        </div>
+      </Dialog>
     </>
   );
 }

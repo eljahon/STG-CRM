@@ -73,11 +73,6 @@ export default function GolabTable(props: ITable) {
 
   const [deleteId, setDeleteId] = useState<any>(false);
   const columnsList = [
-    isFunction(checked) && {
-      id: 5678,
-      selectionMode: "multiple",
-      exportable: false
-    },
     ...columns,
     isCheckEvent() && {
       id: columns.length + 1,
