@@ -458,6 +458,7 @@ export default function ProductAction() {
                           getDiseesesByCrop(e.value);
                           setValuetest(`state.items[${i}].crop`, e.value);
                         }
+                        setCropsSet("");
                       }}
                       filterTemplate={() => (
                         <InputText
@@ -505,6 +506,9 @@ export default function ProductAction() {
                             setValuetest(
                               `state.items[${i}].disease`,
                               diseases.find((de: any) => de?.id == el.value)
+                            );
+                            getDiseesesByCrop(
+                              watchedTestFiles?.state?.items?.[i]?.crop
                             );
                             return el.value;
                           },
