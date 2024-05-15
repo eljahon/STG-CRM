@@ -7,11 +7,12 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { GetMe } from "../../../../service/global";
+import { useTranslation } from "react-i18next";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [openmadal, setOpenmadal] = useState(false);
-  // const company = window.localStorage.getItem("company");
+  const { t } = useTranslation();
   const { data: me } = useQuery(["meCompony"], () => GetMe());
 
   useEffect(() => {
@@ -21,13 +22,13 @@ export default function Header() {
   const deleteProductDialogFooter = (
     <React.Fragment>
       <Button
-        label="No"
+        label={t("no")}
         icon="pi pi-times"
         outlined
         onClick={() => setOpenmadal(false)}
       />
       <Button
-        label="Yes"
+        label={t("yes")}
         icon="pi pi-check"
         severity="danger"
         onClick={() => {
@@ -45,7 +46,7 @@ export default function Header() {
         <InputText
           className="border-round-2xl  border-none"
           v-model="value1"
-          placeholder="Search"
+          placeholder={t("search")}
         />
       </IconField>
 
@@ -86,7 +87,7 @@ export default function Header() {
               className="no-underline "
               style={{ color: "black" }}
             >
-              <p className="py-2 px-4 m-0 hover:bg-blue-50">Profile</p>
+              <p className="py-2 px-4 m-0 hover:bg-blue-50">{t("profile")}</p>
             </Link>
             <Link
               to={
@@ -97,13 +98,13 @@ export default function Header() {
               className=" no-underline "
               style={{ color: "black" }}
             >
-              <p className="py-2 px-4 m-0 hover:bg-blue-50">Compony</p>
+              <p className="py-2 px-4 m-0 hover:bg-blue-50">{t("compony")}</p>
             </Link>
             <p
               className="py-2 px-4 m-0 hover:bg-blue-50"
               onClick={() => setOpenmadal(true)}
             >
-              log out
+              {t("logOut")}
             </p>
           </div>
         </div>
@@ -113,7 +114,7 @@ export default function Header() {
         visible={openmadal}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header="Confirm"
+        header={t('confirm')}
         modal
         footer={deleteProductDialogFooter}
         onHide={() => setOpenmadal(false)}
@@ -123,7 +124,7 @@ export default function Header() {
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "1rem" }}
           />
-          {true && <span>Are you sure to logout</span>}
+          {true && <span>{t("sureTolog")}</span>}
         </div>
       </Dialog>
     </div>

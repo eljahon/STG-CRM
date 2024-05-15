@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { Paginator } from "primereact/paginator";
 import { DeleteDataId } from "../../service/global";
 import { useQueryClient } from "react-query";
+import { useTranslation } from "react-i18next";
 
 interface Product {
   id: string | null;
@@ -72,7 +73,7 @@ export default function GolabTable(props: ITable) {
   const isCheckEvent = () => {
     return isFunction(deleteFunction) || isFunction(showFunction) || false;
   };
-
+  const { t } = useTranslation();
   const [deleteId, setDeleteId] = useState<any>(false);
   const columnsList = [
     ...columns,
@@ -127,7 +128,7 @@ export default function GolabTable(props: ITable) {
         {isFunction(newAdd) && (
           <Button
             className="border-round-3xl px-4"
-            label="New"
+            label={t("new")}
             icon="pi pi-plus"
             severity="success"
             onClick={newAdd}
@@ -141,13 +142,13 @@ export default function GolabTable(props: ITable) {
   const deleteProductDialogFooter = (
     <React.Fragment>
       <Button
-        label="No"
+        label={t("no")}
         icon="pi pi-times"
         outlined
         onClick={() => setDeleteProductDialog(false)}
       />
       <Button
-        label="Yes"
+        label={t("yes")}
         icon="pi pi-check"
         severity="danger"
         onClick={async () => {
@@ -167,7 +168,7 @@ export default function GolabTable(props: ITable) {
     <React.Fragment>
       <div className="text-center">
         <i className="pi pi-cloud-download" style={{ fontSize: "6.2rem" }}></i>
-        <h3>No Date</h3>
+        <h3>{t('nodata')}</h3>
       </div>
     </React.Fragment>
   );
@@ -216,7 +217,7 @@ export default function GolabTable(props: ITable) {
         visible={deleteProductDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header="Confirm"
+        header={t('confirm')}
         modal
         footer={deleteProductDialogFooter}
         onHide={() => setDeleteProductDialog(false)}
@@ -226,7 +227,7 @@ export default function GolabTable(props: ITable) {
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {true && <span>Are you sure you want to delete this product</span>}
+          {true && <span>{t('sureDeleteProduct')}</span>}
         </div>
       </Dialog>
     </div>

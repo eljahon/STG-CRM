@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ImageUpload } from "../../utils/uplaoadFile";
+import { useTranslation } from "react-i18next";
 
 export default function UploadFileSer({
   setValue,
@@ -11,7 +12,7 @@ export default function UploadFileSer({
   const [image, setImage] = useState<any>(value);
   const [file, setfile] = useState<any>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
-
+  const { t } = useTranslation();
   useEffect(() => {
     setImage(value);
   }, [value]);
@@ -133,7 +134,7 @@ export default function UploadFileSer({
             }}
             className="my-3"
           >
-            Drag and Drop certificete Here
+            {t("dropcer")}
           </span>
         </div>
       )}
@@ -141,12 +142,12 @@ export default function UploadFileSer({
         <label className="w-full ">
           <div className="w-full p-3 bg-green-500 text-white  border-round-3xl cursor-pointer flex align-items-center justify-content-center gap-2">
             <i className="pi pi-upload" style={{ fontSize: "1rem" }} />
-            upload
+            {t("upload")}
           </div>
           <input
             type="file"
             className="hidden"
-            accept=".png, .jpg, .jpeg .pdf"
+            accept="image/jpeg,image/jpg,image/png,application/pdf"
             onChange={(e) => hendleimg(e)}
           />
         </label>

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { AddData, UpdateData, UpdateDataOne } from "../../service/global";
 import { Button } from "primereact/button";
 import Loader from "../loader";
+import { useTranslation } from "react-i18next";
 
 interface IForm {
   children?: any;
@@ -32,6 +33,7 @@ export default function GlobalFrom({
   const { id } = useParams();
   const [loader, setLoader] = useState<boolean>(loaderGlob || false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const handleAdd = async (data: any) => {
     setLoader(true);
     if (id == "new" || !id) {
@@ -117,7 +119,7 @@ export default function GlobalFrom({
         <div className="flex gap-2  ">
           <Button
             className="border-round-3xl px-4"
-            label={id == "new" || !id ? "Save" : "Update"}
+            label={id == "new" || !id ? t("save") : t("update")}
             type="submit"
             severity="success"
           />

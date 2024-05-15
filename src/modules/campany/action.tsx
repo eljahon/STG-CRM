@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import UploadFile from "../../ui/uploadFile";
 import { GetAllData } from "../../service/global";
 import { useQuery } from "react-query";
+import { useTranslation } from "react-i18next";
 interface FormData {
   description: string;
   name: string;
@@ -22,7 +23,7 @@ export default function CampanySetPage() {
     watch,
     formState: { errors }
   } = useForm<FormData>();
-
+  const { t } = useTranslation();
   const watchedFiles = watch();
   const [image, setImage] = useState<any>();
 
@@ -44,22 +45,22 @@ export default function CampanySetPage() {
     <GlobalFrom
       handleSubmit={handleSubmit}
       reset={reset}
-      cancel={"Cancel"}
+      cancel={t("cancel")}
       url={
         company && company != "undefined" ? "update-company" : "create-company"
       }
       navUrl={"/product"}
-      title={`Company`}
+      title={t("company")}
     >
       <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 justify-content-between">
         <div className="w-8 ">
           <div className="flex gap-3 w-full mb-5">
             <div className="w-full relative">
-              <p className="label-my">Company name</p>
+              <p className="label-my">{t("companyName")} </p>
               <InputText
                 className=" mr-2 w-full"
                 id="name"
-                placeholder="name"
+                placeholder={t("companyName")}
                 aria-label="name"
                 {...register(`name`, { required: "name is required" })}
                 invalid={errors?.name?.message ? true : false}
@@ -72,11 +73,11 @@ export default function CampanySetPage() {
               )}
             </div>
             <div className="w-full relative">
-              <p className="label-my">Phone number</p>
+              <p className="label-my">{t("phone")} </p>
               <InputText
                 className=" mr-2 w-full"
                 id="phone"
-                placeholder="phone"
+                placeholder={t("phone")}
                 aria-label="phone"
                 {...register(`phone`, {
                   required: "phone is required",
@@ -97,11 +98,11 @@ export default function CampanySetPage() {
             </div>
           </div>
           <div className="w-full relative">
-            <p className="label-my">Description</p>
+            <p className="label-my">{t("description")} </p>
             <InputTextarea
               className=" mr-2 w-full"
               id="description"
-              placeholder="description"
+              placeholder={t("description")}
               rows={4}
               cols={20}
               {...register(`description`)}

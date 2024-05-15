@@ -7,6 +7,7 @@ import UploadFile from "../../../ui/uploadFile";
 import { GetAllData } from "../../../service/global";
 import { useQuery } from "react-query";
 import { Dropdown } from "primereact/dropdown";
+import { useTranslation } from "react-i18next";
 
 interface FormData {
   fullname: string;
@@ -33,7 +34,7 @@ export default function ProfileSettingPage() {
   );
   const { data: genders } = useQuery("genders", () => GetAllData("genders"));
   const { data: regions } = useQuery("regions", () => GetAllData("regions"));
-
+  const { t } = useTranslation();
   // const { data: districts } = useQuery(
   //   ["districts", watchedFiles?.region],
   //   () =>
@@ -59,7 +60,7 @@ export default function ProfileSettingPage() {
       handleSubmit={handleSubmit}
       reset={reset}
       url={"users-permissions/user-update"}
-      cancel={"Cancel"}
+      cancel={t("cancel")}
       navUrl={"/product"}
       title={`Profile`}
     >
@@ -67,13 +68,13 @@ export default function ProfileSettingPage() {
         <div className="w-8 ">
           <div className="flex gap-3 w-full mb-5">
             <div className="w-full relative">
-              <p className="label-my">Full name</p>
+              <p className="label-my"> {t("fullName")} </p>
               <InputText
                 className=" mr-2 w-full"
                 id="name"
-                placeholder="full name"
-                aria-label="Full name"
-                {...register(`fullname`, { required: "fullname is required" })}
+                placeholder={t("fullName")}
+                aria-label={t("fullName")}
+                {...register(`fullname`, { required: t("fullNamerequired") })}
                 invalid={errors?.fullname?.message ? true : false}
                 value={watchedFiles?.fullname || ""}
               />
@@ -84,12 +85,12 @@ export default function ProfileSettingPage() {
               )}
             </div>
             <div className="w-full relative">
-              <p className="label-my">Gender</p>
+              <p className="label-my"> {t("selectgender")} </p>
               <Dropdown
                 id="gender"
                 className=" mr-2 w-full md:w-full"
                 {...{
-                  ...register("gender", { required: "genders is required" }),
+                  ...register("gender", { required: t("gendergender") }),
                   onChange: function (el) {
                     setValue("gender", el.value);
                     clearErrors("gender");
@@ -98,7 +99,7 @@ export default function ProfileSettingPage() {
                   onBlur: function () {}
                 }}
                 invalid={errors?.gender?.message ? true : false}
-                placeholder={"Select gender"}
+                placeholder={t("gender")}
                 value={watchedFiles?.gender || ""}
                 options={genders?.data}
                 optionValue="id"
@@ -113,12 +114,12 @@ export default function ProfileSettingPage() {
           </div>
           <div className="flex gap-3 w-6 mb-5">
             <div className="w-full relative">
-              <p className="label-my">Region</p>
+              <p className="label-my">{t("selectregion")} </p>
               <Dropdown
                 id="region"
                 className=" mr-2 w-full md:w-full"
                 {...{
-                  ...register("region", { required: "regions is required" }),
+                  ...register("region", { required: t("requiredregion") }),
                   onChange: function (el) {
                     setValue("region", el.value);
                     clearErrors("region");
@@ -127,7 +128,7 @@ export default function ProfileSettingPage() {
                   onBlur: function () {}
                 }}
                 invalid={errors?.region?.message ? true : false}
-                placeholder={"Select region"}
+                placeholder={t("region")}
                 value={watchedFiles?.region || ""}
                 options={regions?.data}
                 optionValue="id"

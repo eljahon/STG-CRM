@@ -1,10 +1,11 @@
 import  { useEffect, useState } from 'react'
 import { ImageUpload } from '../../utils/uplaoadFile';
+import { useTranslation } from 'react-i18next';
 
 export default function UploadFileMulty({setValue,fieldName,value=[],valueId=[],className}:any) {
   const [image, setImage] = useState<any>(value);
   const [loadingFile, setLoading] = useState<boolean>(false);
-
+  const { t } = useTranslation();
   useEffect(()=>{
     setImage(value)
   },[value])
@@ -34,11 +35,11 @@ export default function UploadFileMulty({setValue,fieldName,value=[],valueId=[],
       <label className="w-6 ">
         <div className="w-6 p-3 bg-green-500 text-white border-round-3xl cursor-pointer flex align-items-center justify-content-center gap-2">
           <i className="pi pi-upload " style={{ fontSize: "1rem" }} />
-          upload
+          {t("upload")}
         </div>
         <input
           type="file"
-          accept=".png, .jpg, .jpeg"
+          accept="image/jpeg,image/jpg,image/png"
           className="hidden"
           onChange={(e) => hendleimg(e)}
         />
@@ -86,7 +87,7 @@ export default function UploadFileMulty({setValue,fieldName,value=[],valueId=[],
           }}
           className="my-3"
         >
-          Drag and Drop Image Here
+     {t("dropImage")}
         </span>
       </div>
     }

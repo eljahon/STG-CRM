@@ -3,7 +3,7 @@ import { AuthorizedRoutes, UnAuthorizedRoutes } from "./router/index";
 import { GetMe } from "./service/global";
 import { useNavigate } from "react-router-dom";
 import GlobalLoader from "./ui/global-loader";
-
+import "../i18";
 function App() {
   const [isAuth, setIsAtuh] = useState<any>(
     window.localStorage.getItem("authToken") || null
