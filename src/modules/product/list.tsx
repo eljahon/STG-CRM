@@ -11,7 +11,6 @@ export default function ProductPage() {
   const navigate = useNavigate();
   const [page, setPage] = useState<any>(0);
   const [opemNavigate, setopemNavigate] = useState<any>(false);
-  const company = window.localStorage.getItem("company");
   const { isLoading, data: product } = useQuery(["products", page], () =>
     GetAllData("products/distribute", { limit: 10, page: page / 10 + 1 })
   );
