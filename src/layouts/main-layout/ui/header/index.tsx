@@ -62,13 +62,15 @@ export default function Header() {
             setOpen(!open);
           }}
           style={{ minWidth: "150px" }}
-          className="p-3  pb-2   bg-white border-round-2xl flex gap-2 align-items-center cursor-pointer relative"
+          className="p-3  pb-2   bg-white border-round-2xl flex justify-content-between gap-2 align-items-center cursor-pointer relative"
         >
-          <i
-            className="pi pi-user "
-            style={{ fontSize: "1.2rem", color: "black" }}
-          ></i>
-          <p className="m-0 mb-1">{me?.data?.fullname}</p>
+          <div className="flex align-items-center gap-2">
+            <i
+              className="pi pi-user "
+              style={{ fontSize: "1.2rem", color: "black" }}
+            ></i>
+            <p className="m-0 ">{me?.data?.fullname}</p>
+          </div>
           <i
             className="pi  pi-angle-down"
             style={{ fontSize: "1.2rem", color: "black" }}

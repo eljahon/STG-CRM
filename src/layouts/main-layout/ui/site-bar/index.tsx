@@ -11,7 +11,7 @@ export default function RouterDemo() {
     item.hideIfchildern && (
       <div
         className={`p-menuitem-content border-round-2xl ${
-          pashName.pathname.includes(item?.url) ? "bg-green-300 text-white" : ""
+          pashName.pathname.includes(item?.url) ? "bg-green-500 text-white" : ""
         }`}
       >
         <Link

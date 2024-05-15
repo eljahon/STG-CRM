@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AuthorizedRoutes, UnAuthorizedRoutes } from "./router/index";
 import { GetMe } from "./service/global";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import GlobalLoader from "./ui/global-loader";
 
 function App() {
@@ -24,8 +24,7 @@ function App() {
             error?.response?.status == "403" ||
             error?.response?.status == "401"
           ) {
-            navigate("/auth/login");
-            window.location.reload();
+            // window.location.reload();
             window.localStorage.removeItem("authToken");
             setIsAtuh(null);
           }
@@ -33,6 +32,9 @@ function App() {
         .finally(() => setLoading(false));
     };
 
+    if (!isAuth) {
+      navigate("/auth/login");
+    }
     fetchData();
   }, []);
 
