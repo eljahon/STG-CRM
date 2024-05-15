@@ -4,8 +4,7 @@ import { useQuery } from "react-query";
 import { GetAllData } from "../../service/global";
 import React, { useState } from "react";
 import { Button } from "primereact/button";
-import { toast } from "react-toastify";
-import { queryClient } from "../../service/api";
+
 import { Dialog } from "primereact/dialog";
 
 export default function ProductPage() {
