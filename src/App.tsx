@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { AuthorizedRoutes, UnAuthorizedRoutes } from "./router/index";
 import { GetMe } from "./service/global";
 import { useLocation, useNavigate } from "react-router-dom";
-import Loader from "./ui/loader";
+import GlobalLoader from "./ui/global-loader";
 
 function App() {
-  const [isAuth, setIsAtuh] = useState<boolean>();
+  const [isAuth, setIsAtuh] = useState<any>(
+    window.localStorage.getItem("authToken") || null
+  );
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const pashName = useLocation();
@@ -15,7 +17,7 @@ function App() {
       await GetMe()
         .then((res) => {
           if (res.status == 200) {
-            setIsAtuh(true);
+            navigate("/product");
           }
         })
         .catch((error) => {
@@ -26,18 +28,19 @@ function App() {
             navigate("/auth/login");
             window.location.reload();
             window.localStorage.removeItem("authToken");
+            setIsAtuh(null);
           }
         })
         .finally(() => setLoading(false));
     };
 
     if (pashName.pathname != "/auth/login") fetchData();
-  }, [pashName]);
+  }, []);
 
   return (
     <>
       {isAuth ? <AuthorizedRoutes /> : <UnAuthorizedRoutes />}
-      {loading ? <Loader /> : ""}
+      {loading ? <GlobalLoader /> : ""}
     </>
   );
 }

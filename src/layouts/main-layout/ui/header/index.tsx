@@ -12,7 +12,8 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [openmadal, setOpenmadal] = useState(false);
   // const company = window.localStorage.getItem("company");
-  const { data: me } = useQuery(["me"], () => GetMe());
+  const { data: me } = useQuery(["meCompony"], () => GetMe());
+
   useEffect(() => {
     window.addEventListener("click", () => setOpen(false));
   }, []);
@@ -60,7 +61,8 @@ export default function Header() {
             e.stopPropagation();
             setOpen(!open);
           }}
-          className="p-3  pb-2  bg-white border-round-2xl flex gap-2 align-items-center cursor-pointer relative"
+          style={{ minWidth: "150px" }}
+          className="p-3  pb-2   bg-white border-round-2xl flex gap-2 align-items-center cursor-pointer relative"
         >
           <i
             className="pi pi-user "

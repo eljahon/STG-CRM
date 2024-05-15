@@ -3,7 +3,7 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm, } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { AuthLogin } from "../../../service/auth";
 import Loader from "../../../ui/loader/index";
@@ -15,10 +15,7 @@ type FormValues = {
 
 export default function LoginFrom() {
   const [loader, setLoader] = useState(false);
-  const {
-    register,
-    handleSubmit,
-  } = useForm<FormValues>();
+  const { register, handleSubmit } = useForm<FormValues>();
 
   const navigate = useNavigate();
 
@@ -28,6 +25,7 @@ export default function LoginFrom() {
       .then((response: any) => {
         window.localStorage.setItem("authToken", response?.data?.token);
         navigate(`/product`);
+        window.location.reload();
         // toast.seccess("login seccess!")
       })
       .catch((error: any) => {
@@ -51,7 +49,7 @@ export default function LoginFrom() {
           <label className="block">
             <p>Username </p>
             <InputText
-            //   variant='success'
+              //   variant='success'
               id="username"
               type="text"
               {...register(`phone`, { required: true })}
@@ -60,7 +58,7 @@ export default function LoginFrom() {
           <label className="block mb-4">
             <p>Password</p>
             <InputText
-            //   variant="success"
+              //   variant="success"
               id="password"
               type="password"
               {...register(`password`, { required: true })}
@@ -69,7 +67,7 @@ export default function LoginFrom() {
           <Button label="Login" className="w-full"></Button>
         </div>
       </form>
-      {loader && <Loader  />}
+      {loader && <Loader />}
     </>
   );
 }

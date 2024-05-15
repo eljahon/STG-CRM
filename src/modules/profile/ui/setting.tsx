@@ -12,7 +12,7 @@ interface FormData {
   fullname: string;
   gender: number;
   region: number;
-  district: number;
+  // district: number;
   avatar: string | number;
 }
 export default function ProfileSettingPage() {
@@ -34,20 +34,20 @@ export default function ProfileSettingPage() {
   const { data: genders } = useQuery("genders", () => GetAllData("genders"));
   const { data: regions } = useQuery("regions", () => GetAllData("regions"));
 
-  const { data: districts } = useQuery(
-    ["districts", watchedFiles?.region],
-    () =>
-      GetAllData(
-        `districts${
-          watchedFiles?.region ? `?filters[region]=${watchedFiles?.region}` : ""
-        }`
-      )
-  );
+  // const { data: districts } = useQuery(
+  //   ["districts", watchedFiles?.region],
+  //   () =>
+  //     GetAllData(
+  //       `districts${
+  //         watchedFiles?.region ? `?filters[region]=${watchedFiles?.region}` : ""
+  //       }`
+  //     )
+  // );
   useEffect(() => {
     setValue("fullname", userMe?.fullname);
     setValue("gender", userMe?.gender?.id);
     setValue("region", userMe?.region?.id);
-    setValue("district", userMe?.district?.id);
+    // setValue("district", userMe?.district?.id);
 
     if (userMe?.avatar) {
       setValue("avatar", userMe?.avatar?.id);
@@ -111,7 +111,7 @@ export default function ProfileSettingPage() {
               )}
             </div>
           </div>
-          <div className="flex gap-3 w-full mb-5">
+          <div className="flex gap-3 w-6 mb-5">
             <div className="w-full relative">
               <p className="label-my">Region</p>
               <Dropdown
@@ -139,7 +139,7 @@ export default function ProfileSettingPage() {
                 </p>
               )}
             </div>
-            <div className="w-full relative">
+            {/* <div className="w-full relative">
               <p className="label-my">Districts</p>
               <Dropdown
                 id="district"
@@ -167,7 +167,7 @@ export default function ProfileSettingPage() {
                   {errors?.district?.message}
                 </p>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex gap-3 w-3">

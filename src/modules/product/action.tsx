@@ -13,6 +13,7 @@ import { GetAllData, GetByIdData } from "../../service/global";
 import UploadFile from "../../ui/uploadFile";
 import UploadFileMulty from "../../ui/uploadFileMulty";
 import UploadFileSer from "../../ui/uploadFileSer";
+import Loader from "../../ui/loader";
 
 const typeArr: any = [
   {
@@ -61,7 +62,7 @@ export default function ProductAction() {
   const [image, setImage] = useState<any>();
   const [imageMulti, setImageMulti] = useState<any>([]);
   const [imageSer, setImageSer] = useState<any>();
-
+  const [loader, setLoader] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -125,6 +126,7 @@ export default function ProductAction() {
     if (id == "new") {
       setIndexArr([1]);
     } else {
+      setLoader(true);
       GetByIdData("products", id, { populate: "*" })
         .then((e) => {
           setIndexArr([]);
@@ -211,7 +213,8 @@ export default function ProductAction() {
               }
             });
         })
-        .catch((errors) => console.log(errors));
+        .catch((errors) => console.log(errors))
+        .finally(() => setLoader(false));
     }
   }, [id]);
 
@@ -778,6 +781,8 @@ export default function ProductAction() {
           }}
         />
       </div>
+
+      {loader && <Loader />}
     </GlobalFrom>
   );
 }

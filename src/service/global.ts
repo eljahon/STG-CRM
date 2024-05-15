@@ -8,8 +8,11 @@ export const GetAllData = async (url: string, query?: any) => {
       `/${url}${query ? "?" + params.toString() : ""}`
     );
     return response?.data;
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    if (error?.response?.status == 401 || error?.response?.status == 403) {
+      window.location.reload();
+      window.localStorage.removeItem("authToken");
+    }
   }
 };
 
@@ -20,8 +23,11 @@ export const GetByIdData = async (url: string, id: any, query: any) => {
       `/${url}/${id}${query ? "?" + params.toString() : ""}`
     );
     return response?.data;
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    if (error?.response?.status == 401 || error?.response?.status == 403) {
+      window.location.reload();
+      window.localStorage.removeItem("authToken");
+    }
   }
 };
 

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AddData, UpdateData, UpdateDataOne } from "../../service/global";
 import { Button } from "primereact/button";
+import Loader from "../loader";
 
 interface IForm {
   children?: any;
@@ -39,7 +40,16 @@ export default function GlobalFrom({
           // reset()
         })
         .catch((error: any) => {
-          toast.error(error?.response?.data?.error?.message);
+          if (
+            error?.response?.status == "403" ||
+            error?.response?.status == "401"
+          ) {
+            navigate("/auth/login");
+            window.location.reload();
+            window.localStorage.removeItem("authToken");
+          } else {
+            toast.error(error?.response?.data?.error?.message);
+          }
         })
         .finally(() => setLoader(false));
     } else if (id == "old") {
@@ -52,7 +62,16 @@ export default function GlobalFrom({
           }
         })
         .catch((error) => {
-          toast.error(error?.response?.data?.error?.message);
+          if (
+            error?.response?.status == "403" ||
+            error?.response?.status == "401"
+          ) {
+            navigate("/auth/login");
+            window.location.reload();
+            window.localStorage.removeItem("authToken");
+          } else {
+            toast.error(error?.response?.data?.error?.message);
+          }
         })
         .finally(() => setLoader(false));
     } else {
@@ -67,7 +86,16 @@ export default function GlobalFrom({
           }
         })
         .catch((error) => {
-          toast.error(error?.response?.data?.error?.message);
+          if (
+            error?.response?.status == "403" ||
+            error?.response?.status == "401"
+          ) {
+            navigate("/auth/login");
+            window.location.reload();
+            window.localStorage.removeItem("authToken");
+          } else {
+            toast.error(error?.response?.data?.error?.message);
+          }
         })
         .finally(() => setLoader(false));
     }
@@ -83,29 +111,28 @@ export default function GlobalFrom({
           unfixed ? "w-full" : " fixed myflext2"
         }`}
       >
-  
-          <h3 className="m-0 text-2xl">{title}</h3>
-          <div className="flex gap-2  ">
+        <h3 className="m-0 text-2xl">{title}</h3>
+        <div className="flex gap-2  ">
+          <Button
+            className="border-round-3xl px-4"
+            label={id == "new" || !id ? "Save" : "Update"}
+            type="submit"
+            severity="success"
+          />
+          {cancel && (
             <Button
               className="border-round-3xl px-4"
-              label={id == "new" || !id ? "Save" : "Update"}
-              type="submit"
-              severity="success"
+              label={cancel}
+              severity="secondary"
+              type="button"
+              onClick={() => navigate(navUrl)}
             />
-            {cancel && (
-              <Button
-                className="border-round-3xl px-4"
-                label={cancel}
-                severity="secondary"
-                type="button"
-                onClick={() => navigate(navUrl)}
-              />
-            )}
-          </div>
+          )}
         </div>
-   
+      </div>
+
       {children}
-      {loader && "."}
+      {loader && <Loader />}
     </form>
   );
 }
