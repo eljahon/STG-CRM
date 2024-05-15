@@ -4,13 +4,15 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import React, { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import { GetMe } from "../../../../service/global";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
   const [openmadal, setOpenmadal] = useState(false);
-  const company = window.localStorage.getItem("company");
-
+  // const company = window.localStorage.getItem("company");
+  const { data: me } = useQuery(["me"], () => GetMe());
   useEffect(() => {
     window.addEventListener("click", () => setOpen(false));
   }, []);
@@ -64,7 +66,7 @@ export default function Header() {
             className="pi pi-user "
             style={{ fontSize: "1.2rem", color: "black" }}
           ></i>
-          <p className="m-0 mb-1">Evan Yates</p>
+          <p className="m-0 mb-1">{me?.data?.fullname}</p>
           <i
             className="pi  pi-angle-down"
             style={{ fontSize: "1.2rem", color: "black" }}
@@ -84,7 +86,7 @@ export default function Header() {
             </Link>
             <Link
               to={
-                company && company != "undefined"
+                me?.data?.company && me?.data?.company != "undefined"
                   ? "/compony/old"
                   : "/compony/new"
               }

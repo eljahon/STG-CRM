@@ -17,7 +17,6 @@ function App() {
           if (res.status == 200) {
             setIsAtuh(true);
           }
-          window.localStorage.setItem("company", res?.data?.company);
         })
         .catch((error) => {
           if (
