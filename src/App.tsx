@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AuthorizedRoutes, UnAuthorizedRoutes } from "./router/index";
 import { GetMe } from "./service/global";
-import { useLocation, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import GlobalLoader from "./ui/global-loader";
 
 function App() {
@@ -10,7 +10,6 @@ function App() {
   );
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const pashName = useLocation();
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -34,7 +33,7 @@ function App() {
         .finally(() => setLoading(false));
     };
 
-    if (pashName.pathname != "/auth/login") fetchData();
+    fetchData();
   }, []);
 
   return (

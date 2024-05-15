@@ -1,7 +1,7 @@
 // import { Divider } from 'primereact/divider';
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -18,7 +18,9 @@ export default function LoginFrom() {
   const { register, handleSubmit } = useForm<FormValues>();
 
   const navigate = useNavigate();
-
+  useEffect(() => {
+    window.localStorage.removeItem("authToken");
+  }, []);
   const handleAuth = async (data: FormValues) => {
     setLoader(true);
     await AuthLogin(data)
