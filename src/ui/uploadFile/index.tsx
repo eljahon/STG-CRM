@@ -10,6 +10,7 @@ export default function UploadFile({
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
+  const [imageOpen, setImageOpen] = useState<any>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
   const { t } = useTranslation();
   useEffect(() => {
@@ -50,7 +51,10 @@ export default function UploadFile({
                 logo ? "gap-3" : "gap-4"
               }`}
             >
-              <span className="cursor-pointer">
+              <span
+                className="cursor-pointer"
+                onClick={() => setImageOpen(true)}
+              >
                 <i
                   className="pi pi-eye"
                   style={{ fontSize: logo ? "1em" : "1.4em", color: "white" }}
@@ -123,6 +127,35 @@ export default function UploadFile({
           />
         </label>
       </div>
+
+      {imageOpen && (
+        <div
+          onClick={() => setImageOpen(false)}
+          className="fixed top-0 left-0 w-screen h-screen fixedmu"
+        >
+          <span
+            className="cursor-pointer fixed "
+            onClick={() => hendleRemoveimg()}
+            style={{ top: "50px", right: "70px" }}
+          >
+            <i
+              className="pi pi-times"
+              style={{ fontSize: "2em", color: "white" }}
+            />
+          </span>
+          <img
+            className={`w-full`}
+            onClick={(e: any) => e.stopPropagation()}
+            style={{
+              maxWidth: "40%",
+              maxHeight: "80%",
+              objectFit: "contain",
+              zIndex: "10001"
+            }}
+            src={import.meta.env.VITE_APP_AWS_PATH + image}
+          />
+        </div>
+      )}
     </div>
   );
 }

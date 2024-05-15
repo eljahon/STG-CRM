@@ -96,6 +96,14 @@ body {
 }
 
 .colm1 {
-  width: calc((100% - 24px) / 5);
+  width: calc(100% / 3);
 
+}
+
+.fixedmu {
+  background-color: rgb(0, 0, 0, .3);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

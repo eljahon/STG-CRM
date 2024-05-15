@@ -11,6 +11,7 @@ export default function UploadFileSer({
 }: any) {
   const [image, setImage] = useState<any>(value);
   const [file, setfile] = useState<any>(false);
+  const [imageOpen, setImageOpen] = useState<any>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
   const { t } = useTranslation();
   useEffect(() => {
@@ -65,6 +66,8 @@ export default function UploadFileSer({
                       import.meta.env.VITE_APP_AWS_PATH + image,
                       "_blank"
                     );
+                  }else{
+                    setImageOpen(true)
                   }
                 }}
               >
@@ -152,6 +155,26 @@ export default function UploadFileSer({
           />
         </label>
       </div>
+
+
+      {imageOpen && (
+        <div
+          onClick={() => setImageOpen(false)}
+          className="fixed top-0 left-0 w-screen h-screen fixedmu"
+        >
+          <img
+            className={`w-full`}
+            onClick={(e: any) => e.stopPropagation()}
+            style={{
+              maxWidth: "40%",
+              maxHeight: "80%",
+              objectFit: "contain",
+              zIndex: "10001"
+            }}
+            src={import.meta.env.VITE_APP_AWS_PATH + image}
+          />
+        </div>
+      )}
     </div>
   );
 }

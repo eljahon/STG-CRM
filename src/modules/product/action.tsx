@@ -454,8 +454,8 @@ export default function ProductAction() {
       <div className="p-4 bg-white border-round-3xl mt-4 mb-8">
         {indexArr?.map((_: any, i: any) => {
           return (
-            <div key={i} className="flex align-items-center gap-6 mb-4">
-              <div className="w-10">
+            <div key={i} className="flex align-items-start gap-3 mb-4">
+              <div className="w-full">
                 <div className="flex mb-4 gap-2">
                   {/* floatLabel */}
                   <div className="colm1">
@@ -559,7 +559,10 @@ export default function ProductAction() {
                     </div>
                   )}
                   {/* floatLabel */}
-                  <div className="colm1 relative">
+                  <div
+                    className="relative w-full"
+                    style={{ maxWidth: "155px" }}
+                  >
                     <InputText
                       className="mr-2 w-full pb-3"
                       id="dose_min"
@@ -587,7 +590,10 @@ export default function ProductAction() {
                     {/* <label htmlFor="dose_min">dose_min</label> */}
                   </div>
                   {/* floatLabel */}
-                  <div className="colm1 relative">
+                  <div
+                    className="colm1 relative w-full"
+                    style={{ maxWidth: "155px" }}
+                  >
                     <InputText
                       type="number"
                       className="mr-2 w-full pb-3"
@@ -615,7 +621,10 @@ export default function ProductAction() {
                   </div>
 
                   {/* floatLabel */}
-                  <div className="colm1 relative">
+                  <div
+                    className="colm1 relative w-full"
+                    style={{ maxWidth: "150px" }}
+                  >
                     <Dropdown
                       filter
                       id="unit"
@@ -751,8 +760,8 @@ export default function ProductAction() {
                 </div>
               </div>
               <Button
-                className="w-2 max-w-10rem border-round-3xl"
-                label={t("delete")}
+                className="w-2 max-w-3rem border-round-3xl"
+                // label={t("delete")}
                 type="button"
                 severity="danger"
                 icon="pi pi-trash"
