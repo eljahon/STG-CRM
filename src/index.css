@@ -94,3 +94,8 @@ body {
   z-index: 5;
   background-color: #F4F9FD;
 }
+
+.colm1 {
+  width: calc((100% - 24px) / 5);
+
+}

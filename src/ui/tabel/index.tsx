@@ -49,6 +49,7 @@ interface ITable {
   totalProduct: any;
   pageChange: any;
   currentPage: any;
+  isLoading?: any;
 }
 export default function GolabTable(props: ITable) {
   const {
@@ -63,7 +64,8 @@ export default function GolabTable(props: ITable) {
     totalProduct,
     currentPage,
     pageChange,
-    checked
+    checked,
+    isLoading
   } = props;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -161,6 +163,14 @@ export default function GolabTable(props: ITable) {
     </React.Fragment>
   );
 
+  const emptyMessagecom = (
+    <React.Fragment>
+      <div className="text-center">
+        <i className="pi pi-cloud-download" style={{ fontSize: "6.2rem" }}></i>
+        <h3>No Date</h3>
+      </div>
+    </React.Fragment>
+  );
   return (
     <div>
       <Toast ref={toasts} />
@@ -168,7 +178,9 @@ export default function GolabTable(props: ITable) {
         <DataTable
           ref={dt}
           value={data}
+          loading={isLoading}
           selection={selectedProducts}
+          emptyMessage={emptyMessagecom}
           onSelectionChange={
             isFunction(checked)
               ? (e) => {

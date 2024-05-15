@@ -12,9 +12,10 @@ export default function ProductPage() {
   const [page, setPage] = useState<any>(0);
   const [opemNavigate, setopemNavigate] = useState<any>(false);
   const company = window.localStorage.getItem("company");
-  const { data: product } = useQuery(["products", page], () =>
+  const { isLoading, data: product } = useQuery(["products", page], () =>
     GetAllData("products/distribute", { limit: 10, page: page / 10 + 1 })
   );
+
   const columns = [
     {
       header: "Image",
@@ -82,6 +83,7 @@ export default function ProductPage() {
   return (
     <>
       <GolabTable
+        isLoading={isLoading}
         data={product?.data?.items}
         columns={columns}
         totalProduct={product?.data?.meta?.total}

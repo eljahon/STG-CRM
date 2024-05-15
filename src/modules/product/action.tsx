@@ -454,7 +454,7 @@ export default function ProductAction() {
               <div className="w-10">
                 <div className="flex mb-4 gap-2">
                   {/* floatLabel */}
-                  <div className="w-full">
+                  <div className="colm1">
                     <Dropdown
                       filter
                       id="crop"
@@ -492,7 +492,7 @@ export default function ProductAction() {
 
                   {watchedFiles?.state?.type == "drug" && (
                     // floatLabel
-                    <div className="w-full relative">
+                    <div className="colm1 relative">
                       <Dropdown
                         filter
                         id="disease"
@@ -555,7 +555,7 @@ export default function ProductAction() {
                     </div>
                   )}
                   {/* floatLabel */}
-                  <div className="w-full relative">
+                  <div className="colm1 relative">
                     <InputText
                       className="mr-2 w-full pb-3"
                       id="dose_min"
@@ -583,7 +583,7 @@ export default function ProductAction() {
                     {/* <label htmlFor="dose_min">dose_min</label> */}
                   </div>
                   {/* floatLabel */}
-                  <div className="w-full relative">
+                  <div className="colm1 relative">
                     <InputText
                       type="number"
                       className="mr-2 w-full pb-3"
@@ -611,7 +611,7 @@ export default function ProductAction() {
                   </div>
 
                   {/* floatLabel */}
-                  <div className="w-full relative">
+                  <div className="colm1 relative">
                     <Dropdown
                       filter
                       id="unit"
@@ -657,7 +657,7 @@ export default function ProductAction() {
                   </div>
                   {watchedFiles?.state?.type == "fertilizer" && (
                     // floatLabel
-                    <div className="w-full relative">
+                    <div className="colm1 relative">
                       <InputText
                         className="mr-2 w-full pb-3"
                         id="use_count"

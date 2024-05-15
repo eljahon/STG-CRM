@@ -24,7 +24,6 @@ function App() {
             error?.response?.status == "403" ||
             error?.response?.status == "401"
           ) {
-            // window.location.reload();
             window.localStorage.removeItem("authToken");
             setIsAtuh(null);
           }
