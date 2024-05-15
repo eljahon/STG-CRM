@@ -15,6 +15,7 @@ interface IForm {
   navUrl?: any;
   cancel?: any;
   unfixed?: any;
+  loaderGlob?: any;
 }
 export default function GlobalFrom({
   children,
@@ -25,10 +26,11 @@ export default function GlobalFrom({
   title,
   navUrl,
   cancel,
-  unfixed
+  unfixed,
+  loaderGlob
 }: IForm) {
   const { id } = useParams();
-  const [loader, setLoader] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(loaderGlob || false);
   const navigate = useNavigate();
   const handleAdd = async (data: any) => {
     setLoader(true);

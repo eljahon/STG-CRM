@@ -25,6 +25,7 @@ export default function CampanySetPage() {
 
   const watchedFiles = watch();
   const [image, setImage] = useState<any>();
+
   const company = window.localStorage.getItem("company");
   const { data: companies } = useQuery("meFor", () =>
     GetAllData("my-company", { populate: "*" })
@@ -43,7 +44,6 @@ export default function CampanySetPage() {
     <GlobalFrom
       handleSubmit={handleSubmit}
       reset={reset}
-      
       cancel={"Cancel"}
       url={
         company && company != "undefined" ? "update-company" : "create-company"
@@ -78,10 +78,14 @@ export default function CampanySetPage() {
                 id="phone"
                 placeholder="phone"
                 aria-label="phone"
-                {...register(`phone`, { required: "phone is required", pattern: {
-                  value: /^\+998\d{9}$/,
-                  message: "Phone number must start with +998 and followed by 9 digits"
-                } })}
+                {...register(`phone`, {
+                  required: "phone is required",
+                  pattern: {
+                    value: /^\+998\d{9}$/,
+                    message:
+                      "Phone number must start with +998 and followed by 9 digits"
+                  }
+                })}
                 invalid={errors?.phone?.message ? true : false}
                 value={watchedFiles?.phone || ""}
               />
@@ -112,7 +116,12 @@ export default function CampanySetPage() {
           </div>
         </div>
         <div className="flex gap-3 w-3">
-          <UploadFile setValue={setValue} logo={true} value={image} fieldName={"logo"} />
+          <UploadFile
+            setValue={setValue}
+            logo={true}
+            value={image}
+            fieldName={"logo"}
+          />
         </div>
       </div>
     </GlobalFrom>

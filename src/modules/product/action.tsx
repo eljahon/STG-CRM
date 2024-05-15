@@ -18,13 +18,15 @@ import Loader from "../../ui/loader";
 const typeArr: any = [
   {
     code: "drug",
-    name: "drug"
+    name: "Dori"
   },
   {
     code: "fertilizer",
-    name: "fertilizer"
+    name: "O'g'it"
   }
 ];
+
+// [ { name: "O'g'it", "value": "ferti" }, { name: "Dori", "value": "drug" } ]
 
 interface iItems {
   disease: any;
@@ -287,7 +289,7 @@ export default function ProductAction() {
                   options={typeArr}
                   optionLabel="name"
                   disabled={id != "new"}
-                  optionValue="name"
+                  optionValue="code"
                   value={watchedFiles?.state?.type}
                   placeholder={"Select Type"}
                 />
