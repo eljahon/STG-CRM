@@ -2,18 +2,18 @@ import ProductAction from "./pages/action.tsx";
 import ProductPage from "./pages/list.tsx";
 
 
-export const ProductRoute = [
+export const BranchRoute = [
   {
-    url: "/product",
+    url: "/branch",
     Element: ProductPage,
-    label: "Product",
+    label: "Branchs",
     icon: 'pi pi-bars',
     children: [],
     meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
     hideIfchildern: true,
   },
   {
-    url: "/product/:id",
+    url: "/branch/:id",
     Element: ProductAction,
     meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
   },

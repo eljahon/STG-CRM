@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import GolabTable from "../../ui/tabel";
+import GolabTable from "../../../ui/tabel";
 import { useQuery } from "react-query";
-import { GetAllData, GetMe } from "../../service/global";
+import { GetAllData, GetMe } from "../../../service/global.ts";
 import React, { useState } from "react";
 import { Button } from "primereact/button";
 

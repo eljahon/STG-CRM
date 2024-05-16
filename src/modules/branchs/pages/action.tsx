@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import GlobalFrom from "../../ui/form/global-from";
+import GlobalFrom from "../../../ui/form/global-from.tsx";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
@@ -8,12 +8,12 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { useQuery } from "react-query";
-import { GetAllData, GetByIdData } from "../../service/global";
+import { GetAllData, GetByIdData } from "../../../service/global.ts";
 
-import UploadFile from "../../ui/uploadFile";
-import UploadFileMulty from "../../ui/uploadFileMulty";
-import UploadFileSer from "../../ui/uploadFileSer";
-import Loader from "../../ui/loader";
+import UploadFile from "../../../ui/uploadFile";
+import UploadFileMulty from "../../../ui/uploadFileMulty";
+import UploadFileSer from "../../../ui/uploadFileSer";
+import Loader from "../../../ui/loader";
 import { useTranslation } from "react-i18next";
 
 const typeArr: any = [
