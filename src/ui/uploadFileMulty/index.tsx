@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ImageUpload } from "../../utils/uplaoadFile";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 export default function UploadFileMulty({
   setValue,
@@ -18,8 +19,8 @@ export default function UploadFileMulty({
   }, [value]);
 
   const hendleimg = async (e: any) => {
-    setLoading(true);
-    if (e.target.files[0]) {
+    if (e.target.files[0]&& e.target.files[0]?.size < 5000000) {
+      setLoading(true);
       const res = await ImageUpload(e.target.files[0], {
         type: "image",
         folder: "other"
@@ -32,6 +33,8 @@ export default function UploadFileMulty({
         setValue(fieldName, [res?.data?.media?.id]);
         setImage([res?.data?.media]);
       }
+    }else{
+      toast.error("The galary size must be less than 5 MB.");
     }
   };
 
@@ -126,6 +129,15 @@ export default function UploadFileMulty({
           onClick={() => setImageOpen(false)}
           className="fixed top-0 left-0 w-screen h-screen fixedmu"
         >
+          <span
+            className="cursor-pointer fixed "
+            style={{ top: "50px", right: "70px" }}
+          >
+            <i
+              className="pi pi-times"
+              style={{ fontSize: "2em", color: "white" }}
+            />
+          </span>
           <img
             className={`w-full`}
             onClick={(e: any) => e.stopPropagation()}

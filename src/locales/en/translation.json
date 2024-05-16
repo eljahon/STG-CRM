@@ -54,8 +54,8 @@
   "selectregion": "Select region",
   "nodata": "no data",
   "sureDeleteProduct": "Are you sure you want to delete this product",
-  "dropImage": "Drag and Drop Image Here",
-  "dropcer": "Drag and Drop certifice Here",
+  "dropImage": "Drag and Drop Image Here to a size of 5MB.",
+  "dropcer": "Drag and Drop certifice Here to a size of 5MB.",
   "upload": "Upload",
   "crup": "Dori",
   "fert": "Ogit"

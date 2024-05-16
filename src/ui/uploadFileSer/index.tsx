@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react";
 import { ImageUpload } from "../../utils/uplaoadFile";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 export default function UploadFileSer({
   setValue,
   fieldName,
   value,
   logo,
+  setError,
+  error,
+  clearErrors,
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
   const [file, setfile] = useState<any>(false);
+  const [iscer, setIsCer] = useState<any>(false);
   const [imageOpen, setImageOpen] = useState<any>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
   const { t } = useTranslation();
@@ -19,28 +24,40 @@ export default function UploadFileSer({
   }, [value]);
 
   const hendleimg = async (e: any) => {
-    setLoadingFile(true);
-    if (e.target.files[0]) {
+    if (e.target.files[0] && e.target.files[0]?.size < 5000000) {
+      setLoadingFile(true);
+      clearErrors(fieldName);
       const res = await ImageUpload(e.target.files[0], {
         type: e.target.files[0].type == "application/pdf" ? "pdf" : "image",
         folder: "other"
-      }).finally(() => setLoadingFile(false));
+      })
+        .catch((error: any) => {
+          toast.error(error?.response?.data?.error?.message);
+        })
+        .finally(() => setLoadingFile(false));
 
+      setfile(e.target.files[0].name);
       if (e.target.files[0].type == "application/pdf") {
-        setfile(e.target.files[0].name);
+        setIsCer(true);
       } else {
-        setfile(false);
+        setIsCer(false);
       }
       setValue(fieldName, res?.data?.media?.id);
       setImage(res?.data?.media?.aws_path);
+    } else {
+      setError(fieldName, {
+        type: "custom",
+        message: "The certifice size must be less than 5 MB."
+      });
+      toast.error("The certifice size must be less than 5 MB.");
     }
   };
 
   const hendleRemoveimg = async () => {
     setValue(fieldName, null);
+    setfile(false);
     setImage(null);
   };
-
   return (
     <div className={`w-full ${className && className}`}>
       {loadingFile ? (
@@ -61,13 +78,13 @@ export default function UploadFileSer({
               <span
                 className="cursor-pointer"
                 onClick={() => {
-                  if (file) {
+                  if (iscer) {
                     window.open(
                       import.meta.env.VITE_APP_AWS_PATH + image,
                       "_blank"
                     );
-                  }else{
-                    setImageOpen(true)
+                  } else {
+                    setImageOpen(true);
                   }
                 }}
               >
@@ -86,7 +103,7 @@ export default function UploadFileSer({
                 />
               </span>
             </div>
-            {file ? (
+            {iscer ? (
               <i
                 className="pi pi-file-pdf mt-2 p-5 mx-auto border-circle border-1 border-black"
                 style={{
@@ -109,15 +126,27 @@ export default function UploadFileSer({
               />
             )}
           </div>
-          <span
-            style={{
-              fontSize: "1em",
-              color: "var(--text-color-secondary)"
-            }}
-            className="my-3"
-          >
-            {file ? file : "Drag and Drop certificete Here"}
-          </span>
+          {error?.[fieldName]?.message ? (
+            <span
+              style={{
+                fontSize: "1em",
+                color: "red"
+              }}
+              className="my-3"
+            >
+              {error?.[fieldName]?.message}
+            </span>
+          ) : (
+            <span
+              style={{
+                fontSize: "1em",
+                color: "var(--text-color-secondary)"
+              }}
+              className="my-3"
+            >
+              {file ? file : t("dropcer")}
+            </span>
+          )}
         </div>
       ) : (
         <div className="flex align-items-center flex-column">
@@ -130,15 +159,27 @@ export default function UploadFileSer({
               color: "var(--surface-d)"
             }}
           ></i>
-          <span
-            style={{
-              fontSize: "1em",
-              color: "var(--text-color-secondary)"
-            }}
-            className="my-3"
-          >
-            {t("dropcer")}
-          </span>
+          {error?.[fieldName]?.message ? (
+            <span
+              style={{
+                fontSize: "1em",
+                color: "red"
+              }}
+              className="my-3"
+            >
+              {error?.[fieldName]?.message}
+            </span>
+          ) : (
+            <span
+              style={{
+                fontSize: "1em",
+                color: "var(--text-color-secondary)"
+              }}
+              className="my-3"
+            >
+              {file ? file : t("dropcer")}
+            </span>
+          )}
         </div>
       )}
       <div className="flex gap-2">
@@ -156,12 +197,20 @@ export default function UploadFileSer({
         </label>
       </div>
 
-
       {imageOpen && (
         <div
           onClick={() => setImageOpen(false)}
           className="fixed top-0 left-0 w-screen h-screen fixedmu"
         >
+          <span
+            className="cursor-pointer fixed "
+            style={{ top: "50px", right: "70px" }}
+          >
+            <i
+              className="pi pi-times"
+              style={{ fontSize: "2em", color: "white" }}
+            />
+          </span>
           <img
             className={`w-full`}
             onClick={(e: any) => e.stopPropagation()}

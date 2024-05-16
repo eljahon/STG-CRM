@@ -74,6 +74,7 @@ export default function ProductAction() {
     clearErrors,
     reset,
     watch,
+    setError,
     formState: { errors }
   } = useForm<FormData>();
 
@@ -441,12 +442,18 @@ export default function ProductAction() {
             className={"mb-4"}
             setValue={setValue}
             value={image}
+            setError={setError}
+            clearErrors={clearErrors}
+            error={errors}
             fieldName={"image"}
           />
           <UploadFileSer
             setValue={setValue}
             fieldName={"cer"}
             value={imageSer}
+            setError={setError}
+            clearErrors={clearErrors}
+            error={errors}
           />
         </div>
       </div>

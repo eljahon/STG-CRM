@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { AuthorizedRoutes, UnAuthorizedRoutes } from "./router/index";
 import { GetMe } from "./service/global";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import GlobalLoader from "./ui/global-loader";
 import "../i18";
 function App() {
@@ -10,12 +10,16 @@ function App() {
   );
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const location = useLocation();
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       await GetMe()
         .then((res) => {
-          if (res.status == 200) {
+          if (
+            (res.status == 200 && location.pathname == "/") ||
+            location.pathname == "/auth/login"
+          ) {
             navigate("/product");
           }
         })

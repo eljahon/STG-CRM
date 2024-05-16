@@ -1,36 +1,55 @@
 import { useEffect, useState } from "react";
 import { ImageUpload } from "../../utils/uplaoadFile";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 export default function UploadFile({
   setValue,
   fieldName,
   value,
   logo,
+  setError,
+  error,
+  clearErrors,
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
   const [imageOpen, setImageOpen] = useState<any>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
+  const [file, setfile] = useState<any>(false);
   const { t } = useTranslation();
   useEffect(() => {
     setImage(value);
   }, [value]);
 
   const hendleimg = async (e: any) => {
-    setLoadingFile(true);
-    if (e.target.files[0]) {
+    
+    if (e.target.files[0] && e.target.files[0]?.size < 5000000) {
+      setLoadingFile(true);
+      clearErrors(fieldName);
       const res = await ImageUpload(e.target.files[0], {
         type: "image",
         folder: "other"
-      }).finally(() => setLoadingFile(false));
+      })
+        .catch((err: any) => {
+          toast.error(err?.response?.data?.error?.message);
+        })
+        .finally(() => setLoadingFile(false));
+
+      // setfile(e.target.files[0].name);
       setValue(fieldName, res?.data?.media?.id);
       setImage(res?.data?.media?.aws_path);
+    } else {
+      setError(fieldName, {
+        type: "custom",
+        message: "The image size must be less than 5 MB."
+      });
+      toast.error("The image size must be less than 5 MB.");
     }
   };
-
   const hendleRemoveimg = async () => {
     setValue(fieldName, null);
+    setfile(false);
     setImage(null);
   };
 
@@ -102,15 +121,27 @@ export default function UploadFile({
               color: "var(--surface-d)"
             }}
           ></i>
-          <span
-            style={{
-              fontSize: "1em",
-              color: "var(--text-color-secondary)"
-            }}
-            className="my-3"
-          >
-            Drag and Drop Image Here
-          </span>
+          {error?.[fieldName]?.message ? (
+            <span
+              style={{
+                fontSize: "1em",
+                color: "red"
+              }}
+              className="my-3"
+            >
+              {error?.[fieldName]?.message}
+            </span>
+          ) : (
+            <span
+              style={{
+                fontSize: "1em",
+                color: "var(--text-color-secondary)"
+              }}
+              className="my-3"
+            >
+              {file ? file : t("dropImage")}
+            </span>
+          )}
         </div>
       )}
       <div className="flex gap-2">
@@ -135,7 +166,6 @@ export default function UploadFile({
         >
           <span
             className="cursor-pointer fixed "
-            onClick={() => hendleRemoveimg()}
             style={{ top: "50px", right: "70px" }}
           >
             <i

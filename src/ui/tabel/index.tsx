@@ -90,6 +90,7 @@ export default function GolabTable(props: ITable) {
                   icon="pi pi-pencil"
                   rounded
                   outlined
+                  severity="success"
                   className="mr-2 ml-auto h-2rem w-2rem"
                   onClick={() => navigate(url + "/" + itemData?.id)}
                 />
@@ -168,7 +169,7 @@ export default function GolabTable(props: ITable) {
     <React.Fragment>
       <div className="text-center">
         <i className="pi pi-cloud-download" style={{ fontSize: "6.2rem" }}></i>
-        <h3>{t('nodata')}</h3>
+        <h3>{t("nodata")}</h3>
       </div>
     </React.Fragment>
   );
@@ -217,7 +218,7 @@ export default function GolabTable(props: ITable) {
         visible={deleteProductDialog}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header={t('confirm')}
+        header={t("confirm")}
         modal
         footer={deleteProductDialogFooter}
         onHide={() => setDeleteProductDialog(false)}
@@ -227,7 +228,7 @@ export default function GolabTable(props: ITable) {
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          {true && <span>{t('sureDeleteProduct')}</span>}
+          {true && <span>{t("sureDeleteProduct")}</span>}
         </div>
       </Dialog>
     </div>

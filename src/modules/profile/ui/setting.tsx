@@ -24,6 +24,7 @@ export default function ProfileSettingPage() {
     reset,
     watch,
     clearErrors,
+    setError,
     formState: { errors }
   } = useForm<FormData>();
 
@@ -177,6 +178,9 @@ export default function ProfileSettingPage() {
             setValue={setValue}
             value={image}
             fieldName={"avatar"}
+            setError={setError}
+            clearErrors={clearErrors}
+            error={errors}
           />
         </div>
       </div>

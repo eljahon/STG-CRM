@@ -21,6 +21,8 @@ export default function CampanySetPage() {
     setValue,
     reset,
     watch,
+    setError,
+    clearErrors,
     formState: { errors }
   } = useForm<FormData>();
   const { t } = useTranslation();
@@ -122,6 +124,9 @@ export default function CampanySetPage() {
             logo={true}
             value={image}
             fieldName={"logo"}
+            setError={setError}
+            clearErrors={clearErrors}
+            error={errors}
           />
         </div>
       </div>
