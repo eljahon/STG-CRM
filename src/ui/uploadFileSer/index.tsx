@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ImageUpload } from "../../utils/uplaoadFile";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { ProgressBar } from "primereact/progressbar";
 
 export default function UploadFileSer({
   setValue,
@@ -18,6 +19,7 @@ export default function UploadFileSer({
   const [iscer, setIsCer] = useState<any>(false);
   const [imageOpen, setImageOpen] = useState<any>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
+  const [progress, setProgress] = useState<any>(0);
   const { t } = useTranslation();
   useEffect(() => {
     setImage(value);
@@ -27,10 +29,14 @@ export default function UploadFileSer({
     if (e.target.files[0] && e.target.files[0]?.size < 5000000) {
       setLoadingFile(true);
       clearErrors(fieldName);
-      const res = await ImageUpload(e.target.files[0], {
-        type: e.target.files[0].type == "application/pdf" ? "pdf" : "image",
-        folder: "other"
-      })
+      const res = await ImageUpload(
+        e.target.files[0],
+        {
+          type: e.target.files[0].type == "application/pdf" ? "pdf" : "image",
+          folder: "other"
+        },
+        setProgress
+      )
         .catch((error: any) => {
           toast.error(error?.response?.data?.error?.message);
         })
@@ -61,7 +67,26 @@ export default function UploadFileSer({
   return (
     <div className={`w-full ${className && className}`}>
       {loadingFile ? (
-        <div>loading</div>
+        <div className="flex align-items-center flex-column">
+          <i
+            className="pi pi-spin pi-spinner-dotted p-5"
+            style={{ fontSize: "3rem" }}
+          ></i>
+          <span
+            style={{
+              fontSize: "1em",
+              color: "var(--text-color-secondary)"
+            }}
+            className="my-3 w-full text-center"
+          >
+            {progress} %
+            <ProgressBar
+              mode="indeterminate"
+              style={{ height: "4px" }}
+              value={progress}
+            ></ProgressBar>
+          </span>
+        </div>
       ) : image ? (
         <div className="w-full flex align-items-center justify-content-center   flex-column">
           <div

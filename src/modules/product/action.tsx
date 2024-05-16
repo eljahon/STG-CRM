@@ -432,6 +432,7 @@ export default function ProductAction() {
               className={"mb-4"}
               setValue={setValue}
               value={imageMulti || []}
+              setLocalValue={setImageMulti}
               valueId={watchedFiles?.gallery || []}
               fieldName={"gallery"}
             />
