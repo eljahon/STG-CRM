@@ -66,7 +66,7 @@ export default function UploadFile({
             className="pi pi-spin pi-spinner-dotted p-5"
             style={{ fontSize: "3rem" }}
           ></i>
-        <span
+          <span
             style={{
               fontSize: "1em",
               color: "var(--text-color-secondary)"
@@ -117,7 +117,7 @@ export default function UploadFile({
               className={`w-full ${logo ? "border-round-2xl" : ""}`}
               style={{
                 maxWidth: logo ? "80px" : "200px",
-                objectFit: "cover"
+                objectFit: "contain"
               }}
               src={import.meta.env.VITE_APP_AWS_PATH + image}
               width={200}

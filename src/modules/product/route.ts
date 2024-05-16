@@ -1,5 +1,5 @@
-import ProductAction from "./action";
-import ProductPage from "./list";
+import ProductAction from "./pages/action.tsx";
+import ProductPage from "./pages/list.tsx";
 
 
 export const ProductRoute = [
@@ -12,13 +12,11 @@ export const ProductRoute = [
     meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
     hideIfchildern: true,
   },
+  {
+    url: "/product/:id",
+    Element: ProductAction,
+    meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
+  },
 ];
 
-export const ProductActionRoute = [
-    {
-      url: "/product/:id",
-      Element: ProductAction,
-      meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
-    },
-  ];
   

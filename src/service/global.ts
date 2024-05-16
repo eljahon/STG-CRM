@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import api from "./api";
 
 export const GetAllData = async (url: string, query?: any) => {
@@ -9,9 +10,11 @@ export const GetAllData = async (url: string, query?: any) => {
     );
     return response?.data;
   } catch (error: any) {
-    if (error?.response?.status == 401 || error?.response?.status == 403) {
+    if (error?.response?.status == 401) {
       window.location.reload();
       window.localStorage.removeItem("authToken");
+    } else {
+      toast.error(error?.response?.data?.error?.message);
     }
   }
 };
@@ -24,9 +27,11 @@ export const GetByIdData = async (url: string, id: any, query: any) => {
     );
     return response?.data;
   } catch (error: any) {
-    if (error?.response?.status == 401 || error?.response?.status == 403) {
+    if (error?.response?.status == 401) {
       window.location.reload();
       window.localStorage.removeItem("authToken");
+    } else {
+      toast.error(error?.response?.data?.error?.message);
     }
   }
 };

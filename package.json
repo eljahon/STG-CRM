@@ -13,6 +13,7 @@
     "preview:prod": "vite --mode production preview"
   },
   "dependencies": {
+    "@pbe/react-yandex-maps": "^1.2.5",
     "@types/react-toastify": "^4.1.0",
     "axios": "^1.6.8",
     "dotenv": "^16.4.5",

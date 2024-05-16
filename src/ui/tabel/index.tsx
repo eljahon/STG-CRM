@@ -51,6 +51,7 @@ interface ITable {
   pageChange: any;
   currentPage: any;
   isLoading?: any;
+  Isupdate?: any;
 }
 export default function GolabTable(props: ITable) {
   const {
@@ -66,7 +67,8 @@ export default function GolabTable(props: ITable) {
     currentPage,
     pageChange,
     checked,
-    isLoading
+    isLoading,
+    Isupdate
   } = props;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -85,7 +87,7 @@ export default function GolabTable(props: ITable) {
         return (
           <React.Fragment>
             <div className="flex">
-              {
+              {Isupdate && (
                 <Button
                   icon="pi pi-pencil"
                   rounded
@@ -94,7 +96,7 @@ export default function GolabTable(props: ITable) {
                   className="mr-2 ml-auto h-2rem w-2rem"
                   onClick={() => navigate(url + "/" + itemData?.id)}
                 />
-              }
+              )}
               {isFunction(deleteFunction) && (
                 <Button
                   icon="pi pi-trash"

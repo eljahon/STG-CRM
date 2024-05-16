@@ -143,7 +143,7 @@ export default function UploadFileSer({
                 className={`w-full ${logo ? "border-round-2xl" : ""}`}
                 style={{
                   maxWidth: logo ? "80px" : "200px",
-                  objectFit: "cover"
+                  objectFit: "contain"
                 }}
                 src={import.meta.env.VITE_APP_AWS_PATH + image}
                 width={200}

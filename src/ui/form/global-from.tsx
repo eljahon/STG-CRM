@@ -45,7 +45,7 @@ export default function GlobalFrom({
         })
         .catch((error: any) => {
           if (
-            error?.response?.status == "403" ||
+            // error?.response?.status == "403" ||
             error?.response?.status == "401"
           ) {
             navigate("/auth/login");
@@ -67,7 +67,7 @@ export default function GlobalFrom({
         })
         .catch((error) => {
           if (
-            error?.response?.status == "403" ||
+            // error?.response?.status == "403" ||
             error?.response?.status == "401"
           ) {
             navigate("/auth/login");
@@ -91,7 +91,7 @@ export default function GlobalFrom({
         })
         .catch((error) => {
           if (
-            error?.response?.status == "403" ||
+            // error?.response?.status == "403" ||
             error?.response?.status == "401"
           ) {
             navigate("/auth/login");
