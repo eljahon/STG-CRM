@@ -1,5 +1,5 @@
-import ProductAction from "./pages/action.tsx";
-import ProductPage from "./pages/list.tsx";
+import ProductAction from "./pages/create.tsx";
+import ProductPage from "./pages";
 
 
 export const BranchRoute = [

@@ -89,7 +89,7 @@ export default function ProductPage() {
         columns={columns}
         totalProduct={product?.data?.meta?.total}
         currentPage={page}
-        tableTile={t("products")}
+        tableTile={t("branch")}
         url={"/product"}
         deleteUrl={"products"}
         checked={(value: any) => {
