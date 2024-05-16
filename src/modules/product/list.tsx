@@ -6,9 +6,11 @@ import React, { useState } from "react";
 import { Button } from "primereact/button";
 
 import { Dialog } from "primereact/dialog";
+import { useTranslation } from "react-i18next";
 
 export default function ProductPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [page, setPage] = useState<any>(0);
   const [opemNavigate, setopemNavigate] = useState<any>(false);
   const { isLoading, data: product } = useQuery(["products", page], () =>
@@ -17,7 +19,7 @@ export default function ProductPage() {
   const { data: me } = useQuery(["meComponye"], () => GetMe());
   const columns = [
     {
-      header: "Image",
+      header: t("image"),
       field: "image.aws_path",
       id: 1,
       // sortable: true,
@@ -34,7 +36,7 @@ export default function ProductPage() {
       // ItemRender: (itemData, itemcoulmns,index) => {}
     },
     {
-      header: "Title",
+      header: t("title"),
       field: "title",
       id: 2,
       exportable: false,
@@ -42,19 +44,19 @@ export default function ProductPage() {
     },
 
     {
-      header: "Description",
+      header: t("description"),
       field: "description",
       id: 3,
       exportable: false
     },
     {
-      header: "Price",
+      header: t("price"),
       field: "price",
       id: 4,
       exportable: false
     },
     {
-      header: "Type",
+      header: t("type"),
       field: "state.type",
       id: 5,
       exportable: false
@@ -63,13 +65,13 @@ export default function ProductPage() {
   const NavigateDialog = (
     <React.Fragment>
       <Button
-        label="No"
+        label={t("no")}
         icon="pi pi-times"
         outlined
         onClick={() => setopemNavigate(false)}
       />
       <Button
-        label="Yes"
+        label={"yes"}
         icon="pi pi-check"
         severity="danger"
         onClick={async () => {
@@ -87,7 +89,7 @@ export default function ProductPage() {
         columns={columns}
         totalProduct={product?.data?.meta?.total}
         currentPage={page}
-        tableTile="Products"
+        tableTile={t("products")}
         url={"/product"}
         deleteUrl={"products"}
         checked={(value: any) => {
@@ -112,7 +114,7 @@ export default function ProductPage() {
         visible={opemNavigate}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header="Confirm"
+        header={t("confirm")}
         modal
         footer={NavigateDialog}
         onHide={() => setopemNavigate(false)}
@@ -122,7 +124,7 @@ export default function ProductPage() {
             className="pi pi-exclamation-triangle mr-3"
             style={{ fontSize: "2rem" }}
           />
-          <span>you don't have campony,please create campony</span>
+          <span>{t("logToCompony")}</span>
         </div>
       </Dialog>
     </>

@@ -14,6 +14,7 @@ import UploadFile from "../../ui/uploadFile";
 import UploadFileMulty from "../../ui/uploadFileMulty";
 import UploadFileSer from "../../ui/uploadFileSer";
 import Loader from "../../ui/loader";
+import { useTranslation } from "react-i18next";
 
 const typeArr: any = [
   {
@@ -56,6 +57,7 @@ interface FormData {
 }
 export default function ProductAction() {
   const { id } = useParams();
+  const { t } = useTranslation();
   const [diseases, setdiseases] = useState<any>([]);
   const [cropsSet, setCropsSet] = useState<any>("");
   const [unitsSet, setUnitsSet] = useState<any>("");
@@ -72,6 +74,7 @@ export default function ProductAction() {
     clearErrors,
     reset,
     watch,
+    setError,
     formState: { errors }
   } = useForm<FormData>();
 
@@ -227,8 +230,8 @@ export default function ProductAction() {
       reset={reset}
       url={"products"}
       navUrl={"/product"}
-      cancel={"Cancel"}
-      title={`Product ${id == "new" ? "Add" : "Update"}`}
+      cancel={t("cancel")}
+      title={`${t("product")} ${id == "new" ? t("add") : t("update")}`}
     >
       <div className="flex gap-4 ">
         <div className="w-8 bg-white border-round-3xl ">
@@ -239,9 +242,9 @@ export default function ProductAction() {
                 <InputText
                   className=" mr-2 w-full"
                   id="title"
-                  placeholder="title"
+                  placeholder={t("title")}
                   aria-label="title"
-                  {...register(`title`, { required: "title is required" })}
+                  {...register(`title`, { required: t("titlerequired") })}
                   invalid={errors?.title?.message ? true : false}
                   value={watchedFiles?.title || ""}
                 />
@@ -258,9 +261,9 @@ export default function ProductAction() {
                   type="number"
                   className="mr-2 w-full"
                   id="price"
-                  placeholder="price"
+                  placeholder={t("price")}
                   {...register(`price`, {
-                    required: "price is required",
+                    required: t("pricerequired"),
                     valueAsNumber: true
                   })}
                   value={watchedFiles?.price || ""}
@@ -291,7 +294,7 @@ export default function ProductAction() {
                   disabled={id != "new"}
                   optionValue="code"
                   value={watchedFiles?.state?.type}
-                  placeholder={"Select Type"}
+                  placeholder={`${t("selectType")} `}
                 />
                 {/* <label htmlFor="Type"> Type </label> */}
               </div>
@@ -302,7 +305,7 @@ export default function ProductAction() {
                   id="unit"
                   className=" mr-2 w-full md:w-full"
                   {...{
-                    ...register("unit", { required: "unit is required" }),
+                    ...register("unit", { required: t("UnitRequired") }),
                     onChange: function (el) {
                       setValue("unit", el.value);
                       clearErrors("unit");
@@ -319,7 +322,7 @@ export default function ProductAction() {
                   )}
                   onMouseDown={() => setUnitsSet("")}
                   invalid={errors?.unit?.message ? true : false}
-                  placeholder={"Select Units"}
+                  placeholder={`${t("selectUnit")} `}
                   value={watchedFiles?.unit || ""}
                   options={units?.data}
                   optionValue="id"
@@ -344,7 +347,7 @@ export default function ProductAction() {
                   className=" mr-2 w-full md:w-full"
                   {...{
                     ...register("drug_category", {
-                      required: "drug_category is required"
+                      required: t("drugCategoryrequired")
                     }),
                     onChange: function (el) {
                       setValue("drug_category", el.value);
@@ -354,7 +357,7 @@ export default function ProductAction() {
                     onBlur: function () {}
                   }}
                   invalid={errors?.drug_category?.message ? true : false}
-                  placeholder={"Select drugs category"}
+                  placeholder={`${t("selectdrugCategory")} `}
                   value={watchedFiles?.drug_category}
                   options={drugCategory?.data}
                   optionValue="id"
@@ -379,7 +382,7 @@ export default function ProductAction() {
                   className=" mr-2 w-full md:w-full"
                   {...{
                     ...register("fertilizer_category", {
-                      required: "fertilizer_category is required"
+                      required: t("fertilizerCategoryrequired")
                     }),
                     onChange: function (el) {
                       setValue("fertilizer_category", el.value);
@@ -389,7 +392,7 @@ export default function ProductAction() {
                     onBlur: function () {}
                   }}
                   invalid={errors?.fertilizer_category?.message ? true : false}
-                  placeholder={"Select fertilizer category"}
+                  placeholder={`${t("selectFertilizerCategory")} `}
                   value={watchedFiles?.fertilizer_category}
                   options={fertilizerCategory?.data}
                   optionValue="id"
@@ -410,7 +413,7 @@ export default function ProductAction() {
               <InputTextarea
                 className=" mr-2 w-full"
                 id="description"
-                placeholder="description"
+                placeholder={`${t("description")} `}
                 rows={7}
                 cols={20}
                 {...register(`description`)}
@@ -439,12 +442,18 @@ export default function ProductAction() {
             className={"mb-4"}
             setValue={setValue}
             value={image}
+            setError={setError}
+            clearErrors={clearErrors}
+            error={errors}
             fieldName={"image"}
           />
           <UploadFileSer
             setValue={setValue}
             fieldName={"cer"}
             value={imageSer}
+            setError={setError}
+            clearErrors={clearErrors}
+            error={errors}
           />
         </div>
       </div>
@@ -452,8 +461,8 @@ export default function ProductAction() {
       <div className="p-4 bg-white border-round-3xl mt-4 mb-8">
         {indexArr?.map((_: any, i: any) => {
           return (
-            <div key={i} className="flex align-items-center gap-6 mb-4">
-              <div className="w-10">
+            <div key={i} className="flex align-items-start gap-3 mb-4">
+              <div className="w-full">
                 <div className="flex mb-4 gap-2">
                   {/* floatLabel */}
                   <div className="colm1">
@@ -482,7 +491,7 @@ export default function ProductAction() {
                         watchedFiles?.state?.items?.[i]?.crop ||
                         watchedTestFiles?.state?.items?.[i]?.crop
                       }
-                      placeholder={"Select Crops"}
+                      placeholder={`${t("selectCrop")} `}
                       optionValue="id"
                       options={crops?.data}
                       optionLabel="name"
@@ -508,7 +517,7 @@ export default function ProductAction() {
                         className=" mr-2 w-full"
                         {...{
                           ...register(`state.items[${i}].disease`, {
-                            required: "disease is required"
+                            required: t("diseaseRequired")
                           }),
                           onChange: function (el) {
                             setValue(`state.items[${i}].disease`, el.value);
@@ -534,7 +543,7 @@ export default function ProductAction() {
                             : false
                         }
                         value={watchedFiles?.state?.items?.[i]?.disease}
-                        placeholder={"Select Diseases"}
+                        placeholder={`${t("selectDisease")} `}
                         optionValue="id"
                         options={
                           watchedTestFiles?.state?.items?.[i]?.disease
@@ -557,12 +566,15 @@ export default function ProductAction() {
                     </div>
                   )}
                   {/* floatLabel */}
-                  <div className="colm1 relative">
+                  <div
+                    className="relative w-full"
+                    style={{ maxWidth: "155px" }}
+                  >
                     <InputText
                       className="mr-2 w-full pb-3"
                       id="dose_min"
                       type="number"
-                      placeholder="dose_min"
+                      placeholder={`${t("dose_min")} `}
                       aria-label="dose_min"
                       {...register(`state.items[${i}].dose_min`, {
                         // required: "dose_min is required",
@@ -585,12 +597,15 @@ export default function ProductAction() {
                     {/* <label htmlFor="dose_min">dose_min</label> */}
                   </div>
                   {/* floatLabel */}
-                  <div className="colm1 relative">
+                  <div
+                    className="colm1 relative w-full"
+                    style={{ maxWidth: "155px" }}
+                  >
                     <InputText
                       type="number"
                       className="mr-2 w-full pb-3"
                       id="dose_max"
-                      placeholder="dose_max"
+                      placeholder={`${t("dose_max")} `}
                       {...register(`state.items[${i}].dose_max`, {
                         // required: "dose_max is required",
                         valueAsNumber: true
@@ -613,14 +628,17 @@ export default function ProductAction() {
                   </div>
 
                   {/* floatLabel */}
-                  <div className="colm1 relative">
+                  <div
+                    className="colm1 relative w-full"
+                    style={{ maxWidth: "150px" }}
+                  >
                     <Dropdown
                       filter
                       id="unit"
                       className="mr-2 w-full"
                       {...{
                         ...register(`state.items[${i}].unit`, {
-                          required: "unit is required"
+                          required: t("UnitRequired")
                         }),
                         onChange: function (el) {
                           setValue(`state.items[${i}].unit`, el.value);
@@ -635,7 +653,7 @@ export default function ProductAction() {
                           : false
                       }
                       value={watchedFiles?.state?.items?.[i]?.unit}
-                      placeholder={"Select Units"}
+                      placeholder={`${t("selectUnit")} `}
                       optionValue="id"
                       options={units?.data}
                       optionLabel="name"
@@ -664,7 +682,7 @@ export default function ProductAction() {
                         className="mr-2 w-full pb-3"
                         id="use_count"
                         type="number"
-                        placeholder="use_count"
+                        placeholder={`${t("use_count")} `}
                         aria-label="dose_min"
                         {...register(`state.items[${i}].use_count`, {
                           // required: "use_count is required",
@@ -697,7 +715,7 @@ export default function ProductAction() {
                       <InputTextarea
                         className=" mr-2 w-full"
                         id="descriptionitems"
-                        placeholder="description"
+                        placeholder={`${t("description")}`}
                         rows={4}
                         cols={20}
                         {...register(`state.items[${i}].description`)}
@@ -725,7 +743,7 @@ export default function ProductAction() {
                       <InputTextarea
                         className=" mr-2 w-full"
                         id="method"
-                        placeholder="method"
+                        placeholder={`${t("method")}`}
                         rows={4}
                         cols={20}
                         {...register(`state.items[${i}].method`)}
@@ -749,8 +767,8 @@ export default function ProductAction() {
                 </div>
               </div>
               <Button
-                className="w-2 max-w-10rem border-round-3xl"
-                label="Delete"
+                className="w-2 max-w-3rem border-round-3xl"
+                // label={t("delete")}
                 type="button"
                 severity="danger"
                 icon="pi pi-trash"
@@ -772,7 +790,7 @@ export default function ProductAction() {
         })}
 
         <Button
-          label="Add"
+          label={t("add")}
           type="button"
           severity="success"
           className="border-round-3xl px-5"
