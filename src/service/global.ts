@@ -36,7 +36,7 @@ export const AddData = async (url: string, data: any) => {
 };
 
 export const UpdateData = async (url: string, data: any, id: any) => {
-    try {
+  try {
     const response = await api.put(`/${url}/${id}`, data);
     return response;
   } catch (error: any) {
@@ -47,7 +47,7 @@ export const UpdateDataOne = async (url: string, data: any) => {
   try {
     const response = await api.put(`/${url}`, data);
     return response;
-  }  catch (error: any) {
+  } catch (error: any) {
     handleError(error);
   }
 };
@@ -61,7 +61,6 @@ export const DeleteDataId = async (url: string, id: string) => {
   }
 };
 
-
 export const GetMe = async () => {
   try {
     const res = await api.get("/users/me");
@@ -73,8 +72,8 @@ export const GetMe = async () => {
 
 const handleError = (error: any) => {
   if (error?.response?.status === 401) {
+    window.location.replace("/auth/login");
     window.localStorage.removeItem("authToken");
-    window.location.reload();
   } else {
     toast.error(error?.response?.data?.error?.message);
   }

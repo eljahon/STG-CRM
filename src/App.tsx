@@ -21,12 +21,16 @@ function App() {
     };
     if (location.pathname != "/auth/login") fetchData();
 
+   
+  }, []);
+
+  useEffect(()=>{
     if (!isAuth) {
       navigate("/auth/login");
     } else if (location.pathname == "/" || location.pathname == "/auth/login") {
       navigate("/product");
     }
-  }, []);
+  },[isAuth])
 
   return (
     <>

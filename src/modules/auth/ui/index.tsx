@@ -2,7 +2,7 @@
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { AuthLogin } from "../../../service/auth";
@@ -18,7 +18,7 @@ export default function LoginFrom() {
   const [loader, setLoader] = useState(false);
   const { register, handleSubmit } = useForm<FormValues>();
   const { t } = useTranslation();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   useEffect(() => {
     window.localStorage.removeItem("authToken");
   }, []);
@@ -27,9 +27,9 @@ export default function LoginFrom() {
     await AuthLogin(data)
       .then((response: any) => {
         window.localStorage.setItem("authToken", response?.data?.token);
-        // navigate(`/product`);
-        window.location.reload();
-        // toast.seccess("login seccess!")
+        navigate(`/product`);
+        // window.location.reload();
+        // toast.seccess("login seccess!");
       })
       .catch((error: any) => {
         toast.error(
