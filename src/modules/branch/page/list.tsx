@@ -12,7 +12,14 @@ export default function BranchList() {
   const [page, setPage] = useState<any>(0);
   const { isLoading, data: product } = useQuery(
     ["company-branches", page],
-    () => GetAllData("company-branches", { populate: "*" })
+    () =>
+      GetAllData("company-branches", {
+        populate: "*",
+        pagination: {
+          page: page / 10 + 1,
+          pageSize: 20
+        }
+      })
   );
   const columns = [
     {
@@ -55,7 +62,7 @@ export default function BranchList() {
         isLoading={isLoading}
         data={product?.data}
         columns={columns}
-        totalProduct={product?.data?.meta?.total}
+        totalProduct={product?.meta?.pagination?.total}
         currentPage={page}
         tableTile={t("branch")}
         url={"/branch"}

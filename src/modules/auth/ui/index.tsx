@@ -49,18 +49,18 @@ export default function LoginFrom() {
           <div className="w-full flex justify-content-center">
             <img src="/Logo.png" width={150} />
           </div>
-          <label className="block">
-            <p> {t("username")}</p>
+          <label className="block my-3">
+            <p className="label-my"> {t("phone")}</p>
             <InputText
               //   variant='success'
               id="username"
               type="text"
-              placeholder={t("username")}
+              placeholder={t("phone")}
               {...register(`phone`, { required: true })}
             />
           </label>
           <label className="block mb-4">
-            <p>{t("password")}</p>
+            <p className="label-my">{t("password")}</p>
             <InputText
               //   variant="success"
               id="password"

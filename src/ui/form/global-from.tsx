@@ -41,20 +41,8 @@ export default function GlobalFrom({
         .then(() => {
           toast.success("seccessfully create");
           navigate(navUrl);
-          // reset()
         })
-        .catch((error: any) => {
-          if (
-            // error?.response?.status == "403" ||
-            error?.response?.status == "401"
-          ) {
-            navigate("/auth/login");
-            window.location.reload();
-            window.localStorage.removeItem("authToken");
-          } else {
-            toast.error(error?.response?.data?.error?.message);
-          }
-        })
+      
         .finally(() => setLoader(false));
     } else if (id == "old") {
       await UpdateDataOne(url, data)
@@ -63,18 +51,6 @@ export default function GlobalFrom({
           navigate(navUrl);
           if (setfile?.length) {
             setfile(null);
-          }
-        })
-        .catch((error) => {
-          if (
-            // error?.response?.status == "403" ||
-            error?.response?.status == "401"
-          ) {
-            navigate("/auth/login");
-            window.location.reload();
-            window.localStorage.removeItem("authToken");
-          } else {
-            toast.error(error?.response?.data?.error?.message);
           }
         })
         .finally(() => setLoader(false));
@@ -87,18 +63,6 @@ export default function GlobalFrom({
           reset();
           if (setfile?.length) {
             setfile(null);
-          }
-        })
-        .catch((error) => {
-          if (
-            // error?.response?.status == "403" ||
-            error?.response?.status == "401"
-          ) {
-            navigate("/auth/login");
-            window.location.reload();
-            window.localStorage.removeItem("authToken");
-          } else {
-            toast.error(error?.response?.data?.error?.message);
           }
         })
         .finally(() => setLoader(false));

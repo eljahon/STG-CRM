@@ -1,66 +1,81 @@
 import { toast } from "react-toastify";
 import api from "./api";
+import qs from "qs";
 
 export const GetAllData = async (url: string, query?: any) => {
   try {
-    const params = new URLSearchParams(query);
-
-    const response = await api.get(
-      `/${url}${query ? "?" + params.toString() : ""}`
-    );
+    const params = query
+      ? `?${qs.stringify(query, { arrayFormat: "repeat" })}`
+      : "";
+    const response = await api.get(`/${url}${params}`);
     return response?.data;
   } catch (error: any) {
-    if (error?.response?.status == 401) {
-      window.location.reload();
-      window.localStorage.removeItem("authToken");
-    } else {
-      toast.error(error?.response?.data?.error?.message);
-    }
+    handleError(error);
   }
 };
 
-export const GetByIdData = async (url: string, id: any, query: any) => {
+export const GetByIdData = async (url: string, id: any, query?: any) => {
   try {
-    const params = new URLSearchParams(query);
-    const response = await api.get(
-      `/${url}/${id}${query ? "?" + params.toString() : ""}`
-    );
+    const params = query
+      ? `?${qs.stringify(query, { arrayFormat: "repeat" })}`
+      : "";
+    const response = await api.get(`/${url}/${id}${params}`);
     return response?.data;
   } catch (error: any) {
-    if (error?.response?.status == 401) {
-      window.location.reload();
-      window.localStorage.removeItem("authToken");
-    } else {
-      toast.error(error?.response?.data?.error?.message);
-    }
+    handleError(error);
   }
 };
 
 export const AddData = async (url: string, data: any) => {
-  const response = await api.post(`/${url}`, data);
-  return response;
+  try {
+    const response = await api.post(`/${url}`, data);
+    return response;
+  } catch (error: any) {
+    handleError(error);
+  }
 };
 
 export const UpdateData = async (url: string, data: any, id: any) => {
-  const response = await api.put(`/${url}/${id}`, data);
-  return response;
+    try {
+    const response = await api.put(`/${url}/${id}`, data);
+    return response;
+  } catch (error: any) {
+    handleError(error);
+  }
 };
 export const UpdateDataOne = async (url: string, data: any) => {
-  const response = await api.put(`/${url}`, data);
-  return response;
+  try {
+    const response = await api.put(`/${url}`, data);
+    return response;
+  }  catch (error: any) {
+    handleError(error);
+  }
 };
 
 export const DeleteDataId = async (url: string, id: string) => {
-  const response = await api.delete(`/${url}/${id}`);
-  return response;
+  try {
+    const response = await api.delete(`/${url}/${id}`);
+    return response;
+  } catch (error: any) {
+    handleError(error);
+  }
 };
 
-export const DeleteData = async (url: string, id: string) => {
-  const response = await api.post(`/${url}/delete-multiple`, id);
-  return response;
-};
 
 export const GetMe = async () => {
-  const res = await api.get("/users/me");
-  return res;
+  try {
+    const res = await api.get("/users/me");
+    return res;
+  } catch (error: any) {
+    handleError(error);
+  }
+};
+
+const handleError = (error: any) => {
+  if (error?.response?.status === 401) {
+    window.localStorage.removeItem("authToken");
+    window.location.reload();
+  } else {
+    toast.error(error?.response?.data?.error?.message);
+  }
 };

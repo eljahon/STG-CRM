@@ -14,7 +14,13 @@ export default function ProductPage() {
   const [page, setPage] = useState<any>(0);
   const [opemNavigate, setopemNavigate] = useState<any>(false);
   const { isLoading, data: product } = useQuery(["products", page], () =>
-    GetAllData("products/distribute", { populate: "*" })
+    GetAllData("products/distribute", {
+      populate: "*",
+      pagination: {
+        page: page / 10 + 1,
+        pageSize: 20
+      }
+    })
   );
   // { limit: 10, page: page / 10 + 1 }
   const { data: me } = useQuery(["meComponye"], () => GetMe());
@@ -88,7 +94,7 @@ export default function ProductPage() {
         isLoading={isLoading}
         data={product?.data}
         columns={columns}
-        totalProduct={product?.data?.meta?.total}
+        totalProduct={product?.meta?.pagination?.total}
         currentPage={page}
         tableTile={t("products")}
         url={"/product"}

@@ -161,7 +161,6 @@ export default function GolabTable(props: ITable) {
               setDeleteProductDialog(false);
               queryClient.invalidateQueries([deleteUrl]);
             })
-            .catch(() => toast.error("something want wrong"));
         }}
       />
     </React.Fragment>

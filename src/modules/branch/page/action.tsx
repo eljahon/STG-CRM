@@ -35,16 +35,14 @@ const BranchAction = () => {
   } = useForm<FormData>();
   const { id } = useParams();
   const watchedFiles = watch();
-
+  
   const { data: regions } = useQuery("regions", () => GetAllData("regions"));
   const { data: districts } = useQuery(
     ["districts", watchedFiles?.region],
     () =>
-      GetAllData(
-        `districts${
-          watchedFiles?.region ? `?filters[region]=${watchedFiles?.region}` : ""
-        }`
-      )
+      GetAllData(`districts`, {
+        filters: { region: watchedFiles?.region || undefined }
+      })
   );
   const handleLocationSelect = (coords: number[]) => {
     setValue("location.lat", coords?.[0]);

@@ -90,15 +90,19 @@ export default function ProductAction() {
       }, delay);
     };
   };
-
+  
   const { setValue: setValuetest, watch: watchTest } = useForm<any>();
   const watchedFiles = watch();
   const watchedTestFiles = watchTest();
   const { data: crops } = useQuery(["crops", cropsSet], () =>
-    GetAllData(`crops${cropsSet && `?filters[name][$containsi]=${cropsSet}`}`)
+    GetAllData(`crops`, {
+      filters: { name: { $containsi: cropsSet || undefined } }
+    })
   );
   const { data: units } = useQuery(["units", unitsSet], () =>
-    GetAllData(`units${unitsSet && `?filters[name][$containsi]=${unitsSet}`}`)
+    GetAllData(`units`, {
+      filters: { name: { $containsi: unitsSet || undefined } }
+    })
   );
   const { data: drugCategory } = useQuery("drugCategory", () =>
     GetAllData("drug-categories")
@@ -107,15 +111,12 @@ export default function ProductAction() {
     GetAllData("fertilizer-categories")
   );
   const getDiseesesByCrop = async (crop?: string, diseases?: string) => {
-    await GetAllData(
-      `diseases${
-        crop
-          ? `?filters[crop]=${crop}`
-          : diseases
-          ? `?filters[name][$containsi]=${diseases}`
-          : ""
-      }`
-    )
+    await GetAllData(`diseases`, {
+      filters: {
+        name: { $containsi: diseases || undefined },
+        crop: crop || undefined
+      }
+    })
       .then((e) => {
         setdiseases(e?.data);
       })
