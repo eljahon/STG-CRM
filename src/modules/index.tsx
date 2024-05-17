@@ -1,3 +1,4 @@
+import { BranchRoute } from "./branch/route";
 import { CampanyActionRoute } from "./campany/route";
 import { ProductRoute } from "./product/route";
 import { ProfileActionRoute } from "./profile/route";
@@ -15,7 +16,8 @@ const routes = [
   //   ...notFound,
   ...ProductRoute,
   ...CampanyActionRoute,
-  ...ProfileActionRoute
+  ...ProfileActionRoute,
+  ...BranchRoute
 ];
 const rolename = "SuperAdmin";
 export const filteredRoutes = routes.filter(async (el) => {

@@ -5,9 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import GlobalLoader from "./ui/global-loader";
 import "../i18";
 function App() {
-  const [isAuth, setIsAtuh] = useState<any>(
-    window.localStorage.getItem("authToken") || null
-  );
+  const isAuth = window.localStorage.getItem("authToken") || null;
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -15,31 +13,24 @@ function App() {
     const fetchData = async () => {
       setLoading(true);
       await GetMe()
-        .then((res) => {
-          if (
-            (res.status == 200 && location.pathname == "/") ||
-            location.pathname == "/auth/login"
-          ) {
+        .then((res: any) => {
+          if (res.status == "200" && location.pathname == "/")
             navigate("/product");
-          }
-        })
-        .catch((error) => {
-          if (
-            error?.response?.status == "403" ||
-            error?.response?.status == "401"
-          ) {
-            window.localStorage.removeItem("authToken");
-            setIsAtuh(null);
-          }
         })
         .finally(() => setLoading(false));
     };
+    if (location.pathname != "/auth/login") fetchData();
 
+   
+  }, []);
+
+  useEffect(()=>{
     if (!isAuth) {
       navigate("/auth/login");
+    } else if (location.pathname == "/" || location.pathname == "/auth/login") {
+      navigate("/product");
     }
-    fetchData();
-  }, []);
+  },[isAuth])
 
   return (
     <>

@@ -14,13 +14,20 @@ export default function ProductPage() {
   const [page, setPage] = useState<any>(0);
   const [opemNavigate, setopemNavigate] = useState<any>(false);
   const { isLoading, data: product } = useQuery(["products", page], () =>
-    GetAllData("products/distribute", { limit: 10, page: page / 10 + 1 })
+    GetAllData("products/distribute", {
+      populate: "*",
+      pagination: {
+        page: page / 10 + 1,
+        pageSize: 20
+      }
+    })
   );
+  // { limit: 10, page: page / 10 + 1 }
   const { data: me } = useQuery(["meComponye"], () => GetMe());
   const columns = [
     {
       header: t("image"),
-      field: "image.aws_path",
+      field: "avatar.aws_path",
       id: 1,
       // sortable: true,
       exportable: false,
@@ -85,13 +92,14 @@ export default function ProductPage() {
     <>
       <GolabTable
         isLoading={isLoading}
-        data={product?.data?.items}
+        data={product?.data}
         columns={columns}
-        totalProduct={product?.data?.meta?.total}
+        totalProduct={product?.meta?.pagination?.total}
         currentPage={page}
         tableTile={t("products")}
         url={"/product"}
         deleteUrl={"products"}
+        Isupdate={true}
         checked={(value: any) => {
           console.log(value);
         }}

@@ -2,38 +2,47 @@ import { useEffect, useState } from "react";
 import { ImageUpload } from "../../utils/uplaoadFile";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+import { ProgressBar } from "primereact/progressbar";
 
 export default function UploadFileMulty({
   setValue,
   fieldName,
   value = [],
   valueId = [],
+  setLocalValue,
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
   const [imageOpen, setImageOpen] = useState<any>(null);
   const [loadingFile, setLoading] = useState<boolean>(false);
+  const [progress, setProgress] = useState<any>(0);
   const { t } = useTranslation();
   useEffect(() => {
     setImage(value);
   }, [value]);
 
   const hendleimg = async (e: any) => {
-    if (e.target.files[0]&& e.target.files[0]?.size < 5000000) {
+    if (e.target.files[0] && e.target.files[0]?.size < 5000000) {
       setLoading(true);
-      const res = await ImageUpload(e.target.files[0], {
-        type: "image",
-        folder: "other"
-      }).finally(() => setLoading(false));
+      const res = await ImageUpload(
+        e.target.files[0],
+        {
+          type: "image",
+          folder: "other"
+        },
+        setProgress
+      ).finally(() => setLoading(false));
 
       if (value?.length) {
         setValue(fieldName, [res?.data?.media?.id, ...valueId]);
         setImage((state: any) => [res?.data?.media, ...state]);
+        setLocalValue((state: any) => [res?.data?.media, ...state]);
       } else {
         setValue(fieldName, [res?.data?.media?.id]);
         setImage([res?.data?.media]);
+        setLocalValue([res?.data?.media]);
       }
-    }else{
+    } else {
       toast.error("The galary size must be less than 5 MB.");
     }
   };
@@ -45,6 +54,7 @@ export default function UploadFileMulty({
       valueId?.filter((aE: any) => aE != e)
     );
   };
+
   return (
     <div className={`w-full ${className && className}`}>
       <label className="w-6 ">
@@ -61,7 +71,28 @@ export default function UploadFileMulty({
       </label>
       {image.length ? (
         <div className="flex  flex=wrap gap-2 mt-3">
-          {loadingFile && <div>loading</div>}
+          {loadingFile && (
+            <div className="flex align-items-center flex-column">
+              <i
+                className="pi pi-spin pi-spinner-dotted p-5"
+                style={{ fontSize: "3rem" }}
+              ></i>
+             <span
+            style={{
+              fontSize: "1em",
+              color: "var(--text-color-secondary)"
+            }}
+            className="my-3 w-full text-center"
+          >
+            {progress} %
+            <ProgressBar
+              mode="indeterminate"
+              style={{ height: "4px" }}
+              value={progress}
+            ></ProgressBar>
+          </span>
+            </div>
+          )}
           {image &&
             image?.map((e: any, i: any) => (
               <div
@@ -100,7 +131,21 @@ export default function UploadFileMulty({
             ))}
         </div>
       ) : loadingFile ? (
-        <div>loading</div>
+        <div className="flex align-items-center flex-column">
+          <i
+            className="pi pi-spin pi-spinner-dotted p-5"
+            style={{ fontSize: "3rem" }}
+          ></i>
+          <span
+            style={{
+              fontSize: "1em",
+              color: "var(--text-color-secondary)"
+            }}
+            className="my-3"
+          >
+            loading...
+          </span>
+        </div>
       ) : (
         <div className="flex align-items-center flex-column mt-4">
           <i

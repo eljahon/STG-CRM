@@ -38,67 +38,35 @@ export default function GlobalFrom({
     setLoader(true);
     if (id == "new" || !id) {
       await AddData(url, data)
-        .then(() => {
-          toast.success("seccessfully create");
-          navigate(navUrl);
-          // reset()
-        })
-        .catch((error: any) => {
-          if (
-            error?.response?.status == "403" ||
-            error?.response?.status == "401"
-          ) {
-            navigate("/auth/login");
-            window.location.reload();
-            window.localStorage.removeItem("authToken");
-          } else {
-            toast.error(error?.response?.data?.error?.message);
+        .then((res: any) => {
+          if (res?.status == "200" || res?.status == "201") {
+            toast.success("seccessfully create");
+            navigate(navUrl);
           }
         })
         .finally(() => setLoader(false));
     } else if (id == "old") {
       await UpdateDataOne(url, data)
-        .then(() => {
-          toast.success("seccessfully update");
-          navigate(navUrl);
+        .then((res: any) => {
+          if (res?.status == "200" || res?.status == "201") {
+            toast.success("seccessfully update");
+            navigate(navUrl);
+          }
           if (setfile?.length) {
             setfile(null);
-          }
-        })
-        .catch((error) => {
-          if (
-            error?.response?.status == "403" ||
-            error?.response?.status == "401"
-          ) {
-            navigate("/auth/login");
-            window.location.reload();
-            window.localStorage.removeItem("authToken");
-          } else {
-            toast.error(error?.response?.data?.error?.message);
           }
         })
         .finally(() => setLoader(false));
     } else {
       await UpdateData(url, data, id)
-        .then(() => {
-          toast.success("seccessfully update");
-
-          navigate(navUrl);
-          reset();
+        .then((res: any) => {
+          if (res?.status == "200" || res?.status == "201") {
+            toast.success("seccessfully update");
+            navigate(navUrl);
+            reset();
+          }
           if (setfile?.length) {
             setfile(null);
-          }
-        })
-        .catch((error) => {
-          if (
-            error?.response?.status == "403" ||
-            error?.response?.status == "401"
-          ) {
-            navigate("/auth/login");
-            window.location.reload();
-            window.localStorage.removeItem("authToken");
-          } else {
-            toast.error(error?.response?.data?.error?.message);
           }
         })
         .finally(() => setLoader(false));
