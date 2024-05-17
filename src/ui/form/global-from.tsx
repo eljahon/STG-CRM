@@ -38,17 +38,20 @@ export default function GlobalFrom({
     setLoader(true);
     if (id == "new" || !id) {
       await AddData(url, data)
-        .then(() => {
-          toast.success("seccessfully create");
-          navigate(navUrl);
+        .then((res: any) => {
+          if (res?.status == "200" || res?.status == "201") {
+            toast.success("seccessfully create");
+            navigate(navUrl);
+          }
         })
-      
         .finally(() => setLoader(false));
     } else if (id == "old") {
       await UpdateDataOne(url, data)
-        .then(() => {
-          toast.success("seccessfully update");
-          navigate(navUrl);
+        .then((res: any) => {
+          if (res?.status == "200" || res?.status == "201") {
+            toast.success("seccessfully update");
+            navigate(navUrl);
+          }
           if (setfile?.length) {
             setfile(null);
           }
@@ -56,11 +59,12 @@ export default function GlobalFrom({
         .finally(() => setLoader(false));
     } else {
       await UpdateData(url, data, id)
-        .then(() => {
-          toast.success("seccessfully update");
-
-          navigate(navUrl);
-          reset();
+        .then((res: any) => {
+          if (res?.status == "200" || res?.status == "201") {
+            toast.success("seccessfully update");
+            navigate(navUrl);
+            reset();
+          }
           if (setfile?.length) {
             setfile(null);
           }

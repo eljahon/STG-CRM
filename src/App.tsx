@@ -13,8 +13,9 @@ function App() {
     const fetchData = async () => {
       setLoading(true);
       await GetMe()
-        .then(() => {
-          if (location.pathname == "/") navigate("/product");
+        .then((res: any) => {
+          if (res.status == "200" && location.pathname == "/")
+            navigate("/product");
         })
         .finally(() => setLoading(false));
     };
