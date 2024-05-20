@@ -1,12 +1,12 @@
 import BranchAction from "./page/action";
-import BranchList from "./page/list";
+import BranchList from "./page";
 
 export const BranchRoute = [
   {
     url: "/branch",
     Element: BranchList,
     label: "Branch",
-    icon: "pi pi-bars",
+    icon: "pi pi-sitemap",
     children: [],
     meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
     hideIfchildern: true

@@ -4,15 +4,13 @@ import { Link, useLocation } from "react-router-dom";
 import { filteredRoutes } from "../../../../modules/index.tsx";
 import { Badge } from "primereact/badge";
 
-
 export default function RouterDemo() {
   const pashName = useLocation();
-
 
   const itemRenderer = (item: any) =>
     item.hideIfchildern && (
       <div
-        className={`p-menuitem-content border-round-2xl ${
+        className={`p-menuitem-content border-round-2xl mb-2 ${
           pashName.pathname.includes(item?.url) ? "bg-green-500 text-white" : ""
         }`}
       >

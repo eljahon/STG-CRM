@@ -19,9 +19,7 @@ function App() {
         })
         .finally(() => setLoading(false));
     };
-    if (location.pathname != "/auth/login") fetchData();
-
-   
+    if (location.pathname != "/auth/login" && isAuth) fetchData();
   }, []);
 
   useEffect(()=>{

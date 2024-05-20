@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import GolabTable from "../../../ui/tabel";
+import GolabTable from "../../../ui/tabel/index.tsx";
 import { useQuery } from "react-query";
 import { GetAllData } from "../../../service/global.ts";
 import { useState } from "react";

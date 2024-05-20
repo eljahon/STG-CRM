@@ -1,22 +1,19 @@
 import ProductAction from "./pages/action.tsx";
-import ProductPage from "./pages/list.tsx";
-
+import ProductPage from "./pages/index.tsx";
 
 export const ProductRoute = [
   {
     url: "/product",
     Element: ProductPage,
     label: "Product",
-    icon: 'pi pi-bars',
+    icon: "pi pi-th-large",
     children: [],
     meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
-    hideIfchildern: true,
+    hideIfchildern: true
   },
   {
     url: "/product/:id",
     Element: ProductAction,
-    meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
-  },
+    meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) }
+  }
 ];
-
-  
