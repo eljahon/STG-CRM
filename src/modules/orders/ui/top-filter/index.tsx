@@ -9,7 +9,7 @@ const TopFilter = ({ title }: any) => {
             style={{ fontSize: "1rem", color: "black" }}
           ></i>
         </div>
-        <div className="py-2 px-3     bg-white border-round-2xl cursor-pointer">
+        <div className="py-2 px-3  bg-white border-round-2xl cursor-pointer">
           <i
             className="pi pi-objects-column"
             style={{ fontSize: "1rem", color: "black" }}

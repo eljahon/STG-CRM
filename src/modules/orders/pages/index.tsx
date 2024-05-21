@@ -16,14 +16,35 @@ const OrderPage = () => {
                 { label: "Title", text: "Research" },
                 { label: "Estimate", text: "2d 4h" }
               ]}
-              status={"seccess"}
+              status={"pending"}
             />
             <OrdersCard
               column={[
                 { label: "Title", text: "Research" },
                 { label: "Estimate", text: "2d 4h" }
               ]}
-              status={"seccess"}
+              status={"accepted"}
+            />
+            <OrdersCard
+              column={[
+                { label: "Title", text: "Research" },
+                { label: "Estimate", text: "2d 4h" }
+              ]}
+              status={"shipping"}
+            />
+            <OrdersCard
+              column={[
+                { label: "Title", text: "Research" },
+                { label: "Estimate", text: "2d 4h" }
+              ]}
+              status={"completed"}
+            />
+            <OrdersCard
+              column={[
+                { label: "Title", text: "Research" },
+                { label: "Estimate", text: "2d 4h" }
+              ]}
+              status={"cancelled"}
             />
           </div>
         </div>

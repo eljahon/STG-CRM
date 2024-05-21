@@ -90,7 +90,7 @@ export default function ProductAction() {
       }, delay);
     };
   };
-  
+
   const { setValue: setValuetest, watch: watchTest } = useForm<any>();
   const watchedFiles = watch();
   const watchedTestFiles = watchTest();
@@ -224,7 +224,6 @@ export default function ProductAction() {
     }
   }, [id]);
 
-  // console.log(errors, watchedFiles);
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
@@ -321,7 +320,7 @@ export default function ProductAction() {
                       }, 700)}
                     />
                   )}
-                  onMouseDown={() => setUnitsSet("")}
+                  // onMouseDown={() => setUnitsSet("")}
                   invalid={errors?.unit?.message ? true : false}
                   placeholder={`${t("selectUnit")} `}
                   value={watchedFiles?.unit || ""}
@@ -471,7 +470,7 @@ export default function ProductAction() {
                     <Dropdown
                       filter
                       id="crop"
-                      onMouseDown={() => setCropsSet("")}
+                      // onMouseDown={() => setCropsSet("")}
                       onScroll={(e) => console.log(e)}
                       className=" mr-2 w-full md:w-full"
                       onChange={(e) => {
@@ -479,23 +478,37 @@ export default function ProductAction() {
                           setValue(`state.items[${i}].crop`, e.value);
                         } else {
                           getDiseesesByCrop(e.value);
-                          setValuetest(`state.items[${i}].crop`, e.value);
+                        }
+                        if (e?.value) {
+                          setValuetest(
+                            `state.items[${i}].crop`,
+                            crops?.data?.find((de: any) => de?.id == e.value)
+                          );
                         }
                       }}
                       filterTemplate={() => (
                         <InputText
                           onChange={debounce((e) => {
-                            setCropsSet(e.target.value);
+                            if (e.target.value) {
+                              setCropsSet(e.target.value);
+                            }
                           }, 700)}
                         />
                       )}
                       value={
                         watchedFiles?.state?.items?.[i]?.crop ||
-                        watchedTestFiles?.state?.items?.[i]?.crop
+                        watchedTestFiles?.state?.items?.[i]?.crop?.id
                       }
                       placeholder={`${t("selectCrop")} `}
                       optionValue="id"
-                      options={crops?.data}
+                      options={
+                        watchedTestFiles?.state?.items?.[i]?.crop && crops?.data 
+                          ? [
+                              ...crops?.data,
+                              watchedTestFiles?.state?.items?.[i]?.crop
+                            ]:
+                        crops?.data
+                      }
                       optionLabel="name"
                       checkmark={true}
                       highlightOnSelect={false}
@@ -527,7 +540,7 @@ export default function ProductAction() {
 
                             setValuetest(
                               `state.items[${i}].disease`,
-                              diseases.find((de: any) => de?.id == el.value)
+                              diseases?.find((de: any) => de?.id == el.value)
                             );
 
                             return el.value;
@@ -536,7 +549,7 @@ export default function ProductAction() {
                         }}
                         onMouseDown={() => {
                           getDiseesesByCrop(
-                            watchedTestFiles?.state?.items?.[i]?.crop
+                            watchedTestFiles?.state?.items?.[i]?.crop?.id
                           );
                         }}
                         invalid={
@@ -659,7 +672,7 @@ export default function ProductAction() {
                       optionValue="id"
                       options={units?.data}
                       optionLabel="name"
-                      onMouseDown={() => setUnitsSet("")}
+                      // onMouseDown={() => setUnitsSet("")}
                       checkmark={true}
                       filterTemplate={() => (
                         <InputText
@@ -797,6 +810,7 @@ export default function ProductAction() {
           severity="success"
           className="border-round-3xl px-5"
           onClick={() => {
+            setCropsSet("");
             setIndex(index + 1);
             setIndexArr((state: any) => [index + 1, ...state]);
             clearErrors();
