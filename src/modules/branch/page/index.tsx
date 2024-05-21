@@ -1,74 +1,65 @@
 import { useNavigate } from "react-router-dom";
-import GolabTable from "../../../ui/tabel";
+import GolabTable from "../../../ui/tabel/index.tsx";
 import { useQuery } from "react-query";
-import { GetAllData, GetMe } from "../../../service/global.ts";
+import { GetAllData } from "../../../service/global.ts";
 import React, { useState } from "react";
-import { Button } from "primereact/button";
 
-import { Dialog } from "primereact/dialog";
 import { useTranslation } from "react-i18next";
+import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
 
-export default function ProductPage() {
+export default function BranchList() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [page, setPage] = useState<any>(0);
   const [opemNavigate, setopemNavigate] = useState<any>(false);
-  const { isLoading, data: product } = useQuery(["products", page], () =>
-    GetAllData("products/distribute", {
-      populate: "*",
-      pagination: {
-        page: page / 10 + 1,
-        pageSize: 20
-      }
-    })
+  const compony = window.localStorage.getItem("compony");
+  const { isLoading, data: product } = useQuery(
+    ["company-branches", page],
+    () =>
+      GetAllData("company-branches", {
+        populate: "*",
+        pagination: {
+          page: page / 10 + 1,
+          pageSize: 20
+        }
+      })
   );
-  // { limit: 10, page: page / 10 + 1 }
-  const { data: me } = useQuery(["meComponye"], () => GetMe());
   const columns = [
     {
-      header: t("image"),
-      field: "avatar.aws_path",
-      id: 1,
-      // sortable: true,
-      exportable: false,
-      body: (itemData: any) => {
-        return (
-          <img
-            src={import.meta.env.VITE_APP_AWS_PATH + itemData?.image?.aws_path}
-            width={50}
-            height={50}
-          />
-        );
-      }
-      // ItemRender: (itemData, itemcoulmns,index) => {}
-    },
-    {
-      header: t("title"),
-      field: "title",
+      header: t("branchName"),
+      field: "name",
       id: 2,
       exportable: false,
       style: { minWidth: "12rem" }
     },
 
     {
-      header: t("description"),
-      field: "description",
+      header: t("region"),
+      field: "region.name",
       id: 3,
       exportable: false
     },
     {
-      header: t("price"),
-      field: "price",
+      header: t("district"),
+      field: "district.name",
       id: 4,
       exportable: false
     },
     {
-      header: t("type"),
-      field: "state.type",
+      header: t("fullname"),
+      field: "owner.fullname",
+      id: 5,
+      exportable: false
+    },
+    {
+      header: t("phone"),
+      field: "owner.phone",
       id: 5,
       exportable: false
     }
   ];
+
   const NavigateDialog = (
     <React.Fragment>
       <Button
@@ -96,10 +87,9 @@ export default function ProductPage() {
         columns={columns}
         totalProduct={product?.meta?.pagination?.total}
         currentPage={page}
-        tableTile={t("products")}
-        url={"/product"}
-        deleteUrl={"products"}
-        Isupdate={true}
+        tableTile={t("branch")}
+        url={"/branch"}
+        deleteUrl={"company-branches"}
         checked={(value: any) => {
           console.log(value);
         }}
@@ -110,8 +100,8 @@ export default function ProductPage() {
           console.log(rowItem);
         }}
         newAdd={() => {
-          if (me?.data?.company && me?.data?.company != "undefined") {
-            navigate("/product/new");
+          if (compony && compony != "undefined") {
+            navigate("/branch/new");
           } else {
             setopemNavigate(true);
           }

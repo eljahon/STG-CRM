@@ -11,7 +11,9 @@ export default function MainLayout() {
         className="w-full relative"
         style={{
           marginLeft: "260px",
-          marginTop: ["/product", "/branch"].includes(location.pathname as any)
+          marginTop: ["/product", "/branch", "/orders", "/dashboard"].includes(
+            location.pathname as any
+          )
             ? "50px"
             : "190px"
         }}

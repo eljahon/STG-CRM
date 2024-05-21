@@ -74,7 +74,6 @@ const handleError = (error: any) => {
   if (error?.response?.status === 401) {
     window.location.replace("/auth/login");
     window.localStorage.removeItem("authToken");
-  } else {
-    toast.error(error?.response?.data?.error?.message);
   }
+  toast.error(error?.response?.data?.error?.message);
 };

@@ -29,7 +29,6 @@ export default function CampanySetPage() {
   const watchedFiles = watch();
   const [image, setImage] = useState<any>();
 
-  const company = window.localStorage.getItem("company");
   const { data: companies } = useQuery("meFor", () =>
     GetAllData("my-company", { populate: "*" })
   );
@@ -49,9 +48,11 @@ export default function CampanySetPage() {
       reset={reset}
       cancel={t("cancel")}
       url={
-        company && company != "undefined" ? "update-company" : "create-company"
+        companies && companies != "undefined"
+          ? "update-company"
+          : "create-company"
       }
-      navUrl={"/product"}
+      navUrl={"/dashboard"}
       title={t("company")}
     >
       <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 justify-content-between">
