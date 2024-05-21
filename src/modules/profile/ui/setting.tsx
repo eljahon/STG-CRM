@@ -62,7 +62,7 @@ export default function ProfileSettingPage() {
       reset={reset}
       url={"users-permissions/user-update"}
       cancel={t("cancel")}
-      navUrl={"/product"}
+      navUrl={"/dashboard"}
       title={`Profile`}
     >
       <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 justify-content-between mb-4">

@@ -1,13 +1,13 @@
-// import { Divider } from 'primereact/divider';
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { AuthLogin } from "../../../service/auth";
 import Loader from "../../../ui/loader/index";
 import { useTranslation } from "react-i18next";
+import { GetMe } from "../../../service/global";
 
 type FormValues = {
   phone: string;
@@ -18,7 +18,7 @@ export default function LoginFrom() {
   const [loader, setLoader] = useState(false);
   const { register, handleSubmit } = useForm<FormValues>();
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   useEffect(() => {
     window.localStorage.removeItem("authToken");
   }, []);
@@ -27,9 +27,12 @@ export default function LoginFrom() {
     await AuthLogin(data)
       .then((response: any) => {
         window.localStorage.setItem("authToken", response?.data?.token);
-        navigate(`/product`);
-        // window.location.reload();
-        // toast.seccess("login seccess!");
+
+        GetMe().then((res: any) => {
+          window.localStorage.setItem("role", res?.data?.role?.description);
+          window.location.reload();
+          // navigate("/dashboard");
+        });
       })
       .catch((error: any) => {
         toast.error(
@@ -54,7 +57,7 @@ export default function LoginFrom() {
           className="w-full"
           style={{ maxWidth: "600px" }}
           width={500}
-          src="/public/marketing-campaign-1-97.svg"
+          src="/marketing-campaign-1-97.svg"
         />
       </div>
       <div className="h-full w-6 flex flex-column  justify-content-center  aling-item-center ">

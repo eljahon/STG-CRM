@@ -1,5 +1,6 @@
 import { BranchRoute } from "./branch/route";
 import { CampanyActionRoute } from "./campany/route";
+import { DashboardRoute } from "./dashboard/route";
 import { OrdersRoute } from "./orders/route";
 import { ProductRoute } from "./product/route";
 import { ProfileActionRoute } from "./profile/route";
@@ -15,13 +16,17 @@ import { ProfileActionRoute } from "./profile/route";
 
 const routes = [
   //   ...notFound,
+  ...DashboardRoute,
   ...ProductRoute,
   ...CampanyActionRoute,
   ...ProfileActionRoute,
   ...BranchRoute,
   ...OrdersRoute
 ];
-const rolename = "SuperAdmin";
-export const filteredRoutes = routes.filter(async (el) => {
-  return await el?.meta?.role?.has(rolename);
+const rolename = window.localStorage.getItem("role") || "distributor";
+
+const data = routes.map((el) => {
+  return el?.meta?.role?.has(rolename) ? el : null;
 });
+
+export const filteredRoutes = data.filter((el) => el !== null);

@@ -14,7 +14,7 @@ export default function Header() {
   const [openmadal, setOpenmadal] = useState(false);
   const { t } = useTranslation();
   const { data: me } = useQuery(["meCompony"], () => GetMe());
-
+  const rolename = window.localStorage.getItem("role") || "";
   useEffect(() => {
     window.addEventListener("click", () => setOpen(false));
   }, []);
@@ -89,17 +89,19 @@ export default function Header() {
             >
               <p className="py-2 px-4 m-0 hover:bg-blue-50">{t("profile")}</p>
             </Link>
-            <Link
-              to={
-                me?.data?.company && me?.data?.company != "undefined"
-                  ? "/compony/old"
-                  : "/compony/new"
-              }
-              className=" no-underline "
-              style={{ color: "black" }}
-            >
-              <p className="py-2 px-4 m-0 hover:bg-blue-50">{t("compony")}</p>
-            </Link>
+            {rolename == "distributor" && (
+              <Link
+                to={
+                  me?.data?.company && me?.data?.company != "undefined"
+                    ? "/compony/old"
+                    : "/compony/new"
+                }
+                className=" no-underline "
+                style={{ color: "black" }}
+              >
+                <p className="py-2 px-4 m-0 hover:bg-blue-50">{t("compony")}</p>
+              </Link>
+            )}
             <p
               className="py-2 px-4 m-0 hover:bg-blue-50"
               onClick={() => setOpenmadal(true)}
@@ -114,7 +116,7 @@ export default function Header() {
         visible={openmadal}
         style={{ width: "32rem" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        header={t('confirm')}
+        header={t("confirm")}
         modal
         footer={deleteProductDialogFooter}
         onHide={() => setOpenmadal(false)}

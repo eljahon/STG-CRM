@@ -8,12 +8,12 @@ export const BranchRoute = [
     label: "Branch",
     icon: "pi pi-sitemap",
     children: [],
-    meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
+    meta: { isLoginIf: false, role: new Set(["distributor"]) },
     hideIfchildern: true
   },
   {
     url: "/branch/:id",
     Element: BranchAction,
-    meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) }
+    meta: { isLoginIf: false, role: new Set(["distributor"]) }
   }
 ];

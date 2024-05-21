@@ -1,6 +1,6 @@
 // src/YandexMap.tsx
 import React, { useState } from "react";
-import { YMaps, Map, Placemark, SearchControl } from "@pbe/react-yandex-maps";
+import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 
 interface YandexMapProps {
   onLocationSelect: (coords: number[]) => void;
@@ -16,14 +16,14 @@ const YandexMap: React.FC<YandexMapProps> = ({ onLocationSelect, value }) => {
     onLocationSelect(newCoords);
   };
 
-  const handleSearchResultSelect = (e: any) => {
-    const results = e.get("target").getResultsArray();
-    if (results.length) {
-      const firstResultCoords = results[0].geometry.getCoordinates();
-      setCoords(firstResultCoords);
-      onLocationSelect(firstResultCoords);
-    }
-  };
+  // const handleSearchResultSelect = (e: any) => {
+  //   const results = e.get("target").getResultsArray();
+  //   if (results.length) {
+  //     const firstResultCoords = results[0].geometry.getCoordinates();
+  //     setCoords(firstResultCoords);
+  //     onLocationSelect(firstResultCoords);
+  //   }
+  // };
 
   return (
     <YMaps>
@@ -34,10 +34,10 @@ const YandexMap: React.FC<YandexMapProps> = ({ onLocationSelect, value }) => {
         onClick={handleMapClick}
       >
         <Placemark geometry={coords} />
-        <SearchControl
+        {/* <SearchControl
           options={{ float: "right" }}
           onResultShow={handleSearchResultSelect}
-        />
+        /> */}
       </Map>
     </YMaps>
   );

@@ -14,21 +14,23 @@ function App() {
       setLoading(true);
       await GetMe()
         .then((res: any) => {
+          window.localStorage.setItem("role", res?.data?.role?.description);
+          window.localStorage.setItem("compony", res?.data?.company?.id);
           if (res.status == "200" && location.pathname == "/")
-            navigate("/product");
+            navigate("/dashboard");
         })
         .finally(() => setLoading(false));
     };
     if (location.pathname != "/auth/login" && isAuth) fetchData();
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (!isAuth) {
       navigate("/auth/login");
     } else if (location.pathname == "/" || location.pathname == "/auth/login") {
-      navigate("/product");
+      navigate("/dashboard");
     }
-  },[isAuth])
+  }, [isAuth]);
 
   return (
     <>

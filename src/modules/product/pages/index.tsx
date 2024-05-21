@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import GolabTable from "../../../ui/tabel/index.tsx";
 import { useQuery } from "react-query";
-import { GetAllData, GetMe } from "../../../service/global.ts";
+import { GetAllData } from "../../../service/global.ts";
 import React, { useState } from "react";
 import { Button } from "primereact/button";
 
@@ -23,7 +23,7 @@ export default function ProductPage() {
     })
   );
   // { limit: 10, page: page / 10 + 1 }
-  const { data: me } = useQuery(["meComponye"], () => GetMe());
+  const compony = window.localStorage.getItem("compony");
   const columns = [
     {
       header: t("image"),
@@ -110,7 +110,7 @@ export default function ProductPage() {
           console.log(rowItem);
         }}
         newAdd={() => {
-          if (me?.data?.company && me?.data?.company != "undefined") {
+          if (compony && compony != "undefined") {
             navigate("/product/new");
           } else {
             setopemNavigate(true);
