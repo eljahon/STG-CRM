@@ -62,8 +62,8 @@ export default function Header() {
             e.stopPropagation();
             setOpen(!open);
           }}
-          style={{ minWidth: "150px" }}
-          className="p-3  pb-2   bg-white border-round-2xl flex justify-content-between gap-2 align-items-center cursor-pointer relative"
+          style={{ minWidth: "150px", padding: "13px" }}
+          className="    bg-white border-round-2xl flex justify-content-between gap-2 align-items-center cursor-pointer relative"
         >
           <div className="flex align-items-center gap-2">
             <i

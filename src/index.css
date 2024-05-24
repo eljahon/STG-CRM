@@ -1,5 +1,7 @@
 @import 'primeflex/primeflex.scss';
 
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -9,6 +11,7 @@
 body {
   background-color: #F4F9FD;
   padding-top: 20px;
+  font-family: "Nunito Sans", sans-serif;
 }
 
 .Container {
@@ -109,4 +112,21 @@ body {
   justify-content: center;
 
   /* color: rgb(253, 228, 158,.1); */
+}
+
+.myhover-text:hover p {
+  color: black !important;
+}
+
+.myhover-text:hover i {
+  color: black !important;
+}
+
+.testWraP {
+  flex-wrap: wrap;
+  overflow-wrap: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
 }

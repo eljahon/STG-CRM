@@ -5,9 +5,16 @@ import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 interface YandexMapProps {
   onLocationSelect: (coords: number[]) => void;
   value?: any;
+  disable?: boolean;
+  height?: any;
 }
 
-const YandexMap: React.FC<YandexMapProps> = ({ onLocationSelect, value }) => {
+const YandexMap: React.FC<YandexMapProps> = ({
+  onLocationSelect,
+  value,
+  disable,
+  height
+}) => {
   const [coords, setCoords] = useState<number[]>(value || [41.2995, 69.2401]); // Default to Tashkent, Uzbekistan
 
   const handleMapClick = (e: any) => {
@@ -30,8 +37,8 @@ const YandexMap: React.FC<YandexMapProps> = ({ onLocationSelect, value }) => {
       <Map
         defaultState={{ center: coords, zoom: 13 }}
         width="100%"
-        height="500px"
-        onClick={handleMapClick}
+        height={height || "500px"}
+        onClick={!disable && handleMapClick}
       >
         <Placemark geometry={coords} />
         {/* <SearchControl

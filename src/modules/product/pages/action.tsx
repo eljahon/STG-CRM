@@ -15,6 +15,7 @@ import UploadFileMulty from "../../../ui/uploadFileMulty";
 import UploadFileSer from "../../../ui/uploadFileSer";
 import Loader from "../../../ui/loader";
 import { useTranslation } from "react-i18next";
+import { MultiSelect } from "primereact/multiselect";
 
 const typeArr: any = [
   {
@@ -30,7 +31,7 @@ const typeArr: any = [
 // [ { name: "O'g'it", "value": "ferti" }, { name: "Dori", "value": "drug" } ]
 
 interface iItems {
-  disease: any;
+  diseases: any;
   dose_max: any;
   dose_min: any;
   unit: any;
@@ -46,8 +47,7 @@ interface Istate {
 interface FormData {
   cer: string | number;
   description: string | undefined;
-  drug_category: string | number;
-  fertilizer_category: string | number;
+  type: string | number;
   title: string | undefined;
   unit: string | number;
   state: Istate | any;
@@ -77,7 +77,7 @@ export default function ProductAction() {
     setError,
     formState: { errors }
   } = useForm<FormData>();
-
+  const watchedFiles = watch();
   const debounce = <F extends (...args: any[]) => any>(
     func: F,
     delay: number
@@ -92,7 +92,6 @@ export default function ProductAction() {
   };
 
   const { setValue: setValuetest, watch: watchTest } = useForm<any>();
-  const watchedFiles = watch();
   const watchedTestFiles = watchTest();
   const { data: crops } = useQuery(["crops", cropsSet], () =>
     GetAllData(`crops`, {
@@ -124,7 +123,7 @@ export default function ProductAction() {
   };
 
   useEffect(() => {
-    setValue("state.type", "drug");
+    setValue("type", "drug");
     getDiseesesByCrop("");
   }, []);
 
@@ -136,15 +135,20 @@ export default function ProductAction() {
       GetByIdData("products", id, { populate: "*" })
         .then((e) => {
           setIndexArr([]);
+          setValuetest("confirmed", e?.data?.confirmed);
+          setValuetest("update", true);
           setValue("title", e?.data?.title);
           setValue("description", e?.data?.description);
           setValue("unit", e?.data?.unit?.id);
-          if (e?.data?.drug_category)
-            setValue("drug_category", e?.data?.drug_category?.id);
-          if (e?.data?.fertilizer_category)
-            setValue("fertilizer_category", e?.data?.fertilizer_category?.id);
+          if (e?.data?.state?.drug_category)
+            setValue("state.drug_category", e?.data?.state?.drug_category?.id);
+          if (e?.data?.state?.fertilizer_category)
+            setValue(
+              "state.fertilizer_category",
+              e?.data?.state?.fertilizer_category?.id
+            );
+          setValue("type", e?.data?.type);
           setValue("price", e?.data?.price);
-          setValue("state.type", e?.data?.state?.type);
 
           if (e?.data?.cer) {
             setValue("cer", e?.data?.cer?.id);
@@ -161,69 +165,74 @@ export default function ProductAction() {
             );
             setImageMulti(e?.data?.gallery);
           }
-          e?.data?.state?.items?.length &&
-            e?.data?.state?.items?.forEach((_: any, i: number) => {
-              if (!indexArr.length)
-                setIndexArr((state: any) => [i + 1, ...state]);
-              if (e?.data?.state?.items?.[i]?.crop) {
-                setValue(
-                  `state.items[${i}].crop`,
-                  e?.data?.state?.items?.[i]?.crop?.id
+          if (!e?.data?.confirmed) {
+            e?.data?.state?.items?.length &&
+              e?.data?.state?.items?.forEach((_: any, i: number) => {
+                if (!indexArr.length)
+                  setIndexArr((state: any) => [i + 1, ...state]);
+                if (e?.data?.state?.items?.[i]?.crops) {
+                  setValue(
+                    `state.items[${i}].crops`,
+                    e?.data?.state?.items?.[i]?.crops?.map((e: any) => e?.id)
+                  );
+                  setValuetest(
+                    `state.items[${i}].crops`,
+                    e?.data?.state?.items?.[i]?.crops
+                  );
+                }
+                if (e?.data?.state?.items?.[i]?.description) {
+                  setValue(
+                    `state.items[${i}].description`,
+                    e?.data?.state?.items?.[i]?.description
+                  );
+                }
+                if (e?.data?.state?.items?.[i]?.diseases) {
+                  setValue(
+                    `state.items[${i}].diseases`,
+                    e?.data?.state?.items?.[i]?.diseases?.map((e: any) => e?.id)
+                  );
+                }
+                setValuetest(
+                  `state.items[${i}].diseases`,
+                  e?.data?.state?.items?.[i]?.diseases
                 );
-              }
-              if (e?.data?.state?.items?.[i]?.description) {
-                setValue(
-                  `state.items[${i}].description`,
-                  e?.data?.state?.items?.[i]?.description
-                );
-              }
-              if (e?.data?.state?.items?.[i]?.disease) {
-                setValue(
-                  `state.items[${i}].disease`,
-                  e?.data?.state?.items?.[i]?.disease?.id
-                );
-              }
-              setValuetest(
-                `state.items[${i}].disease`,
-                e?.data?.state?.items?.[i]?.disease
-              );
-              if (e?.data?.state?.items?.[i]?.dose_max) {
-                setValue(
-                  `state.items[${i}].dose_max`,
-                  e?.data?.state?.items?.[i]?.dose_max
-                );
-              }
-              if (e?.data?.state?.items?.[i]?.dose_min) {
-                setValue(
-                  `state.items[${i}].dose_min`,
-                  e?.data?.state?.items?.[i]?.dose_min
-                );
-              }
-              if (e?.data?.state?.items?.[i]?.unit) {
-                setValue(
-                  `state.items[${i}].unit`,
-                  e?.data?.state?.items?.[i]?.unit?.id
-                );
-              }
-              if (e?.data?.state?.items?.[i]?.use_count) {
-                setValue(
-                  `state.items[${i}].use_count`,
-                  e?.data?.state?.items?.[i]?.use_count
-                );
-              }
-              if (e?.data?.state?.items?.[i]?.method) {
-                setValue(
-                  `state.items[${i}].method`,
-                  e?.data?.state?.items?.[i]?.method
-                );
-              }
-            });
+                if (e?.data?.state?.items?.[i]?.dose_max) {
+                  setValue(
+                    `state.items[${i}].dose_max`,
+                    e?.data?.state?.items?.[i]?.dose_max
+                  );
+                }
+                if (e?.data?.state?.items?.[i]?.dose_min) {
+                  setValue(
+                    `state.items[${i}].dose_min`,
+                    e?.data?.state?.items?.[i]?.dose_min
+                  );
+                }
+                if (e?.data?.state?.items?.[i]?.unit) {
+                  setValue(
+                    `state.items[${i}].unit`,
+                    e?.data?.state?.items?.[i]?.unit?.id
+                  );
+                }
+                if (e?.data?.state?.items?.[i]?.use_count) {
+                  setValue(
+                    `state.items[${i}].use_count`,
+                    e?.data?.state?.items?.[i]?.use_count
+                  );
+                }
+                if (e?.data?.state?.items?.[i]?.method) {
+                  setValue(
+                    `state.items[${i}].method`,
+                    e?.data?.state?.items?.[i]?.method
+                  );
+                }
+              });
+          }
         })
         .catch((errors) => console.log(errors))
         .finally(() => setLoader(false));
     }
   }, [id]);
-
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
@@ -278,12 +287,11 @@ export default function ProductAction() {
               </div>
             </div>
             <div className="w-full flex gap-4  align-items-start">
-              {/* floatLabel */}
               <div className="w-full">
                 <Dropdown
                   className=" mr-2 w-full md:w-full"
                   onChange={(e) => {
-                    setValue("state.type", e.value);
+                    setValue("type", e.value);
                     setIndex(1);
                     setIndexArr([1]);
                     setValue("state.items", null);
@@ -293,12 +301,11 @@ export default function ProductAction() {
                   optionLabel="name"
                   disabled={id != "new"}
                   optionValue="code"
-                  value={watchedFiles?.state?.type}
+                  value={watchedFiles?.type}
                   placeholder={`${t("selectType")} `}
                 />
                 {/* <label htmlFor="Type"> Type </label> */}
               </div>
-              {/* floatLabel */}
               <div className="w-full relative">
                 <Dropdown
                   filter
@@ -327,7 +334,6 @@ export default function ProductAction() {
                   options={units?.data}
                   optionValue="id"
                   optionLabel="name"
-                  // checkmark={true}
                   highlightOnSelect={false}
                 />
                 {errors?.unit?.message && (
@@ -335,45 +341,45 @@ export default function ProductAction() {
                     {errors?.unit?.message}
                   </p>
                 )}
-                {/* <label htmlFor="unit">Units </label> */}
               </div>
             </div>
-            {watchedFiles?.state?.type == "drug" && (
-              // floatLabel
+            {watchedFiles?.type == "drug" && (
               <div className="w-full relative">
                 <Dropdown
                   filter
                   id="drug_category"
                   className=" mr-2 w-full md:w-full"
                   {...{
-                    ...register("drug_category", {
+                    ...register("state.drug_category", {
                       required: t("drugCategoryrequired")
                     }),
                     onChange: function (el) {
-                      setValue("drug_category", el.value);
-                      clearErrors("drug_category");
+                      setValue("state.drug_category", el.value);
+                      clearErrors("state.drug_category");
                       return el.value;
                     },
                     onBlur: function () {}
                   }}
-                  invalid={errors?.drug_category?.message ? true : false}
+                  invalid={
+                    (errors as any)?.state?.drug_category?.message
+                      ? true
+                      : false
+                  }
                   placeholder={`${t("selectdrugCategory")} `}
-                  value={watchedFiles?.drug_category}
+                  value={watchedFiles?.state?.drug_category}
                   options={drugCategory?.data}
                   optionValue="id"
                   optionLabel="name"
-                  // checkmark={true}
                   highlightOnSelect={false}
                 />
-                {errors?.drug_category?.message && (
+                {(errors as any)?.state?.drug_category?.message && (
                   <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                    {errors?.drug_category?.message}
+                    {(errors as any)?.state?.drug_category?.message}
                   </p>
                 )}
-                {/* <label htmlFor="drug_category">Drugs category </label> */}
               </div>
             )}
-            {watchedFiles?.state?.type == "fertilizer" && (
+            {watchedFiles?.type == "fertilizer" && (
               // floatLabel
               <div className="w-full relative">
                 <Dropdown
@@ -381,31 +387,34 @@ export default function ProductAction() {
                   id="fertilizer"
                   className=" mr-2 w-full md:w-full"
                   {...{
-                    ...register("fertilizer_category", {
+                    ...register("state.fertilizer_category", {
                       required: t("fertilizerCategoryrequired")
                     }),
                     onChange: function (el) {
-                      setValue("fertilizer_category", el.value);
-                      clearErrors("fertilizer_category");
+                      setValue("state.fertilizer_category", el.value);
+                      clearErrors("state.fertilizer_category");
                       return el.value;
                     },
                     onBlur: function () {}
                   }}
-                  invalid={errors?.fertilizer_category?.message ? true : false}
+                  invalid={
+                    (errors as any)?.state?.fertilizer_category?.message
+                      ? true
+                      : false
+                  }
                   placeholder={`${t("selectFertilizerCategory")} `}
-                  value={watchedFiles?.fertilizer_category}
+                  value={watchedFiles?.state?.fertilizer_category}
                   options={fertilizerCategory?.data}
                   optionValue="id"
                   optionLabel="name"
                   // checkmark={true}
                   highlightOnSelect={false}
                 />
-                {errors?.fertilizer_category?.message && (
+                {(errors as any)?.state?.fertilizer_category?.message && (
                   <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                    {errors?.fertilizer_category?.message}
+                    {(errors as any)?.state?.fertilizer_category?.message}
                   </p>
                 )}
-                {/* <label htmlFor="fertilizer">Fertilizer category </label> */}
               </div>
             )}
             {/* floatLabel */}
@@ -459,364 +468,454 @@ export default function ProductAction() {
         </div>
       </div>
 
-      <div className="p-4 bg-white border-round-3xl mt-4 mb-8">
-        {indexArr?.map((_: any, i: any) => {
-          return (
-            <div key={i} className="flex align-items-start gap-3 mb-4">
-              <div className="w-full">
-                <div className="flex mb-4 gap-2">
-                  {/* floatLabel */}
-                  <div className="colm1">
-                    <Dropdown
-                      filter
-                      id="crop"
-                      // onMouseDown={() => setCropsSet("")}
-                      onScroll={(e) => console.log(e)}
-                      className=" mr-2 w-full md:w-full"
-                      onChange={(e) => {
-                        if (watchedFiles?.state?.type == "fertilizer") {
-                          setValue(`state.items[${i}].crop`, e.value);
-                        } else {
-                          getDiseesesByCrop(e.value);
-                        }
-                        if (e?.value) {
-                          setValuetest(
-                            `state.items[${i}].crop`,
-                            crops?.data?.find((de: any) => de?.id == e.value)
-                          );
-                        }
-                      }}
-                      filterTemplate={() => (
-                        <InputText
-                          onChange={debounce((e) => {
-                            if (e.target.value) {
-                              setCropsSet(e.target.value);
+      {!watchedTestFiles?.confirmed ? (
+        <div className="p-4 bg-white border-round-3xl mt-4 mb-8">
+          {indexArr?.map((_: any, i: any) => {
+            return (
+              <div key={i} className="flex align-items-start gap-3 mb-4">
+                <div className="w-full">
+                  <div className="flex mb-4 gap-2">
+                    {watchedFiles?.type == "drug" && (
+                      <div className="colm1">
+                        <Dropdown
+                          filter
+                          id="crop"
+                          // onMouseDown={() => setCropsSet("")}
+                          className=" mr-2 w-full md:w-full"
+                          onChange={(e) => {
+                            getDiseesesByCrop(e.value);
+                            if (e?.value) {
+                              setValuetest(
+                                `state.items[${i}].crop`,
+                                crops?.data?.find(
+                                  (de: any) => de?.id == e.value
+                                )
+                              );
                             }
-                          }, 700)}
+                          }}
+                          filterTemplate={() => (
+                            <InputText
+                              className="w-full"
+                              onChange={debounce((e) => {
+                                if (e.target.value) {
+                                  setCropsSet(e.target.value);
+                                }
+                              }, 700)}
+                            />
+                          )}
+                          value={watchedTestFiles?.state?.items?.[i]?.crop?.id}
+                          placeholder={`${t("selectCrop")} `}
+                          optionValue="id"
+                          options={
+                            watchedTestFiles?.state?.items?.[i]?.crop &&
+                            crops?.data
+                              ? [
+                                  ...crops?.data,
+                                  watchedTestFiles?.state?.items?.[i]?.crop
+                                ]
+                              : crops?.data
+                          }
+                          optionLabel="name"
+                          checkmark={true}
+                          highlightOnSelect={false}
                         />
-                      )}
-                      value={
-                        watchedFiles?.state?.items?.[i]?.crop ||
-                        watchedTestFiles?.state?.items?.[i]?.crop?.id
-                      }
-                      placeholder={`${t("selectCrop")} `}
-                      optionValue="id"
-                      options={
-                        watchedTestFiles?.state?.items?.[i]?.crop && crops?.data 
-                          ? [
-                              ...crops?.data,
-                              watchedTestFiles?.state?.items?.[i]?.crop
-                            ]:
-                        crops?.data
-                      }
-                      optionLabel="name"
-                      checkmark={true}
-                      highlightOnSelect={false}
-                    />
-                    {/* <label htmlFor="crop"> Crops</label> */}
-                  </div>
+                      </div>
+                    )}
 
-                  {watchedFiles?.state?.type == "drug" && (
-                    // floatLabel
-                    <div className="colm1 relative">
+                    {watchedFiles?.type == "fertilizer" && (
+                      <div className="colm1">
+                        <MultiSelect
+                          filter
+                          id="crop"
+                          // onMouseDown={() => setCropsSet("")}
+                          onScroll={(e) => console.log(e)}
+                          className=" mr-2 w-full md:w-full"
+                          onChange={(e) => {
+                            setValue(`state.items[${i}].crops`, e.value);
+                            if (!watchedTestFiles?.update) {
+                              setValuetest(
+                                `state.items[${i}].crops`,
+                                e?.value.length
+                                  ? watchedTestFiles?.state?.items?.[i]?.crops
+                                    ? [
+                                        ...watchedTestFiles?.state?.items?.[i]
+                                          ?.crops,
+                                        crops?.data?.find(
+                                          (de: any) =>
+                                            de?.id ==
+                                            e.value[e.value.length - 1]
+                                        )
+                                      ]
+                                    : [
+                                        crops?.data?.find(
+                                          (de: any) =>
+                                            de?.id ==
+                                            e.value[e.value.length - 1]
+                                        )
+                                      ]
+                                  : undefined
+                              );
+                            }
+                          }}
+                          filterTemplate={() => (
+                            <InputText
+                              onChange={debounce((e) => {
+                                if (e.target.value) {
+                                  setCropsSet(e.target.value);
+                                }
+                              }, 700)}
+                            />
+                          )}
+                          value={watchedFiles?.state?.items?.[i]?.crops}
+                          placeholder={`${t("selectCrop")} `}
+                          optionValue="id"
+                          options={
+                            watchedTestFiles?.state?.items?.[i]?.crops &&
+                            crops?.data
+                              ? [
+                                  ...crops?.data,
+                                  ...watchedTestFiles?.state?.items?.[i]?.crops
+                                ]
+                              : crops?.data
+                          }
+                          optionLabel="name"
+                        />
+                      </div>
+                    )}
+
+                    {watchedFiles?.type == "drug" && (
+                      <div className="colm1 relative">
+                        <MultiSelect
+                          id="disease"
+                          filterTemplate={() => (
+                            <InputText
+                              // className="w-full"
+                              onChange={debounce((e) => {
+                                getDiseesesByCrop("", e.target.value);
+                              }, 700)}
+                            />
+                          )}
+                          className=" mr-2 w-full"
+                          {...{
+                            ...register(`state.items[${i}].diseases`, {
+                              required: t("diseaseRequired")
+                            }),
+                            onChange: function (el) {
+                              setValue(`state.items[${i}].diseases`, el.value);
+                              clearErrors(`state.items[${i}].diseases`);
+                              console.log(el.value);
+                              if (!watchedTestFiles?.update) {
+                                setValuetest(
+                                  `state.items[${i}].diseases`,
+                                  el?.value.length
+                                    ? watchedTestFiles?.state?.items?.[i]
+                                        ?.diseases
+                                      ? [
+                                          ...watchedTestFiles?.state?.items?.[i]
+                                            ?.diseases,
+                                          diseases?.find(
+                                            (de: any) =>
+                                              de?.id ==
+                                              el?.value[el?.value?.length - 1]
+                                          )
+                                        ]
+                                      : [
+                                          diseases?.find(
+                                            (de: any) =>
+                                              de?.id ==
+                                              el?.value[el?.value?.length - 1]
+                                          )
+                                        ]
+                                    : undefined
+                                );
+                              }
+                              return el.value;
+                            },
+                            onBlur: function () {}
+                          }}
+                          onMouseDown={() => {
+                            getDiseesesByCrop(
+                              watchedTestFiles?.state?.items?.[i]?.crop?.id
+                            );
+                          }}
+                          invalid={
+                            (errors as any)?.state?.items?.[i]?.diseases
+                              ?.message
+                              ? true
+                              : false
+                          }
+                          value={watchedFiles?.state?.items?.[i]?.diseases}
+                          placeholder={`${t("selectDisease")} `}
+                          optionValue="id"
+                          options={
+                            watchedTestFiles?.state?.items?.[i]?.diseases
+                              ? [
+                                  ...diseases,
+                                  ...watchedTestFiles?.state?.items?.[i]
+                                    ?.diseases
+                                ]
+                              : diseases
+                          }
+                          filter
+                          optionLabel="name"
+                        />
+                        {(errors as any)?.state?.items?.[i]?.diseases
+                          ?.message && (
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.diseases
+                                ?.message
+                            }
+                          </p>
+                        )}
+                      </div>
+                    )}
+
+                    <div
+                      className="relative w-full"
+                      style={{ maxWidth: "155px" }}
+                    >
+                      <InputText
+                        className="mr-2 w-full pb-3"
+                        id="dose_min"
+                        type="number"
+                        placeholder={`${t("dose_min")} `}
+                        aria-label="dose_min"
+                        {...register(`state.items[${i}].dose_min`, {
+                          valueAsNumber: true
+                        })}
+                        invalid={
+                          (errors as any)?.state?.items?.[i]?.dose_min?.message
+                            ? true
+                            : false
+                        }
+                        value={
+                          watchedFiles?.state?.items?.[i]?.dose_min || undefined
+                        }
+                      />
+                      {(errors as any)?.state?.items?.[i]?.dose_min
+                        ?.message && (
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {
+                            (errors as any)?.state?.items?.[i]?.dose_min
+                              ?.message
+                          }
+                        </p>
+                      )}
+                    </div>
+
+                    <div
+                      className="colm1 relative w-full"
+                      style={{ maxWidth: "155px" }}
+                    >
+                      <InputText
+                        type="number"
+                        className="mr-2 w-full pb-3"
+                        id="dose_max"
+                        placeholder={`${t("dose_max")} `}
+                        {...register(`state.items[${i}].dose_max`, {
+                          valueAsNumber: true
+                        })}
+                        value={
+                          watchedFiles?.state?.items?.[i]?.dose_max || undefined
+                        }
+                        invalid={
+                          (errors as any)?.state?.items?.[i]?.dose_max?.message
+                            ? true
+                            : false
+                        }
+                      />
+                      {(errors as any)?.state?.items?.[i]?.dose_max
+                        ?.message && (
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {
+                            (errors as any)?.state?.items?.[i]?.dose_max
+                              ?.message
+                          }
+                        </p>
+                      )}
+                    </div>
+
+                    <div
+                      className="colm1 relative w-full"
+                      style={{ maxWidth: "150px" }}
+                    >
                       <Dropdown
                         filter
-                        id="disease"
-                        filterTemplate={() => (
-                          <InputText
-                            onChange={debounce((e) => {
-                              getDiseesesByCrop("", e.target.value);
-                            }, 700)}
-                          />
-                        )}
-                        className=" mr-2 w-full"
+                        id="unit"
+                        className="mr-2 w-full"
                         {...{
-                          ...register(`state.items[${i}].disease`, {
-                            required: t("diseaseRequired")
+                          ...register(`state.items[${i}].unit`, {
+                            required: t("UnitRequired")
                           }),
                           onChange: function (el) {
-                            setValue(`state.items[${i}].disease`, el.value);
-                            clearErrors(`state.items[${i}].disease`);
-
-                            setValuetest(
-                              `state.items[${i}].disease`,
-                              diseases?.find((de: any) => de?.id == el.value)
-                            );
-
+                            setValue(`state.items[${i}].unit`, el.value);
+                            clearErrors(`state.items[${i}].unit`);
                             return el.value;
                           },
                           onBlur: function () {}
                         }}
-                        onMouseDown={() => {
-                          getDiseesesByCrop(
-                            watchedTestFiles?.state?.items?.[i]?.crop?.id
-                          );
-                        }}
                         invalid={
-                          (errors as any)?.state?.items?.[i]?.disease?.message
+                          (errors as any)?.state?.items?.[i]?.unit?.message
                             ? true
                             : false
                         }
-                        value={watchedFiles?.state?.items?.[i]?.disease}
-                        placeholder={`${t("selectDisease")} `}
+                        value={watchedFiles?.state?.items?.[i]?.unit}
+                        placeholder={`${t("selectUnit")} `}
                         optionValue="id"
-                        options={
-                          watchedTestFiles?.state?.items?.[i]?.disease
-                            ? [
-                                ...diseases,
-                                watchedTestFiles?.state?.items?.[i]?.disease
-                              ]
-                            : diseases
-                        }
+                        options={units?.data}
                         optionLabel="name"
+                        // onMouseDown={() => setUnitsSet("")}
                         checkmark={true}
+                        filterTemplate={() => (
+                          <InputText
+                            onChange={debounce((e) => {
+                              setUnitsSet(e.target.value);
+                            }, 700)}
+                          />
+                        )}
                         highlightOnSelect={false}
                       />
-                      {(errors as any)?.state?.items?.[i]?.disease?.message && (
+                      {(errors as any)?.state?.items?.[i]?.unit?.message && (
                         <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                          {(errors as any)?.state?.items?.[i]?.disease?.message}
+                          {(errors as any)?.state?.items?.[i]?.unit?.message}
                         </p>
                       )}
-                      {/* <label htmlFor="disease">Diseases </label> */}
+                      {/* <label htmlFor="unit">Units </label> */}
                     </div>
-                  )}
-                  {/* floatLabel */}
-                  <div
-                    className="relative w-full"
-                    style={{ maxWidth: "155px" }}
-                  >
-                    <InputText
-                      className="mr-2 w-full pb-3"
-                      id="dose_min"
-                      type="number"
-                      placeholder={`${t("dose_min")} `}
-                      aria-label="dose_min"
-                      {...register(`state.items[${i}].dose_min`, {
-                        // required: "dose_min is required",
-                        valueAsNumber: true
-                      })}
-                      invalid={
-                        (errors as any)?.state?.items?.[i]?.dose_min?.message
-                          ? true
-                          : false
-                      }
-                      value={
-                        watchedFiles?.state?.items?.[i]?.dose_min || undefined
-                      }
-                    />
-                    {(errors as any)?.state?.items?.[i]?.dose_min?.message && (
-                      <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                        {(errors as any)?.state?.items?.[i]?.dose_min?.message}
-                      </p>
-                    )}
-                    {/* <label htmlFor="dose_min">dose_min</label> */}
-                  </div>
-                  {/* floatLabel */}
-                  <div
-                    className="colm1 relative w-full"
-                    style={{ maxWidth: "155px" }}
-                  >
-                    <InputText
-                      type="number"
-                      className="mr-2 w-full pb-3"
-                      id="dose_max"
-                      placeholder={`${t("dose_max")} `}
-                      {...register(`state.items[${i}].dose_max`, {
-                        // required: "dose_max is required",
-                        valueAsNumber: true
-                      })}
-                      value={
-                        watchedFiles?.state?.items?.[i]?.dose_max || undefined
-                      }
-                      invalid={
-                        (errors as any)?.state?.items?.[i]?.dose_max?.message
-                          ? true
-                          : false
-                      }
-                    />
-                    {(errors as any)?.state?.items?.[i]?.dose_max?.message && (
-                      <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                        {(errors as any)?.state?.items?.[i]?.dose_max?.message}
-                      </p>
-                    )}
-                    {/* <label htmlFor="dose_max">Dose_max</label> */}
-                  </div>
 
-                  {/* floatLabel */}
-                  <div
-                    className="colm1 relative w-full"
-                    style={{ maxWidth: "150px" }}
-                  >
-                    <Dropdown
-                      filter
-                      id="unit"
-                      className="mr-2 w-full"
-                      {...{
-                        ...register(`state.items[${i}].unit`, {
-                          required: t("UnitRequired")
-                        }),
-                        onChange: function (el) {
-                          setValue(`state.items[${i}].unit`, el.value);
-                          clearErrors(`state.items[${i}].unit`);
-                          return el.value;
-                        },
-                        onBlur: function () {}
-                      }}
-                      invalid={
-                        (errors as any)?.state?.items?.[i]?.unit?.message
-                          ? true
-                          : false
-                      }
-                      value={watchedFiles?.state?.items?.[i]?.unit}
-                      placeholder={`${t("selectUnit")} `}
-                      optionValue="id"
-                      options={units?.data}
-                      optionLabel="name"
-                      // onMouseDown={() => setUnitsSet("")}
-                      checkmark={true}
-                      filterTemplate={() => (
+                    {watchedFiles?.type == "fertilizer" && (
+                      <div className="colm1 relative">
                         <InputText
-                          onChange={debounce((e) => {
-                            setUnitsSet(e.target.value);
-                          }, 700)}
-                        />
-                      )}
-                      highlightOnSelect={false}
-                    />
-                    {(errors as any)?.state?.items?.[i]?.unit?.message && (
-                      <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                        {(errors as any)?.state?.items?.[i]?.unit?.message}
-                      </p>
-                    )}
-                    {/* <label htmlFor="unit">Units </label> */}
-                  </div>
-                  {watchedFiles?.state?.type == "fertilizer" && (
-                    // floatLabel
-                    <div className="colm1 relative">
-                      <InputText
-                        className="mr-2 w-full pb-3"
-                        id="use_count"
-                        type="number"
-                        placeholder={`${t("use_count")} `}
-                        aria-label="dose_min"
-                        {...register(`state.items[${i}].use_count`, {
-                          // required: "use_count is required",
-                          valueAsNumber: true
-                        })}
-                        invalid={
-                          (errors as any)?.state?.items?.[i]?.use_count?.message
-                            ? true
-                            : false
-                        }
-                        value={watchedFiles?.state?.items?.[i]?.use_count || ""}
-                      />
-                      {(errors as any)?.state?.items?.[i]?.use_count
-                        ?.message && (
-                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                          {
+                          className="mr-2 w-full pb-3"
+                          id="use_count"
+                          type="number"
+                          placeholder={`${t("use_count")} `}
+                          aria-label="dose_min"
+                          {...register(`state.items[${i}].use_count`, {
+                            valueAsNumber: true
+                          })}
+                          invalid={
                             (errors as any)?.state?.items?.[i]?.use_count
                               ?.message
+                              ? true
+                              : false
                           }
-                        </p>
-                      )}
-                      {/* <label htmlFor="use_count">use_count</label> */}
-                    </div>
-                  )}
-                </div>
-                {/* floatLabel */}
-                <div className="w-full relative">
-                  {watchedFiles?.state?.type == "drug" ? (
-                    <>
-                      <InputTextarea
-                        className=" mr-2 w-full"
-                        id="descriptionitems"
-                        placeholder={`${t("description")}`}
-                        rows={4}
-                        cols={20}
-                        {...register(`state.items[${i}].description`)}
-                        value={watchedFiles?.state?.items?.[i]?.description}
-                        invalid={
-                          (errors as any)?.state?.items?.[i]?.description
-                            ?.message
-                            ? true
-                            : false
-                        }
-                      />
-                      {/* <label htmlFor="descriptionitems">description</label> */}
-                      {(errors as any)?.state?.items?.[i]?.description
-                        ?.message && (
-                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                          {
+                          value={
+                            watchedFiles?.state?.items?.[i]?.use_count || ""
+                          }
+                        />
+                        {(errors as any)?.state?.items?.[i]?.use_count
+                          ?.message && (
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.use_count
+                                ?.message
+                            }
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="w-full relative">
+                    {watchedFiles?.type == "drug" ? (
+                      <>
+                        <InputTextarea
+                          className=" mr-2 w-full"
+                          id="descriptionitems"
+                          placeholder={`${t("description")}`}
+                          rows={4}
+                          cols={20}
+                          {...register(`state.items[${i}].description`)}
+                          value={watchedFiles?.state?.items?.[i]?.description}
+                          invalid={
                             (errors as any)?.state?.items?.[i]?.description
                               ?.message
+                              ? true
+                              : false
                           }
-                        </p>
-                      )}
-                    </>
-                  ) : watchedFiles?.state?.type == "fertilizer" ? (
-                    <>
-                      <InputTextarea
-                        className=" mr-2 w-full"
-                        id="method"
-                        placeholder={`${t("method")}`}
-                        rows={4}
-                        cols={20}
-                        {...register(`state.items[${i}].method`)}
-                        value={watchedFiles?.state?.items?.[i]?.method || ""}
-                        invalid={
-                          (errors as any)?.state?.items?.[i]?.method?.message
-                            ? true
-                            : false
-                        }
-                      />
-                      {/* <label htmlFor="method">method</label> */}
-                      {(errors as any)?.state?.items?.[i]?.method?.message && (
-                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                          {(errors as any)?.state?.items?.[i]?.method?.message}
-                        </p>
-                      )}
-                    </>
-                  ) : (
-                    ""
-                  )}
+                        />
+                        {(errors as any)?.state?.items?.[i]?.description
+                          ?.message && (
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.description
+                                ?.message
+                            }
+                          </p>
+                        )}
+                      </>
+                    ) : watchedFiles?.type == "fertilizer" ? (
+                      <>
+                        <InputTextarea
+                          className=" mr-2 w-full"
+                          id="method"
+                          placeholder={`${t("method")}`}
+                          rows={4}
+                          cols={20}
+                          {...register(`state.items[${i}].method`)}
+                          value={watchedFiles?.state?.items?.[i]?.method || ""}
+                          invalid={
+                            (errors as any)?.state?.items?.[i]?.method?.message
+                              ? true
+                              : false
+                          }
+                        />
+                        {(errors as any)?.state?.items?.[i]?.method
+                          ?.message && (
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.method
+                                ?.message
+                            }
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
+                <Button
+                  className="w-2 max-w-3rem border-round-3xl"
+                  // label={t("delete")}
+                  type="button"
+                  severity="danger"
+                  icon="pi pi-trash"
+                  onClick={() => {
+                    clearErrors();
+                    setValue(
+                      `state.items`,
+                      watchedFiles?.state?.items?.filter(
+                        (_: any, index: any) => index !== i
+                      )
+                    );
+                    setIndexArr((state: any) =>
+                      state.length > 1 ? state?.slice(0, -1) : state
+                    );
+                  }}
+                />
               </div>
-              <Button
-                className="w-2 max-w-3rem border-round-3xl"
-                // label={t("delete")}
-                type="button"
-                severity="danger"
-                icon="pi pi-trash"
-                onClick={() => {
-                  clearErrors();
-                  setValue(
-                    `state.items`,
-                    watchedFiles?.state?.items?.filter(
-                      (_: any, index: any) => index !== i
-                    )
-                  );
-                  setIndexArr((state: any) =>
-                    state.length > 1 ? state?.slice(0, -1) : state
-                  );
-                }}
-              />
-            </div>
-          );
-        })}
+            );
+          })}
 
-        <Button
-          label={t("add")}
-          type="button"
-          severity="success"
-          className="border-round-3xl px-5"
-          onClick={() => {
-            setCropsSet("");
-            setIndex(index + 1);
-            setIndexArr((state: any) => [index + 1, ...state]);
-            clearErrors();
-          }}
-        />
-      </div>
+          <Button
+            label={t("add")}
+            type="button"
+            severity="success"
+            className="border-round-3xl px-5"
+            onClick={() => {
+              setCropsSet("");
+              setIndex(index + 1);
+              setIndexArr((state: any) => [index + 1, ...state]);
+              clearErrors();
+            }}
+          />
+        </div>
+      ) : (
+        ""
+      )}
 
       {loader && <Loader />}
     </GlobalFrom>

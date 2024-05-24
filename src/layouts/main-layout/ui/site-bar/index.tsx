@@ -57,7 +57,7 @@ export default function RouterDemo() {
   ];
 
   return (
-    <div className="w-full max-w-13rem fixed">
+    <div className="w-full max-w-14rem fixed">
       <Menu
         model={items}
         className="w-full border-round-3xl  border-none px-3"

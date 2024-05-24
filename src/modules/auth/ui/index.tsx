@@ -66,7 +66,7 @@ export default function LoginFrom() {
           className="w-full m-auto text-center"
           style={{ maxWidth: "410px" }}
         >
-          <h3 className="text-3xl font-bold ">Sign In to Woorkroom</h3>
+          <h3 className="text-3xl font-bold">Sign In to Woorkroom</h3>
           <label className="block my-5">
             <p
               className="label-my text-left text-base font-bold"

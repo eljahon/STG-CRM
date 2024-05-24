@@ -64,7 +64,7 @@ export default function ProductPage() {
     },
     {
       header: t("type"),
-      field: "state.type",
+      field: "type",
       id: 5,
       exportable: false
     }
