@@ -40,7 +40,7 @@ const OrderPage = () => {
                   onClick={() => setOrderId(e?.id)}
                   key={e?.id}
                   column={[
-                    { label: "Product name", text: e?.product.title },
+                    { label: "Product name", text: e?.product?.title },
                     { label: "Price", text: e?.price + "so'm" },
                     { label: "Count", text: `${e?.count}/${"ds"}` },
                     {
