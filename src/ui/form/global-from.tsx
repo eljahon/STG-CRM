@@ -35,6 +35,7 @@ export default function GlobalFrom({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const handleAdd = async (data: any) => {
+
     setLoader(true);
     if (id == "new" || !id) {
       await AddData(url, data)

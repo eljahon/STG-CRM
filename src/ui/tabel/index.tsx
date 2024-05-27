@@ -155,12 +155,11 @@ export default function GolabTable(props: ITable) {
         icon="pi pi-check"
         severity="danger"
         onClick={async () => {
-          await DeleteDataId(deleteUrl, deleteId)
-            .then(() => {
-              toast.success("deleted");
-              setDeleteProductDialog(false);
-              queryClient.invalidateQueries([deleteUrl]);
-            })
+          await DeleteDataId(deleteUrl, deleteId).then(() => {
+            toast.success("deleted");
+            setDeleteProductDialog(false);
+            queryClient.invalidateQueries([deleteUrl]);
+          });
         }}
       />
     </React.Fragment>
@@ -169,7 +168,7 @@ export default function GolabTable(props: ITable) {
   const emptyMessagecom = (
     <React.Fragment>
       <div className="text-center">
-        <i className="pi pi-cloud-download" style={{ fontSize: "6.2rem" }}></i>
+        <i className="pi pi-inbox" style={{ fontSize: "6.2rem" }}></i>
         <h3>{t("nodata")}</h3>
       </div>
     </React.Fragment>
