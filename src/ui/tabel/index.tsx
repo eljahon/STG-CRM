@@ -40,16 +40,16 @@ interface Product {
 interface ITable {
   data: Product[];
   columns: any;
-  deleteFunction: any;
+  deleteFunction?: any;
   showFunction?: any;
-  checked: any;
+  checked?: any;
   tableTile?: string;
   url?: string;
   deleteUrl?: any;
-  newAdd: any;
-  totalProduct: any;
-  pageChange: any;
-  currentPage: any;
+  newAdd?: any;
+  totalProduct?: any;
+  pageChange?: any;
+  currentPage?: any;
   isLoading?: any;
   Isupdate?: any;
 }

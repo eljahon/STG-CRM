@@ -17,6 +17,7 @@ import Loader from "../../../ui/loader";
 import { useTranslation } from "react-i18next";
 import { MultiSelect } from "primereact/multiselect";
 import lodash from "lodash";
+import ProductItems from "../ui/items/index.tsx";
 
 const typeArr: any = [
   {
@@ -104,6 +105,38 @@ export default function ProductAction() {
   );
   const { data: fertilizerCategory } = useQuery("fertilizerCategory", () =>
     GetAllData("fertilizer-categories")
+  );
+
+  const { data: fertilizerItems } = useQuery(
+    ["fertilizerItems", watchedTestFiles.fertilizerId],
+    () =>
+      GetAllData("fertilizations", {
+        filters: {
+          fertilizer: { id: { $eq: watchedTestFiles.fertilizerId } }
+        },
+        populate: "*"
+      }),
+    {
+      enabled:
+        watchedTestFiles?.confirmed && watchedFiles?.type == "fertilizer"
+          ? true
+          : false
+    }
+  );
+
+  const { data: drugItems } = useQuery(
+    ["drugItems", watchedTestFiles.drugId],
+    () =>
+      GetAllData("treatments", {
+        filters: { drug: { id: { $eq: watchedTestFiles.drugId } } },
+        populate: "*"
+      }),
+    {
+      enabled:
+        watchedTestFiles?.confirmed && watchedFiles?.type == "drug"
+          ? true
+          : false
+    }
   );
 
   const getCrop = async (crop?: string, indexNumber?: any) => {
@@ -194,6 +227,12 @@ export default function ProductAction() {
               e?.data?.gallery?.map((e: any) => e?.id)
             );
             setImageMulti(e?.data?.gallery);
+          }
+          if (e?.data?.drug) {
+            setValuetest("drugId", e?.data?.drug?.id);
+          }
+          if (e?.data?.fertilizer) {
+            setValuetest("fertilizerId", e?.data?.fertilizer?.id);
           }
           if (!e?.data?.confirmed) {
             e?.data?.state?.items?.length &&
@@ -877,7 +916,11 @@ export default function ProductAction() {
           />
         </div>
       ) : (
-        ""
+        <ProductItems
+          fertilizerItems={fertilizerItems?.data}
+          drugItems={drugItems?.data}
+          type={watchedFiles?.type}
+        />
       )}
 
       {loader && <Loader />}
