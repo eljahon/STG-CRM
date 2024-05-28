@@ -205,7 +205,10 @@ export default function ProductAction() {
                     `state.items[${i}].crops`,
                     e?.data?.state?.items?.[i]?.crops?.map((e: any) => e?.id)
                   );
-
+                  setValuetest(
+                    `cropsUpdate[${i}]`,
+                    e?.data?.state?.items?.[i]?.crops
+                  );
                   setupdateCrop(e?.data?.state?.items?.[i]?.crops || []);
                 }
                 if (e?.data?.state?.items?.[i]?.description) {
@@ -219,9 +222,13 @@ export default function ProductAction() {
                     `state.items[${i}].diseases`,
                     e?.data?.state?.items?.[i]?.diseases?.map((e: any) => e?.id)
                   );
+                  setValuetest(
+                    `diseasesUpdate[${i}]`,
+                    e?.data?.state?.items?.[i]?.diseases
+                  );
+                  setupdatedeases(e?.data?.state?.items?.[i]?.diseases || []);
                 }
-             
-                setupdatedeases(e?.data?.state?.items?.[i]?.diseases|| [])
+
                 if (e?.data?.state?.items?.[i]?.dose_max) {
                   setValue(
                     `state.items[${i}].dose_max`,
@@ -263,24 +270,26 @@ export default function ProductAction() {
   useEffect(() => {
     indexArr?.forEach((_: any, i: number) => {
       const newArr =
-        updateCrop && watchedTestFiles?.corps?.[i]
-          ? [...updateCrop, ...watchedTestFiles?.corps?.[i]]
+        watchedTestFiles?.cropsUpdate?.[i] && watchedTestFiles?.corps?.[i]
+          ? [
+              ...watchedTestFiles?.cropsUpdate?.[i],
+              ...watchedTestFiles?.corps?.[i]
+            ]
           : watchedTestFiles?.corps?.[i];
       const uniqueUsersByName: any = lodash.uniqBy(newArr, "id");
       setValuetest(`corps[${i}]`, uniqueUsersByName);
 
       const newArr1 =
-      updatedeases &&
-        watchedTestFiles?.diseases?.[i]
+        watchedTestFiles?.diseasesUpdate?.[i] && watchedTestFiles?.diseases?.[i]
           ? [
-              ...updatedeases,
+              ...watchedTestFiles?.diseasesUpdate?.[i],
               ...watchedTestFiles?.diseases?.[i]
             ]
           : watchedTestFiles?.diseases?.[i];
       const uniqueUsersByName1: any = lodash.uniqBy(newArr1, "id");
       setValuetest(`diseases[${i}]`, uniqueUsersByName1);
     });
-  }, [updateCrop,updatedeases]);
+  }, [updateCrop, updatedeases]);
 
   return (
     <GlobalFrom
@@ -566,6 +575,7 @@ export default function ProductAction() {
                           onChange={(e) => {
                             setValue(`state.items[${i}].crops`, e.value);
                           }}
+                          maxSelectedLabels={3}
                           onFilter={debounce((e) => {
                             getCrop(e.filter, i);
                           }, 700)}
@@ -582,6 +592,7 @@ export default function ProductAction() {
                       <div className="colm1 relative">
                         <MultiSelect
                           id="disease"
+                          maxSelectedLabels={2}
                           onFilter={debounce((e: any) => {
                             getDiseesesByCrop("", e.filter, i);
                           }, 700)}
