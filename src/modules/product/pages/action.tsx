@@ -59,8 +59,6 @@ export default function ProductAction() {
   const { id } = useParams();
   const { t } = useTranslation();
   const [unitsSet, setUnitsSet] = useState<any>("");
-  const [updateCrop, setupdateCrop] = useState([]);
-  const [updatedeases, setupdatedeases] = useState([]);
   const [index, setIndex] = useState<any>(1);
   const [indexArr, setIndexArr] = useState<any>([]);
   const [image, setImage] = useState<any>();
@@ -172,8 +170,10 @@ export default function ProductAction() {
           const newArr = watchedTestFiles?.diseases?.[indexNumber]
             ? [...watchedTestFiles?.diseases?.[indexNumber], ...e?.data]
             : e?.data;
+          const updateArrAdd =
+            watchedTestFiles?.diseasesUpdate?.[indexNumber] ? [...watchedTestFiles?.diseasesUpdate?.[indexNumber], ...newArr] : newArr
 
-          const uniqueUsersByName: any = lodash.uniqBy(newArr, "id");
+          const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
           setValuetest(`diseases[${indexNumber}]`, uniqueUsersByName);
         }
       })
@@ -187,7 +187,7 @@ export default function ProductAction() {
   useEffect(() => {
     getDiseesesByCrop("", "", index - 1);
     getCrop("", index - 1);
-  }, [index]);
+  }, [index, watchedTestFiles?.diseasesUpdate]);
 
   useEffect(() => {
     if (id == "new") {
@@ -248,7 +248,6 @@ export default function ProductAction() {
                     `cropsUpdate[${i}]`,
                     e?.data?.state?.items?.[i]?.crops
                   );
-                  setupdateCrop(e?.data?.state?.items?.[i]?.crops || []);
                 }
                 if (e?.data?.state?.items?.[i]?.description) {
                   setValue(
@@ -265,7 +264,6 @@ export default function ProductAction() {
                     `diseasesUpdate[${i}]`,
                     e?.data?.state?.items?.[i]?.diseases
                   );
-                  setupdatedeases(e?.data?.state?.items?.[i]?.diseases || []);
                 }
 
                 if (e?.data?.state?.items?.[i]?.dose_max) {
@@ -306,30 +304,30 @@ export default function ProductAction() {
     }
   }, [id]);
 
-  useEffect(() => {
-    indexArr?.forEach((_: any, i: number) => {
-      const newArr =
-        watchedTestFiles?.cropsUpdate?.[i] && watchedTestFiles?.corps?.[i]
-          ? [
-              ...watchedTestFiles?.cropsUpdate?.[i],
-              ...watchedTestFiles?.corps?.[i]
-            ]
-          : watchedTestFiles?.corps?.[i];
-      const uniqueUsersByName: any = lodash.uniqBy(newArr, "id");
-      setValuetest(`corps[${i}]`, uniqueUsersByName);
+  // useEffect(() => {
+  //   indexArr?.forEach((_: any, i: number) => {
+  //     const newArr =
+  //       watchedTestFiles?.cropsUpdate?.[i] && watchedTestFiles?.corps?.[i]
+  //         ? [
+  //           ...watchedTestFiles?.cropsUpdate?.[i],
+  //           ...watchedTestFiles?.corps?.[i]
+  //         ]
+  //         : watchedTestFiles?.corps?.[i];
+  //     const uniqueUsersByName: any = lodash.uniqBy(newArr, "id");
+  //     setValuetest(`corps[${i}]`, uniqueUsersByName);
 
-      const newArr1 =
-        watchedTestFiles?.diseasesUpdate?.[i] && watchedTestFiles?.diseases?.[i]
-          ? [
-              ...watchedTestFiles?.diseasesUpdate?.[i],
-              ...watchedTestFiles?.diseases?.[i]
-            ]
-          : watchedTestFiles?.diseases?.[i];
-      const uniqueUsersByName1: any = lodash.uniqBy(newArr1, "id");
-      setValuetest(`diseases[${i}]`, uniqueUsersByName1);
-    });
-  }, [updateCrop, updatedeases]);
-
+  //     const newArr1 =
+  //       watchedTestFiles?.diseasesUpdate?.[i] && watchedTestFiles?.diseases?.[i]
+  //         ? [
+  //           ...watchedTestFiles?.diseasesUpdate?.[i],
+  //           ...watchedTestFiles?.diseases?.[i]
+  //         ]
+  //         : watchedTestFiles?.diseases?.[i];
+  //     const uniqueUsersByName1: any = lodash.uniqBy(newArr1, "id");
+  //     console.log("unique")
+  //     setValuetest(`diseases[${i}]`, uniqueUsersByName1);
+  //   });
+  // }, [watchedTestFiles?.diseasesUpdate, watchedTestFiles?.cropsUpdate, index]);
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
@@ -415,7 +413,7 @@ export default function ProductAction() {
                       clearErrors("unit");
                       return el.value;
                     },
-                    onBlur: function () {}
+                    onBlur: function () { }
                   }}
                   filterTemplate={() => (
                     <InputText
@@ -455,7 +453,7 @@ export default function ProductAction() {
                       clearErrors("state.drug_category");
                       return el.value;
                     },
-                    onBlur: function () {}
+                    onBlur: function () { }
                   }}
                   invalid={
                     (errors as any)?.state?.drug_category?.message
@@ -492,7 +490,7 @@ export default function ProductAction() {
                       clearErrors("state.fertilizer_category");
                       return el.value;
                     },
-                    onBlur: function () {}
+                    onBlur: function () { }
                   }}
                   invalid={
                     (errors as any)?.state?.fertilizer_category?.message
@@ -646,7 +644,7 @@ export default function ProductAction() {
 
                               return el.value;
                             },
-                            onBlur: function () {}
+                            onBlur: function () { }
                           }}
                           invalid={
                             (errors as any)?.state?.items?.[i]?.diseases
@@ -663,13 +661,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.diseases
                           ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.diseases
-                                ?.message
-                            }
-                          </p>
-                        )}
+                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                              {
+                                (errors as any)?.state?.items?.[i]?.diseases
+                                  ?.message
+                              }
+                            </p>
+                          )}
                       </div>
                     )}
 
@@ -697,13 +695,13 @@ export default function ProductAction() {
                       />
                       {(errors as any)?.state?.items?.[i]?.dose_min
                         ?.message && (
-                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                          {
-                            (errors as any)?.state?.items?.[i]?.dose_min
-                              ?.message
-                          }
-                        </p>
-                      )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.dose_min
+                                ?.message
+                            }
+                          </p>
+                        )}
                     </div>
 
                     <div
@@ -729,13 +727,13 @@ export default function ProductAction() {
                       />
                       {(errors as any)?.state?.items?.[i]?.dose_max
                         ?.message && (
-                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                          {
-                            (errors as any)?.state?.items?.[i]?.dose_max
-                              ?.message
-                          }
-                        </p>
-                      )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.dose_max
+                                ?.message
+                            }
+                          </p>
+                        )}
                     </div>
 
                     <div
@@ -755,7 +753,7 @@ export default function ProductAction() {
                             clearErrors(`state.items[${i}].unit`);
                             return el.value;
                           },
-                          onBlur: function () {}
+                          onBlur: function () { }
                         }}
                         invalid={
                           (errors as any)?.state?.items?.[i]?.unit?.message
@@ -809,13 +807,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.use_count
                           ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.use_count
-                                ?.message
-                            }
-                          </p>
-                        )}
+                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                              {
+                                (errors as any)?.state?.items?.[i]?.use_count
+                                  ?.message
+                              }
+                            </p>
+                          )}
                       </div>
                     )}
                   </div>
@@ -840,13 +838,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.description
                           ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.description
-                                ?.message
-                            }
-                          </p>
-                        )}
+                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                              {
+                                (errors as any)?.state?.items?.[i]?.description
+                                  ?.message
+                              }
+                            </p>
+                          )}
                       </>
                     ) : watchedFiles?.type == "fertilizer" ? (
                       <>
@@ -866,13 +864,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.method
                           ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.method
-                                ?.message
-                            }
-                          </p>
-                        )}
+                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                              {
+                                (errors as any)?.state?.items?.[i]?.method
+                                  ?.message
+                              }
+                            </p>
+                          )}
                       </>
                     ) : (
                       ""
