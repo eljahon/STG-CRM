@@ -145,7 +145,9 @@ export default function ProductAction() {
         const newArr = watchedTestFiles?.corps?.[indexNumber]
           ? [...watchedTestFiles?.corps?.[indexNumber], ...e?.data]
           : e?.data;
-        const uniqueUsersByName: any = lodash.uniqBy(newArr, "id");
+          const updateArrAdd =
+            watchedTestFiles?.cropsUpdate?.[indexNumber] ? [...watchedTestFiles?.cropsUpdate?.[indexNumber], ...newArr] : newArr
+        const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
         setValuetest(`corps[${indexNumber}]`, uniqueUsersByName);
       })
       .catch((errors) => console.log(errors));
@@ -187,7 +189,7 @@ export default function ProductAction() {
   useEffect(() => {
     getDiseesesByCrop("", "", index - 1);
     getCrop("", index - 1);
-  }, [index, watchedTestFiles?.diseasesUpdate]);
+  }, [index, watchedTestFiles?.diseasesUpdate , watchedTestFiles?.cropsUpdate]);
 
   useEffect(() => {
     if (id == "new") {
@@ -304,30 +306,8 @@ export default function ProductAction() {
     }
   }, [id]);
 
-  // useEffect(() => {
-  //   indexArr?.forEach((_: any, i: number) => {
-  //     const newArr =
-  //       watchedTestFiles?.cropsUpdate?.[i] && watchedTestFiles?.corps?.[i]
-  //         ? [
-  //           ...watchedTestFiles?.cropsUpdate?.[i],
-  //           ...watchedTestFiles?.corps?.[i]
-  //         ]
-  //         : watchedTestFiles?.corps?.[i];
-  //     const uniqueUsersByName: any = lodash.uniqBy(newArr, "id");
-  //     setValuetest(`corps[${i}]`, uniqueUsersByName);
 
-  //     const newArr1 =
-  //       watchedTestFiles?.diseasesUpdate?.[i] && watchedTestFiles?.diseases?.[i]
-  //         ? [
-  //           ...watchedTestFiles?.diseasesUpdate?.[i],
-  //           ...watchedTestFiles?.diseases?.[i]
-  //         ]
-  //         : watchedTestFiles?.diseases?.[i];
-  //     const uniqueUsersByName1: any = lodash.uniqBy(newArr1, "id");
-  //     console.log("unique")
-  //     setValuetest(`diseases[${i}]`, uniqueUsersByName1);
-  //   });
-  // }, [watchedTestFiles?.diseasesUpdate, watchedTestFiles?.cropsUpdate, index]);
+  
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
