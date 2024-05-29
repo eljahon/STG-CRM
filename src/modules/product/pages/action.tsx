@@ -58,6 +58,8 @@ interface FormData {
 export default function ProductAction() {
   const { id } = useParams();
   const { t } = useTranslation();
+  const [page, setPage] = useState<any>(0);
+  const pageSize = 5;
   const [unitsSet, setUnitsSet] = useState<any>("");
   const [index, setIndex] = useState<any>(1);
   const [indexArr, setIndexArr] = useState<any>([]);
@@ -106,13 +108,17 @@ export default function ProductAction() {
   );
 
   const { data: fertilizerItems } = useQuery(
-    ["fertilizerItems", watchedTestFiles.fertilizerId],
+    ["fertilizerItems", watchedTestFiles.fertilizerId, page],
     () =>
       GetAllData("fertilizations", {
         filters: {
           fertilizer: { id: { $eq: watchedTestFiles.fertilizerId } }
         },
-        populate: "*"
+        populate: "*",
+        pagination: {
+          page: page / pageSize + 1,
+          pageSize: pageSize
+        }
       }),
     {
       enabled:
@@ -123,11 +129,15 @@ export default function ProductAction() {
   );
 
   const { data: drugItems } = useQuery(
-    ["drugItems", watchedTestFiles.drugId],
+    ["drugItems", watchedTestFiles.drugId, page],
     () =>
       GetAllData("treatments", {
         filters: { drug: { id: { $eq: watchedTestFiles.drugId } } },
-        populate: "*"
+        populate: "*",
+        pagination: {
+          page: page / pageSize + 1,
+          pageSize: pageSize
+        }
       }),
     {
       enabled:
@@ -145,8 +155,9 @@ export default function ProductAction() {
         const newArr = watchedTestFiles?.corps?.[indexNumber]
           ? [...watchedTestFiles?.corps?.[indexNumber], ...e?.data]
           : e?.data;
-          const updateArrAdd =
-            watchedTestFiles?.cropsUpdate?.[indexNumber] ? [...watchedTestFiles?.cropsUpdate?.[indexNumber], ...newArr] : newArr
+        const updateArrAdd = watchedTestFiles?.cropsUpdate?.[indexNumber]
+          ? [...watchedTestFiles?.cropsUpdate?.[indexNumber], ...newArr]
+          : newArr;
         const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
         setValuetest(`corps[${indexNumber}]`, uniqueUsersByName);
       })
@@ -172,8 +183,9 @@ export default function ProductAction() {
           const newArr = watchedTestFiles?.diseases?.[indexNumber]
             ? [...watchedTestFiles?.diseases?.[indexNumber], ...e?.data]
             : e?.data;
-          const updateArrAdd =
-            watchedTestFiles?.diseasesUpdate?.[indexNumber] ? [...watchedTestFiles?.diseasesUpdate?.[indexNumber], ...newArr] : newArr
+          const updateArrAdd = watchedTestFiles?.diseasesUpdate?.[indexNumber]
+            ? [...watchedTestFiles?.diseasesUpdate?.[indexNumber], ...newArr]
+            : newArr;
 
           const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
           setValuetest(`diseases[${indexNumber}]`, uniqueUsersByName);
@@ -189,7 +201,7 @@ export default function ProductAction() {
   useEffect(() => {
     getDiseesesByCrop("", "", index - 1);
     getCrop("", index - 1);
-  }, [index, watchedTestFiles?.diseasesUpdate , watchedTestFiles?.cropsUpdate]);
+  }, [index, watchedTestFiles?.diseasesUpdate, watchedTestFiles?.cropsUpdate]);
 
   useEffect(() => {
     if (id == "new") {
@@ -306,8 +318,6 @@ export default function ProductAction() {
     }
   }, [id]);
 
-
-  
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
@@ -393,7 +403,7 @@ export default function ProductAction() {
                       clearErrors("unit");
                       return el.value;
                     },
-                    onBlur: function () { }
+                    onBlur: function () {}
                   }}
                   filterTemplate={() => (
                     <InputText
@@ -433,7 +443,7 @@ export default function ProductAction() {
                       clearErrors("state.drug_category");
                       return el.value;
                     },
-                    onBlur: function () { }
+                    onBlur: function () {}
                   }}
                   invalid={
                     (errors as any)?.state?.drug_category?.message
@@ -470,7 +480,7 @@ export default function ProductAction() {
                       clearErrors("state.fertilizer_category");
                       return el.value;
                     },
-                    onBlur: function () { }
+                    onBlur: function () {}
                   }}
                   invalid={
                     (errors as any)?.state?.fertilizer_category?.message
@@ -624,7 +634,7 @@ export default function ProductAction() {
 
                               return el.value;
                             },
-                            onBlur: function () { }
+                            onBlur: function () {}
                           }}
                           invalid={
                             (errors as any)?.state?.items?.[i]?.diseases
@@ -641,13 +651,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.diseases
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.diseases
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.diseases
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </div>
                     )}
 
@@ -675,13 +685,13 @@ export default function ProductAction() {
                       />
                       {(errors as any)?.state?.items?.[i]?.dose_min
                         ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.dose_min
-                                ?.message
-                            }
-                          </p>
-                        )}
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {
+                            (errors as any)?.state?.items?.[i]?.dose_min
+                              ?.message
+                          }
+                        </p>
+                      )}
                     </div>
 
                     <div
@@ -707,13 +717,13 @@ export default function ProductAction() {
                       />
                       {(errors as any)?.state?.items?.[i]?.dose_max
                         ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.dose_max
-                                ?.message
-                            }
-                          </p>
-                        )}
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {
+                            (errors as any)?.state?.items?.[i]?.dose_max
+                              ?.message
+                          }
+                        </p>
+                      )}
                     </div>
 
                     <div
@@ -733,7 +743,7 @@ export default function ProductAction() {
                             clearErrors(`state.items[${i}].unit`);
                             return el.value;
                           },
-                          onBlur: function () { }
+                          onBlur: function () {}
                         }}
                         invalid={
                           (errors as any)?.state?.items?.[i]?.unit?.message
@@ -787,13 +797,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.use_count
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.use_count
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.use_count
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>
@@ -818,13 +828,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.description
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.description
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.description
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </>
                     ) : watchedFiles?.type == "fertilizer" ? (
                       <>
@@ -844,13 +854,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.method
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.method
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.method
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </>
                     ) : (
                       ""
@@ -898,6 +908,13 @@ export default function ProductAction() {
           fertilizerItems={fertilizerItems?.data}
           drugItems={drugItems?.data}
           type={watchedFiles?.type}
+          page={page}
+          setPage={setPage}
+          pageSize={pageSize}
+          totalProduct={
+            fertilizerItems?.meta?.pagination?.total ||
+            drugItems?.meta?.pagination?.total
+          }
         />
       )}
 

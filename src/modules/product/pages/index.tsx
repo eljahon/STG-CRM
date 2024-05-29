@@ -13,12 +13,13 @@ export default function ProductPage() {
   const { t } = useTranslation();
   const [page, setPage] = useState<any>(0);
   const [opemNavigate, setopemNavigate] = useState<any>(false);
+  const pageSize = 10;
   const { isLoading, data: product } = useQuery(["products", page], () =>
     GetAllData("products/distribute", {
       populate: "*",
       pagination: {
-        page: page / 10 + 1,
-        pageSize: 20
+        page: page / pageSize + 1,
+        pageSize: pageSize
       }
     })
   );
@@ -95,6 +96,7 @@ export default function ProductPage() {
         data={product?.data}
         columns={columns}
         totalProduct={product?.meta?.pagination?.total}
+        pageSize={pageSize}
         currentPage={page}
         tableTile={t("products")}
         url={"/product"}

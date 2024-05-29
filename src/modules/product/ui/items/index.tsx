@@ -4,6 +4,11 @@ interface IProductItems {
   fertilizerItems?: any;
   drugItems?: any;
   type: any;
+  totalProduct?: any;
+  pageSize?: any;
+  currentPage?: any;
+  page?: any;
+  setPage?: any;
 }
 
 const columnsdrug = [
@@ -66,7 +71,15 @@ const columnsfert = [
     style: { minWidth: "12rem" }
   }
 ];
-const ProductItems = ({ fertilizerItems, drugItems, type }: IProductItems) => {
+const ProductItems = ({
+  fertilizerItems,
+  totalProduct,
+  pageSize,
+  page,
+  setPage,
+  drugItems,
+  type
+}: IProductItems) => {
   return (
     <>
       {type == "drug" ? (
@@ -75,6 +88,12 @@ const ProductItems = ({ fertilizerItems, drugItems, type }: IProductItems) => {
           isLoading={false}
           data={drugItems}
           columns={columnsdrug}
+          totalProduct={totalProduct}
+          pageSize={pageSize}
+          currentPage={page}
+          pageChange={(event: any) => {
+            setPage(event.first);
+          }}
         />
       ) : (
         <GolabTable
@@ -82,6 +101,12 @@ const ProductItems = ({ fertilizerItems, drugItems, type }: IProductItems) => {
           isLoading={false}
           data={fertilizerItems}
           columns={columnsfert}
+          totalProduct={totalProduct}
+          pageSize={pageSize}
+          currentPage={page}
+          pageChange={(event: any) => {
+            setPage(event.first);
+          }}
         />
       )}
     </>

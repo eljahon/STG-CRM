@@ -52,6 +52,7 @@ interface ITable {
   currentPage?: any;
   isLoading?: any;
   Isupdate?: any;
+  pageSize?: any;
 }
 export default function GolabTable(props: ITable) {
   const {
@@ -68,6 +69,7 @@ export default function GolabTable(props: ITable) {
     pageChange,
     checked,
     isLoading,
+    pageSize,
     Isupdate
   } = props;
   const navigate = useNavigate();
@@ -207,7 +209,7 @@ export default function GolabTable(props: ITable) {
         <div className="card">
           <Paginator
             first={currentPage}
-            rows={10}
+            rows={pageSize}
             totalRecords={totalProduct}
             onPageChange={pageChange}
           />
