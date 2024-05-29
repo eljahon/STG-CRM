@@ -69,6 +69,13 @@ const columnsfert = [
     id: 4,
     exportable: false,
     style: { minWidth: "12rem" }
+  },
+  {
+    header: "unit name",
+    field: "unit.name",
+    id: 4,
+    exportable: false,
+    style: { minWidth: "12rem" }
   }
 ];
 const ProductItems = ({

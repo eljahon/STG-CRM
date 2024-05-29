@@ -36,8 +36,7 @@ export default function UploadFile({
           setLoadingFile(true);
           clearErrors(fieldName);
           const res = await ImageUpload(
-            file,
-            {
+            file,{
               type: "image",
               folder: "other"
             },
