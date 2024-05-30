@@ -8,8 +8,9 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { useQuery } from "react-query";
-import { GetAllData, GetByIdData } from "../../../service/global.ts";
+import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
 
+import { GetAllData, GetByIdData } from "../../../service/global.ts";
 import UploadFile from "../../../ui/uploadFile";
 import UploadFileMulty from "../../../ui/uploadFileMulty";
 import UploadFileSer from "../../../ui/uploadFileSer";
@@ -54,6 +55,7 @@ interface FormData {
   price: string | undefined;
   gallery: string[];
   image: string;
+  visible: any;
 }
 export default function ProductAction() {
   const { id } = useParams();
@@ -196,6 +198,7 @@ export default function ProductAction() {
 
   useEffect(() => {
     setValue("type", "drug");
+    setValue("visible", true);
   }, []);
 
   useEffect(() => {
@@ -216,7 +219,7 @@ export default function ProductAction() {
           setValue("title", e?.data?.title);
           setValue("description", e?.data?.description);
           setValue("unit", e?.data?.unit?.id);
-
+          setValue("visible", e?.data?.visible);
           if (e?.data?.state?.drug_category)
             setValue("state.drug_category", e?.data?.state?.drug_category?.id);
           if (e?.data?.state?.fertilizer_category)
@@ -428,81 +431,91 @@ export default function ProductAction() {
                 )}
               </div>
             </div>
-            {watchedFiles?.type == "drug" && (
-              <div className="w-full relative">
-                <Dropdown
-                  filter
-                  id="drug_category"
-                  className=" mr-2 w-full md:w-full"
-                  {...{
-                    ...register("state.drug_category", {
-                      required: t("drugCategoryrequired")
-                    }),
-                    onChange: function (el) {
-                      setValue("state.drug_category", el.value);
-                      clearErrors("state.drug_category");
-                      return el.value;
-                    },
-                    onBlur: function () {}
-                  }}
-                  invalid={
-                    (errors as any)?.state?.drug_category?.message
-                      ? true
-                      : false
+            <div className="w-full flex gap-4  align-items-center">
+              {watchedFiles?.type == "drug" && (
+                <div className="w-full relative">
+                  <Dropdown
+                    filter
+                    id="drug_category"
+                    className=" mr-2 w-full md:w-full"
+                    {...{
+                      ...register("state.drug_category", {
+                        required: t("drugCategoryrequired")
+                      }),
+                      onChange: function (el) {
+                        setValue("state.drug_category", el.value);
+                        clearErrors("state.drug_category");
+                        return el.value;
+                      },
+                      onBlur: function () {}
+                    }}
+                    invalid={
+                      (errors as any)?.state?.drug_category?.message
+                        ? true
+                        : false
+                    }
+                    placeholder={`${t("selectdrugCategory")} `}
+                    value={watchedFiles?.state?.drug_category}
+                    options={drugCategory?.data}
+                    optionValue="id"
+                    optionLabel="name"
+                    highlightOnSelect={false}
+                  />
+                  {(errors as any)?.state?.drug_category?.message && (
+                    <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                      {(errors as any)?.state?.drug_category?.message}
+                    </p>
+                  )}
+                </div>
+              )}
+              {watchedFiles?.type == "fertilizer" && (
+                // floatLabel
+                <div className="w-full relative">
+                  <Dropdown
+                    filter
+                    id="fertilizer"
+                    className=" mr-2 w-full md:w-full"
+                    {...{
+                      ...register("state.fertilizer_category", {
+                        required: t("fertilizerCategoryrequired")
+                      }),
+                      onChange: function (el) {
+                        setValue("state.fertilizer_category", el.value);
+                        clearErrors("state.fertilizer_category");
+                        return el.value;
+                      },
+                      onBlur: function () {}
+                    }}
+                    invalid={
+                      (errors as any)?.state?.fertilizer_category?.message
+                        ? true
+                        : false
+                    }
+                    placeholder={`${t("selectFertilizerCategory")} `}
+                    value={watchedFiles?.state?.fertilizer_category}
+                    options={fertilizerCategory?.data}
+                    optionValue="id"
+                    optionLabel="name"
+                    // checkmark={true}
+                    highlightOnSelect={false}
+                  />
+                  {(errors as any)?.state?.fertilizer_category?.message && (
+                    <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                      {(errors as any)?.state?.fertilizer_category?.message}
+                    </p>
+                  )}
+                </div>
+              )}
+              <label className="w-full flex gap-4  align-items-center">
+                <InputSwitch
+                  checked={watchedFiles?.visible}
+                  onChange={(e: InputSwitchChangeEvent) =>
+                    setValue("visible", e.value)
                   }
-                  placeholder={`${t("selectdrugCategory")} `}
-                  value={watchedFiles?.state?.drug_category}
-                  options={drugCategory?.data}
-                  optionValue="id"
-                  optionLabel="name"
-                  highlightOnSelect={false}
                 />
-                {(errors as any)?.state?.drug_category?.message && (
-                  <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                    {(errors as any)?.state?.drug_category?.message}
-                  </p>
-                )}
-              </div>
-            )}
-            {watchedFiles?.type == "fertilizer" && (
-              // floatLabel
-              <div className="w-full relative">
-                <Dropdown
-                  filter
-                  id="fertilizer"
-                  className=" mr-2 w-full md:w-full"
-                  {...{
-                    ...register("state.fertilizer_category", {
-                      required: t("fertilizerCategoryrequired")
-                    }),
-                    onChange: function (el) {
-                      setValue("state.fertilizer_category", el.value);
-                      clearErrors("state.fertilizer_category");
-                      return el.value;
-                    },
-                    onBlur: function () {}
-                  }}
-                  invalid={
-                    (errors as any)?.state?.fertilizer_category?.message
-                      ? true
-                      : false
-                  }
-                  placeholder={`${t("selectFertilizerCategory")} `}
-                  value={watchedFiles?.state?.fertilizer_category}
-                  options={fertilizerCategory?.data}
-                  optionValue="id"
-                  optionLabel="name"
-                  // checkmark={true}
-                  highlightOnSelect={false}
-                />
-                {(errors as any)?.state?.fertilizer_category?.message && (
-                  <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                    {(errors as any)?.state?.fertilizer_category?.message}
-                  </p>
-                )}
-              </div>
-            )}
-            {/* floatLabel */}
+                <p className="label-my mb-0">{t("visible")}</p>
+              </label>
+            </div>
             <div className="w-full relative">
               <InputTextarea
                 className=" mr-2 w-full"

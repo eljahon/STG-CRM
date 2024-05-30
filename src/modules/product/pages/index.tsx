@@ -7,6 +7,7 @@ import { Button } from "primereact/button";
 
 import { Dialog } from "primereact/dialog";
 import { useTranslation } from "react-i18next";
+import StatusBtn from "../../../ui/status/index.tsx";
 
 export default function ProductPage() {
   const navigate = useNavigate();
@@ -68,8 +69,26 @@ export default function ProductPage() {
       field: "type",
       id: 5,
       exportable: false
+    },
+    {
+      header: t("visible"),
+      field: "visible",
+      id: 6,
+      exportable: false,
+      body: (itemData: any) => {
+        return (
+          <StatusBtn
+            className={"inline-block"}
+            label={itemData?.visible ? "visible" : "unvisible"}
+            status={itemData?.visible ? "completed" : "cancelled"}
+          />
+        );
+      }
+      // ItemRender: (itemData, itemcoulmns,index) => {}
     }
   ];
+
+  // StatusBtn
   const NavigateDialog = (
     <React.Fragment>
       <Button

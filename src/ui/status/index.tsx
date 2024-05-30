@@ -16,10 +16,10 @@ const hexToRgb = (hex: any) => {
 
   return `${r}, ${g}, ${b}`;
 };
-const StatusBtn = ({ status, className }: any) => {
+const StatusBtn = ({ label, status, className }: any) => {
   return (
     <p
-      className={`px-4 py-1 border-round-2xl text-base font-bold m-0 ${
+      className={`px-4 py-1 border-round-2xl text-sm font-bold m-0 ${
         className && className
       } `}
       style={{
@@ -29,7 +29,7 @@ const StatusBtn = ({ status, className }: any) => {
         color: ORDER_STATUS?.[`${status}`]
       }}
     >
-      {status}
+      {label || status}
     </p>
   );
 };
