@@ -66,6 +66,42 @@ export default function Header() {
         <div
           onClick={(e) => {
             e.stopPropagation();
+            setOpenLang(!openLang);
+          }}
+          style={{ padding: "13px" }}
+          className="bg-white border-round-2xl flex justify-content-between gap-2 align-items-center cursor-pointer relative"
+        >
+          <div className="flex align-items-center gap-2">
+            <i
+              className="pi pi-globe"
+              style={{ fontSize: "1.2rem", color: "black" }}
+            ></i>
+            <p className="m-0 ">{t("lang")}</p>
+          </div>
+          <i
+            className="pi  pi-angle-down"
+            style={{ fontSize: "1.2rem", color: "black" }}
+          ></i>
+          <div
+            className={`${
+              openLang ? "block" : "hidden"
+            } absolute  left-0 bg-white border-round-2xl  py-2 w-full`}
+            style={{ top: "55px", zIndex: 100 }}
+          >
+            {LangArr.map((e: any) => (
+              <p
+                key={e?.id}
+                onClick={() =>changeLanguage(e?.lang)}
+                className="py-2 px-4 m-0 hover:bg-blue-50"
+              >
+                {t(e?.lang)}
+              </p>
+            ))}
+          </div>
+        </div>
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
             setOpen(!open);
           }}
           style={{ minWidth: "150px", padding: "13px" }}
@@ -116,42 +152,7 @@ export default function Header() {
             </p>
           </div>
         </div>
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            setOpenLang(!openLang);
-          }}
-          style={{ padding: "13px" }}
-          className="bg-white border-round-2xl flex justify-content-between gap-2 align-items-center cursor-pointer relative"
-        >
-          <div className="flex align-items-center gap-2">
-            <i
-              className="pi pi-globe"
-              style={{ fontSize: "1.2rem", color: "black" }}
-            ></i>
-            <p className="m-0 ">{t("lang")}</p>
-          </div>
-          <i
-            className="pi  pi-angle-down"
-            style={{ fontSize: "1.2rem", color: "black" }}
-          ></i>
-          <div
-            className={`${
-              openLang ? "block" : "hidden"
-            } absolute  left-0 bg-white border-round-2xl  py-2 w-full`}
-            style={{ top: "55px", zIndex: 100 }}
-          >
-            {LangArr.map((e: any) => (
-              <p
-                key={e?.id}
-                onClick={() =>changeLanguage(e?.lang)}
-                className="py-2 px-4 m-0 hover:bg-blue-50"
-              >
-                {t(e?.lang)}
-              </p>
-            ))}
-          </div>
-        </div>
+       
       </div>
 
       <Dialog

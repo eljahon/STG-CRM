@@ -150,6 +150,7 @@ export default function ProductAction() {
   );
 
   const getCrop = async (crop?: string, indexNumber?: any) => {
+    setValuetest(`corpsLoading[${indexNumber}]`, true);
     await GetAllData(`crops`, {
       filters: { name: { $containsi: crop || undefined } }
     })
@@ -163,7 +164,8 @@ export default function ProductAction() {
         const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
         setValuetest(`corps[${indexNumber}]`, uniqueUsersByName);
       })
-      .catch((errors) => console.log(errors));
+      .catch((errors) => console.log(errors))
+      .finally(() => setValuetest(`corpsLoading[${indexNumber}]`, false));
   };
   const getDiseesesByCrop = async (
     crop?: string,
@@ -584,16 +586,10 @@ export default function ProductAction() {
                               setValuetest(`state.items[${i}].crop`, e.value);
                             }
                           }}
-                          filterTemplate={() => (
-                            <InputText
-                              className="w-full"
-                              onChange={debounce((e) => {
-                                if (e.target.value) {
-                                  getCrop(e.target.value, i);
-                                }
-                              }, 700)}
-                            />
-                          )}
+                          onFilter={debounce((e) => {
+                            getCrop(e.filter, i);
+                          }, 700)}
+                          loading={watchedTestFiles.corpsLoading?.[i]}
                           value={watchedTestFiles?.state?.items?.[i]?.crop}
                           placeholder={`${t("selectCrop")} `}
                           optionValue="id"
