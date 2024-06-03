@@ -79,7 +79,7 @@ export default function ProductPage() {
         return (
           <StatusBtn
             className={"inline-block"}
-            label={itemData?.visible ? "visible" : "unvisible"}
+            label={itemData?.visible ?  t("visible") : t("unvisible")}
             status={itemData?.visible ? "completed" : "cancelled"}
           />
         );
@@ -88,7 +88,7 @@ export default function ProductPage() {
     }
   ];
 
-  // StatusBtn
+
   const NavigateDialog = (
     <React.Fragment>
       <Button

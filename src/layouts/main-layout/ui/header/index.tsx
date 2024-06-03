@@ -8,15 +8,19 @@ import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import { GetMe } from "../../../../service/global";
 import { useTranslation } from "react-i18next";
+import { LangArr } from "../../../../data";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const [openLang, setOpenLang] = useState(false);
   const [openmadal, setOpenmadal] = useState(false);
-  const { t } = useTranslation();
+  const { t,i18n } = useTranslation();
   const { data: me } = useQuery(["meCompony"], () => GetMe());
   const rolename = window.localStorage.getItem("role") || "";
   useEffect(() => {
-    window.addEventListener("click", () => setOpen(false));
+    window.addEventListener("click", () => {
+      setOpen(false), setOpenLang(false);
+    });
   }, []);
 
   const deleteProductDialogFooter = (
@@ -38,7 +42,9 @@ export default function Header() {
       />
     </React.Fragment>
   );
-
+  const changeLanguage = (lng:any) => {
+    i18n.changeLanguage(lng);
+  };
   return (
     <div className="flex align-items-center justify-content-between px-2 fixed  myflext  pt-4 pb-4">
       <IconField iconPosition="left">
@@ -108,6 +114,42 @@ export default function Header() {
             >
               {t("logOut")}
             </p>
+          </div>
+        </div>
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpenLang(!openLang);
+          }}
+          style={{ padding: "13px" }}
+          className="bg-white border-round-2xl flex justify-content-between gap-2 align-items-center cursor-pointer relative"
+        >
+          <div className="flex align-items-center gap-2">
+            <i
+              className="pi pi-globe"
+              style={{ fontSize: "1.2rem", color: "black" }}
+            ></i>
+            <p className="m-0 ">{t("lang")}</p>
+          </div>
+          <i
+            className="pi  pi-angle-down"
+            style={{ fontSize: "1.2rem", color: "black" }}
+          ></i>
+          <div
+            className={`${
+              openLang ? "block" : "hidden"
+            } absolute  left-0 bg-white border-round-2xl  py-2 w-full`}
+            style={{ top: "55px", zIndex: 100 }}
+          >
+            {LangArr.map((e: any) => (
+              <p
+                key={e?.id}
+                onClick={() =>changeLanguage(e?.lang)}
+                className="py-2 px-4 m-0 hover:bg-blue-50"
+              >
+                {t(e?.lang)}
+              </p>
+            ))}
           </div>
         </div>
       </div>

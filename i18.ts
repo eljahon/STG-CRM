@@ -28,6 +28,7 @@ i18n
   .init({
     resources,
     fallbackLng: "en",
+    lng:"en",
     debug: true,
     interpolation: {
       escapeValue: false // React already safes from xss

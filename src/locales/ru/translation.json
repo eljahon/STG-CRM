@@ -1,4 +1,8 @@
 {
+  "lang": "Russion",
+  "uz": "Uzbek",
+  "ru": "Russion",
+  "en": "English",
   "no": "No",
   "yes": "Yes",
   "search": "Search",
@@ -19,8 +23,8 @@
   "title": "Title",
   "titlerequired": "title is required",
   "price": "Price",
-  "pricerequired": "price is required",
-  "unitRequired": "unit is required",
+  "pricerequired": "Price is required",
+  "unitRequired": "Unit is required",
   "selectUnit": "Select unit",
   "drugCategoryrequired": "drug category is required",
   "selectdrugCategory": "select drug category",
@@ -58,5 +62,11 @@
   "dropcer": "Drag and Drop certifice Here to a size of 5MB.",
   "upload": "Upload",
   "crup": "Dori",
-  "fert": "Ogit"
+  "fert": "Ogit",
+  "unvisible": "Unvisible",
+  "visible": "Visible",
+  "branchName": "Branch name",
+  "district": "Fistrict",
+  "fullname": "Full name",
+  "branch": "Branch"
 }
