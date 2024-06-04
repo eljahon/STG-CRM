@@ -17,6 +17,14 @@ export default function Header() {
   const { t,i18n } = useTranslation();
   const { data: me } = useQuery(["meCompony"], () => GetMe());
   const rolename = window.localStorage.getItem("role") || "";
+
+  const langFormat =()=> {
+    const currentLang:string = localStorage.getItem('lng')||'uz';
+    console.log(LangArr)
+   const item =  LangArr.find(el =>el.lang === currentLang);
+    console.log(item)
+    return item?.lang||'uz';
+  }
   useEffect(() => {
     window.addEventListener("click", () => {
       setOpen(false), setOpenLang(false);
@@ -44,6 +52,7 @@ export default function Header() {
   );
   const changeLanguage = (lng:any) => {
     i18n.changeLanguage(lng);
+    localStorage.setItem('lng', lng)
   };
   return (
     <div className="flex align-items-center justify-content-between px-2 fixed  myflext  pt-4 pb-4">
@@ -76,7 +85,7 @@ export default function Header() {
               className="pi pi-globe"
               style={{ fontSize: "1.2rem", color: "black" }}
             ></i>
-            <p className="m-0 ">{t("lang")}</p>
+            <p className="m-0 ">{t(langFormat())}</p>
           </div>
           <i
             className="pi  pi-angle-down"

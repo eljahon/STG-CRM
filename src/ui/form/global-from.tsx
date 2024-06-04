@@ -3,7 +3,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AddData, UpdateData, UpdateDataOne } from "../../service/global";
 import { Button } from "primereact/button";
-import Loader from "../loader";
 import { useTranslation } from "react-i18next";
 
 interface IForm {
@@ -90,6 +89,7 @@ export default function GlobalFrom({
         <h3 className="m-0 text-2xl">{title}</h3>
         <div className="flex gap-2  ">
           <Button
+           loading={loader}
             className="border-round-3xl px-4"
             label={id == "new" || !id ? t("save") : t("update")}
             type="submit"
@@ -108,7 +108,6 @@ export default function GlobalFrom({
       </div>
 
       {children}
-      {loader && <Loader />}
     </form>
   );
 }

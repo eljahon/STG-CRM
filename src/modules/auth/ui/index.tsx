@@ -1,11 +1,9 @@
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { AuthLogin } from "../../../service/auth";
-import Loader from "../../../ui/loader/index";
 import { useTranslation } from "react-i18next";
 import { GetMe } from "../../../service/global";
 
@@ -102,13 +100,14 @@ export default function LoginFrom() {
             />
           </label>
           <Button
+            loading={loader}
             severity="success"
             label={t("login")}
             className="w-full max-w-10rem border-round-2xl "
           ></Button>
         </form>
       </div>
-      {loader && <Loader />}
+      {/* {loader && <Loader />} */}
     </div>
   );
 }

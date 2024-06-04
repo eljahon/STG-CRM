@@ -3,10 +3,11 @@ import { Link, useLocation } from "react-router-dom";
 
 import { filteredRoutes } from "../../../../modules/index.tsx";
 import { Badge } from "primereact/badge";
+import {useTranslation} from "react-i18next";
 
 export default function RouterDemo() {
   const pashName = useLocation();
-
+const {t} = useTranslation()
   const itemRenderer = (item: any) =>
     item.hideIfchildern && (
       <div
@@ -21,7 +22,7 @@ export default function RouterDemo() {
           }`}
         >
           <span className={item.icon} />
-          <span className="mx-2">{item.label}</span>
+          <span className="mx-2">{t(item.label)}</span>
           {item.badge && <Badge className="ml-auto" value={item.badge} />}
           {item.shortcut && (
             <span className="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">

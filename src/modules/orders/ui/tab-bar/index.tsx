@@ -38,8 +38,9 @@ const TabBar = ({ className }: any) => {
       }`}
       style={{ maxWidth: "265px", minHeight: `80vh` }}
     >
-      {statusArr?.map((e: any) => (
+      {statusArr?.map((e: any, index:number) => (
         <div
+            key={index}
           onClick={() => {
             setstatus(e?.name);
             if (e?.name == "all") {

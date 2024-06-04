@@ -5,7 +5,7 @@ export const ProductRoute = [
   {
     url: "/product",
     Element: ProductPage,
-    label: "Product",
+    label: "product",
     icon: "pi pi-th-large",
     children: [],
     meta: { isLoginIf: false, role: new Set(["distributor"]) },
