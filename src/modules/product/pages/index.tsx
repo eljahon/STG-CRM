@@ -35,11 +35,19 @@ export default function ProductPage() {
       exportable: false,
       body: (itemData: any) => {
         return (
-          <img
-            src={import.meta.env.VITE_APP_AWS_PATH + itemData?.image?.aws_path}
-            width={50}
-            height={50}
-          />
+          <>
+            {false ? (
+              <img
+                src={
+                  import.meta.env.VITE_APP_AWS_PATH + itemData?.image?.aws_path
+                }
+                width={50}
+                height={50}
+              />
+            ) : (
+              <i className="pi pi-image" style={{ fontSize: "2rem" }} />
+            )}
+          </>
         );
       }
       // ItemRender: (itemData, itemcoulmns,index) => {}
@@ -79,7 +87,7 @@ export default function ProductPage() {
         return (
           <StatusBtn
             className={"inline-block"}
-            label={itemData?.visible ?  t("visible") : t("unvisible")}
+            label={itemData?.visible ? t("visible") : t("unvisible")}
             status={itemData?.visible ? "completed" : "cancelled"}
           />
         );
@@ -87,7 +95,6 @@ export default function ProductPage() {
       // ItemRender: (itemData, itemcoulmns,index) => {}
     }
   ];
-
 
   const NavigateDialog = (
     <React.Fragment>

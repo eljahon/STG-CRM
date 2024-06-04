@@ -155,14 +155,16 @@ export default function ProductAction() {
       filters: { name: { $containsi: crop || undefined } }
     })
       .then((e) => {
-        const newArr = watchedTestFiles?.corps?.[indexNumber]
-          ? [...watchedTestFiles?.corps?.[indexNumber], ...e?.data]
-          : e?.data;
-        const updateArrAdd = watchedTestFiles?.cropsUpdate?.[indexNumber]
-          ? [...watchedTestFiles?.cropsUpdate?.[indexNumber], ...newArr]
-          : newArr;
-        const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
-        setValuetest(`corps[${indexNumber}]`, uniqueUsersByName);
+        indexArr?.map((_: any, i: any) => {
+          const newArr = watchedTestFiles?.corps?.[i]
+            ? [...watchedTestFiles?.corps?.[i], ...e?.data]
+            : e?.data;
+          const updateArrAdd = watchedTestFiles?.cropsUpdate?.[i]
+            ? [...watchedTestFiles?.cropsUpdate?.[i], ...newArr]
+            : newArr;
+          const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
+          setValuetest(`corps[${i}]`, uniqueUsersByName);
+        });
       })
       .catch((errors) => console.log(errors))
       .finally(() => setValuetest(`corpsLoading[${indexNumber}]`, false));
@@ -184,20 +186,46 @@ export default function ProductAction() {
           setValuetest(`diseases[${indexNumber}]`, e?.data);
           setValue(`state.items[${indexNumber}].diseases`, null);
         } else {
-          const newArr = watchedTestFiles?.diseases?.[indexNumber]
-            ? [...watchedTestFiles?.diseases?.[indexNumber], ...e?.data]
-            : e?.data;
-          const updateArrAdd = watchedTestFiles?.diseasesUpdate?.[indexNumber]
-            ? [...watchedTestFiles?.diseasesUpdate?.[indexNumber], ...newArr]
-            : newArr;
+          indexArr?.map((_: any, i: any) => {
+            const newArr = watchedTestFiles?.diseases?.[i]
+              ? [...watchedTestFiles?.diseases?.[i], ...e?.data]
+              : e?.data;
+            const updateArrAdd = watchedTestFiles?.diseasesUpdate?.[i]
+              ? [...watchedTestFiles?.diseasesUpdate?.[i], ...newArr]
+              : newArr;
 
-          const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
-          setValuetest(`diseases[${indexNumber}]`, uniqueUsersByName);
+            const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
+            setValuetest(`diseases[${i}]`, uniqueUsersByName);
+          });
         }
       })
       .catch((errors) => console.log(errors));
   };
 
+  const updataFormat = (items: any) => {
+    let returnResult = [...JSON.parse(JSON.stringify(items))];
+    console.log(items, "ds");
+    for (let i = 0; i < returnResult.length; i++) {
+      setIndexArr((state: any) => [i + 1, ...state]);
+      if (items?.[i]?.crops) {
+        returnResult[i].crops = items?.[i]?.crops?.map((e: any) => e?.id);
+
+        setValuetest(`cropsUpdate[${i}]`, items?.[i]?.crops);
+      }
+      if (items?.[i]?.diseases) {
+        returnResult[i].diseases = items?.[i]?.diseases?.map((e: any) => e?.id);
+
+        setValuetest(`diseasesUpdate[${i}]`, items?.[i]?.diseases);
+      }
+
+      if (items?.[i]?.unit) {
+        returnResult[i].unit = items?.[i]?.unit.id;
+      }
+    }
+    // console.log(returnResult);
+
+    return returnResult;
+  };
   useEffect(() => {
     setValue("type", "drug");
     setValue("visible", true);
@@ -254,68 +282,12 @@ export default function ProductAction() {
             setValuetest("fertilizerId", e?.data?.fertilizer?.id);
           }
           if (!e?.data?.confirmed) {
-            e?.data?.state?.items?.length &&
-              e?.data?.state?.items?.forEach((_: any, i: number) => {
-                if (!indexArr.length)
-                  setIndexArr((state: any) => [i + 1, ...state]);
-                if (e?.data?.state?.items?.[i]?.crops) {
-                  setValue(
-                    `state.items[${i}].crops`,
-                    e?.data?.state?.items?.[i]?.crops?.map((e: any) => e?.id)
-                  );
-                  setValuetest(
-                    `cropsUpdate[${i}]`,
-                    e?.data?.state?.items?.[i]?.crops
-                  );
-                }
-                if (e?.data?.state?.items?.[i]?.description) {
-                  setValue(
-                    `state.items[${i}].description`,
-                    e?.data?.state?.items?.[i]?.description
-                  );
-                }
-                if (e?.data?.state?.items?.[i]?.diseases) {
-                  setValue(
-                    `state.items[${i}].diseases`,
-                    e?.data?.state?.items?.[i]?.diseases?.map((e: any) => e?.id)
-                  );
-                  setValuetest(
-                    `diseasesUpdate[${i}]`,
-                    e?.data?.state?.items?.[i]?.diseases
-                  );
-                }
-
-                if (e?.data?.state?.items?.[i]?.dose_max) {
-                  setValue(
-                    `state.items[${i}].dose_max`,
-                    e?.data?.state?.items?.[i]?.dose_max
-                  );
-                }
-                if (e?.data?.state?.items?.[i]?.dose_min) {
-                  setValue(
-                    `state.items[${i}].dose_min`,
-                    e?.data?.state?.items?.[i]?.dose_min
-                  );
-                }
-                if (e?.data?.state?.items?.[i]?.unit) {
-                  setValue(
-                    `state.items[${i}].unit`,
-                    e?.data?.state?.items?.[i]?.unit?.id
-                  );
-                }
-                if (e?.data?.state?.items?.[i]?.use_count) {
-                  setValue(
-                    `state.items[${i}].use_count`,
-                    e?.data?.state?.items?.[i]?.use_count
-                  );
-                }
-                if (e?.data?.state?.items?.[i]?.method) {
-                  setValue(
-                    `state.items[${i}].method`,
-                    e?.data?.state?.items?.[i]?.method
-                  );
-                }
-              });
+            setValue(
+              "state.items",
+              e?.data?.state?.items?.length
+                ? updataFormat(e?.data?.state?.items)
+                : []
+            );
           }
         })
         .catch((errors) => console.log(errors))
@@ -362,7 +334,6 @@ export default function ProductAction() {
                   id="price"
                   placeholder={t("price")}
                   {...register(`price`, {
-                    required: t("pricerequired"),
                     valueAsNumber: true
                   })}
                   value={watchedFiles?.price || ""}
@@ -589,11 +560,17 @@ export default function ProductAction() {
                           onFilter={debounce((e) => {
                             getCrop(e.filter, i);
                           }, 700)}
-                          loading={watchedTestFiles.corpsLoading?.[i]}
+                          loading={
+                            watchedTestFiles.corpsLoading?.[i] ||
+                            watchedTestFiles.corpsLoading?.[0]
+                          }
                           value={watchedTestFiles?.state?.items?.[i]?.crop}
                           placeholder={`${t("selectCrop")} `}
                           optionValue="id"
-                          options={watchedTestFiles.corps?.[i]}
+                          options={
+                            watchedTestFiles.corps?.[i] ||
+                            watchedTestFiles.corps?.[0]
+                          }
                           optionLabel="name"
                           checkmark={true}
                           highlightOnSelect={false}
@@ -640,7 +617,6 @@ export default function ProductAction() {
                             onChange: function (el) {
                               setValue(`state.items[${i}].diseases`, el.value);
                               clearErrors(`state.items[${i}].diseases`);
-
                               return el.value;
                             },
                             onBlur: function () {}
