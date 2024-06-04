@@ -4,6 +4,7 @@ import { DashboardRoute } from "./dashboard/route";
 import { OrdersRoute } from "./orders/route";
 import { ProductRoute } from "./product/route";
 import { ProfileActionRoute } from "./profile/route";
+import {FormsRoute} from './forms/route.ts'
 
 // const notFound = [
 //   {
@@ -21,7 +22,8 @@ const routes = [
   ...CampanyActionRoute,
   ...ProfileActionRoute,
   ...BranchRoute,
-  ...OrdersRoute
+  ...OrdersRoute,
+    ...FormsRoute
 ];
 const rolename = window.localStorage.getItem("role") || "distributor";
 
