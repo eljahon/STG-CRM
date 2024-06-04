@@ -36,7 +36,7 @@ export default function ProductPage() {
       body: (itemData: any) => {
         return (
           <>
-            {false ? (
+            {itemData?.image?.aws_path ? (
               <img
                 src={
                   import.meta.env.VITE_APP_AWS_PATH + itemData?.image?.aws_path
