@@ -41,6 +41,9 @@ export default function GlobalFrom({
       await AddData(url, data)
         .then((res: any) => {
           if (res?.status == "200" || res?.status == "201") {
+            if(url == "create-company"){
+              window.localStorage.setItem("compony", res?.data?.id);
+            }
             toast.success("seccessfully create");
             navigate(navUrl);
           }

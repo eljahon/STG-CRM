@@ -8,6 +8,7 @@ import { GetAllData } from "../../../service/global";
 import { useQuery } from "react-query";
 import { Dropdown } from "primereact/dropdown";
 import { useTranslation } from "react-i18next";
+import Loader from "../../../ui/loader";
 
 interface FormData {
   fullname: string;
@@ -30,21 +31,13 @@ export default function ProfileSettingPage() {
 
   const watchedFiles = watch();
   const [image, setImage] = useState<any>();
-  const { data: userMe } = useQuery("me", () =>
+  const { data: userMe, isLoading } = useQuery("me", () =>
     GetAllData("users/me", { populate: "*" })
   );
   const { data: genders } = useQuery("genders", () => GetAllData("genders"));
   const { data: regions } = useQuery("regions", () => GetAllData("regions"));
   const { t } = useTranslation();
-  // const { data: districts } = useQuery(
-  //   ["districts", watchedFiles?.region],
-  //   () =>
-  //     GetAllData(
-  //       `districts${
-  //         watchedFiles?.region ? `?filters[region]=${watchedFiles?.region}` : ""
-  //       }`
-  //     )
-  // );
+ 
   useEffect(() => {
     setValue("fullname", userMe?.fullname);
     setValue("gender", userMe?.gender?.id);
@@ -184,6 +177,7 @@ export default function ProfileSettingPage() {
           />
         </div>
       </div>
+      {isLoading && <Loader />}
     </GlobalFrom>
   );
 }

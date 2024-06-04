@@ -8,6 +8,7 @@ import UploadFile from "../../ui/uploadFile";
 import { GetAllData } from "../../service/global";
 import { useQuery } from "react-query";
 import { useTranslation } from "react-i18next";
+import Loader from "../../ui/loader";
 interface FormData {
   description: string;
   name: string;
@@ -29,7 +30,7 @@ export default function CampanySetPage() {
   const watchedFiles = watch();
   const [image, setImage] = useState<any>();
 
-  const { data: companies } = useQuery("meFor", () =>
+  const { data: companies,isLoading } = useQuery("meFor", () =>
     GetAllData("my-company", { populate: "*" })
   );
 
@@ -54,7 +55,7 @@ export default function CampanySetPage() {
       }
       navUrl={"/dashboard"}
       title={t("company")}
-    >
+    > 
       <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 justify-content-between">
         <div className="w-8 ">
           <div className="flex gap-3 w-full mb-5">
@@ -131,6 +132,8 @@ export default function CampanySetPage() {
           />
         </div>
       </div>
+
+      {isLoading && <Loader />}
     </GlobalFrom>
   );
 }

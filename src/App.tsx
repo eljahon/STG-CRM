@@ -14,8 +14,13 @@ function App() {
       setLoading(true);
       await GetMe()
         .then((res: any) => {
+          console.log(res?.data?.company);
           window.localStorage.setItem("role", res?.data?.role?.description);
-          window.localStorage.setItem("compony", res?.data?.company?.id);
+          if (res?.data?.company) {
+            window.localStorage.setItem("compony", res?.data?.company?.id);
+          } else {
+            window.localStorage.removeItem("compony");
+          }
           if (res.status == "200" && location.pathname == "/")
             navigate("/dashboard");
         })
