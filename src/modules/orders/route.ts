@@ -4,7 +4,7 @@ export const OrdersRoute = [
   {
     url: "/orders",
     Element: OrderPage,
-    label: "Orders",
+    label: "orders",
     icon: "pi pi-th-large",
     children: [],
     meta: {

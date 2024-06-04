@@ -5,7 +5,7 @@ export const BranchRoute = [
   {
     url: "/branch",
     Element: BranchList,
-    label: "Branch",
+    label: "branch",
     icon: "pi pi-sitemap",
     children: [],
     meta: { isLoginIf: false, role: new Set(["distributor"]) },

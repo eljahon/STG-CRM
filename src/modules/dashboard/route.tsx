@@ -4,7 +4,7 @@ export const DashboardRoute = [
   {
     url: "/dashboard",
     Element: DashboardPage,
-    label: "Dashboard",
+    label: "dashboard",
     icon: "pi pi-chart-bar",
     children: [],
     meta: {

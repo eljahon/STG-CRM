@@ -28,7 +28,7 @@ i18n
   .init({
     resources,
     fallbackLng: "en",
-    lng:"en",
+    lng: localStorage.getItem('lng')||"uz",
     debug: true,
     interpolation: {
       escapeValue: false // React already safes from xss
