@@ -1,4 +1,8 @@
 {
+  "lang": "Uzbek",
+  "uz": "Uzbek",
+  "ru": "Russion",
+  "en": "English",
   "no": "No",
   "yes": "Yes",
   "search": "Search",
@@ -58,5 +62,11 @@
   "dropcer": "Drag and Drop certifice Here to a size of 5MB.",
   "upload": "Upload",
   "crup": "Dori",
-  "fert": "Ogit"
+  "fert": "Ogit",
+  "unvisible": "Unvisible",
+  "visible": "Visible",
+  "branchName": "Branch name",
+  "district": "Fistrict",
+  "fullname": "Full name",
+  "branch": "Branch"
 }

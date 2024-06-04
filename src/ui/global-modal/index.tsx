@@ -1,4 +1,3 @@
-
 const GlobalMadal = ({ className, close, title, children }: any) => {
   return (
     <div
@@ -10,7 +9,7 @@ const GlobalMadal = ({ className, close, title, children }: any) => {
     >
       <div
         className="m-auto bg-white w-full p-4 border-round-2xl relative"
-        style={{ maxWidth: "1000px", minHeight: "50vh" }}
+        style={{ maxWidth: "850px", minHeight: "50vh" }}
         onClick={(e: any) => e.stopPropagation()}
       >
         <h3 className="m-0 mb-5 ">{title}</h3>
@@ -22,7 +21,7 @@ const GlobalMadal = ({ className, close, title, children }: any) => {
           <i
             className="pi pi-times cursor-pointer "
             onClick={close}
-            style={{ fontSize: "1.4em" }}
+            style={{ fontSize: "1.2em" }}
           ></i>
         </div>
         {children}

@@ -12,6 +12,7 @@ export default function BranchList() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [page, setPage] = useState<any>(0);
+  const pageSize = 10;
   const [opemNavigate, setopemNavigate] = useState<any>(false);
   const compony = window.localStorage.getItem("compony");
   const { isLoading, data: product } = useQuery(
@@ -20,8 +21,8 @@ export default function BranchList() {
       GetAllData("company-branches", {
         populate: "*",
         pagination: {
-          page: page / 10 + 1,
-          pageSize: 20
+          page: page / pageSize + 1,
+          pageSize: pageSize
         }
       })
   );
@@ -85,6 +86,7 @@ export default function BranchList() {
         isLoading={isLoading}
         data={product?.data}
         columns={columns}
+        pageSize={pageSize}
         totalProduct={product?.meta?.pagination?.total}
         currentPage={page}
         tableTile={t("branch")}

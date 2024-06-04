@@ -15,6 +15,7 @@ export default function UploadFile({
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
+  const [aspectRatio, setaspectRatio] = useState<any>(1);
   const [imageOpen, setImageOpen] = useState<any>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
   const [file, setfile] = useState<any>(false);
@@ -26,24 +27,32 @@ export default function UploadFile({
 
   const hendleimg = async (e: any) => {
     if (e.target.files[0] && e.target.files[0]?.size < 5000000) {
-      setLoadingFile(true);
-      clearErrors(fieldName);
-      const res = await ImageUpload(
-        e.target.files[0],
-        {
-          type: "image",
-          folder: "other"
-        },
-        setProgress
-      )
-        .catch((err: any) => {
-          toast.error(err?.response?.data?.error?.message);
-        })
-        .finally(() => setLoadingFile(false));
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event: any) => {
+        const img = new Image();
+        img.onload = async () => {
+          setaspectRatio((img.width / img.height).toFixed(2));
+          setLoadingFile(true);
+          clearErrors(fieldName);
+          const res = await ImageUpload(
+            file,{
+              type: "image",
+              folder: "other"
+            },
+            setProgress
+          )
+            .catch((err: any) => {
+              toast.error(err?.response?.data?.error?.message);
+            })
+            .finally(() => setLoadingFile(false));
 
-      // setfile(e.target.files[0].name);
-      setValue(fieldName, res?.data?.media?.id);
-      setImage(res?.data?.media?.aws_path);
+          setValue(fieldName, res?.data?.media?.id);
+          setImage(res?.data?.media?.aws_path);
+        };
+        img.src = event.target.result as string;
+      };
+      reader.readAsDataURL(file);
     } else {
       setError(fieldName, {
         type: "custom",
@@ -201,10 +210,10 @@ export default function UploadFile({
             className={`w-full`}
             onClick={(e: any) => e.stopPropagation()}
             style={{
-              maxWidth: "40%",
               maxHeight: "80%",
               objectFit: "contain",
-              zIndex: "10001"
+              zIndex: "10001",
+              aspectRatio: `${aspectRatio}/1`
             }}
             src={import.meta.env.VITE_APP_AWS_PATH + image}
           />

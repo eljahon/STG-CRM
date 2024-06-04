@@ -8,14 +8,17 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { useQuery } from "react-query";
-import { GetAllData, GetByIdData } from "../../../service/global.ts";
+import { InputSwitch, InputSwitchChangeEvent } from "primereact/inputswitch";
 
+import { GetAllData, GetByIdData } from "../../../service/global.ts";
 import UploadFile from "../../../ui/uploadFile";
 import UploadFileMulty from "../../../ui/uploadFileMulty";
 import UploadFileSer from "../../../ui/uploadFileSer";
 import Loader from "../../../ui/loader";
 import { useTranslation } from "react-i18next";
 import { MultiSelect } from "primereact/multiselect";
+import lodash from "lodash";
+import ProductItems from "../ui/items/index.tsx";
 
 const typeArr: any = [
   {
@@ -27,8 +30,6 @@ const typeArr: any = [
     name: "O'g'it"
   }
 ];
-
-// [ { name: "O'g'it", "value": "ferti" }, { name: "Dori", "value": "drug" } ]
 
 interface iItems {
   diseases: any;
@@ -54,12 +55,13 @@ interface FormData {
   price: string | undefined;
   gallery: string[];
   image: string;
+  visible: any;
 }
 export default function ProductAction() {
   const { id } = useParams();
   const { t } = useTranslation();
-  const [diseases, setdiseases] = useState<any>([]);
-  const [cropsSet, setCropsSet] = useState<any>("");
+  const [page, setPage] = useState<any>(0);
+  const pageSize = 5;
   const [unitsSet, setUnitsSet] = useState<any>("");
   const [index, setIndex] = useState<any>(1);
   const [indexArr, setIndexArr] = useState<any>([]);
@@ -78,6 +80,7 @@ export default function ProductAction() {
     formState: { errors }
   } = useForm<FormData>();
   const watchedFiles = watch();
+
   const debounce = <F extends (...args: any[]) => any>(
     func: F,
     delay: number
@@ -93,11 +96,7 @@ export default function ProductAction() {
 
   const { setValue: setValuetest, watch: watchTest } = useForm<any>();
   const watchedTestFiles = watchTest();
-  const { data: crops } = useQuery(["crops", cropsSet], () =>
-    GetAllData(`crops`, {
-      filters: { name: { $containsi: cropsSet || undefined } }
-    })
-  );
+
   const { data: units } = useQuery(["units", unitsSet], () =>
     GetAllData(`units`, {
       filters: { name: { $containsi: unitsSet || undefined } }
@@ -109,7 +108,71 @@ export default function ProductAction() {
   const { data: fertilizerCategory } = useQuery("fertilizerCategory", () =>
     GetAllData("fertilizer-categories")
   );
-  const getDiseesesByCrop = async (crop?: string, diseases?: string) => {
+
+  const { data: fertilizerItems } = useQuery(
+    ["fertilizerItems", watchedTestFiles.fertilizerId, page],
+    () =>
+      GetAllData("fertilizations", {
+        filters: {
+          fertilizer: { id: { $eq: watchedTestFiles.fertilizerId } }
+        },
+        populate: "*",
+        pagination: {
+          page: page / pageSize + 1,
+          pageSize: pageSize
+        }
+      }),
+    {
+      enabled:
+        watchedTestFiles?.confirmed && watchedFiles?.type == "fertilizer"
+          ? true
+          : false
+    }
+  );
+
+  const { data: drugItems } = useQuery(
+    ["drugItems", watchedTestFiles.drugId, page],
+    () =>
+      GetAllData("treatments", {
+        filters: { drug: { id: { $eq: watchedTestFiles.drugId } } },
+        populate: "*",
+        pagination: {
+          page: page / pageSize + 1,
+          pageSize: pageSize
+        }
+      }),
+    {
+      enabled:
+        watchedTestFiles?.confirmed && watchedFiles?.type == "drug"
+          ? true
+          : false
+    }
+  );
+
+  const getCrop = async (crop?: string, indexNumber?: any) => {
+    setValuetest(`corpsLoading[${indexNumber}]`, true);
+    await GetAllData(`crops`, {
+      filters: { name: { $containsi: crop || undefined } }
+    })
+      .then((e) => {
+        const newArr = watchedTestFiles?.corps?.[indexNumber]
+          ? [...watchedTestFiles?.corps?.[indexNumber], ...e?.data]
+          : e?.data;
+        const updateArrAdd = watchedTestFiles?.cropsUpdate?.[indexNumber]
+          ? [...watchedTestFiles?.cropsUpdate?.[indexNumber], ...newArr]
+          : newArr;
+        const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
+        setValuetest(`corps[${indexNumber}]`, uniqueUsersByName);
+      })
+      .catch((errors) => console.log(errors))
+      .finally(() => setValuetest(`corpsLoading[${indexNumber}]`, false));
+  };
+  const getDiseesesByCrop = async (
+    crop?: string,
+    diseases?: string,
+    indexNumber?: any,
+    isfilter?: any
+  ) => {
     await GetAllData(`diseases`, {
       filters: {
         name: { $containsi: diseases || undefined },
@@ -117,15 +180,33 @@ export default function ProductAction() {
       }
     })
       .then((e) => {
-        setdiseases(e?.data);
+        if (isfilter) {
+          setValuetest(`diseases[${indexNumber}]`, e?.data);
+          setValue(`state.items[${indexNumber}].diseases`, null);
+        } else {
+          const newArr = watchedTestFiles?.diseases?.[indexNumber]
+            ? [...watchedTestFiles?.diseases?.[indexNumber], ...e?.data]
+            : e?.data;
+          const updateArrAdd = watchedTestFiles?.diseasesUpdate?.[indexNumber]
+            ? [...watchedTestFiles?.diseasesUpdate?.[indexNumber], ...newArr]
+            : newArr;
+
+          const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
+          setValuetest(`diseases[${indexNumber}]`, uniqueUsersByName);
+        }
       })
       .catch((errors) => console.log(errors));
   };
 
   useEffect(() => {
     setValue("type", "drug");
-    getDiseesesByCrop("");
+    setValue("visible", true);
   }, []);
+
+  useEffect(() => {
+    getDiseesesByCrop("", "", index - 1);
+    getCrop("", index - 1);
+  }, [index, watchedTestFiles?.diseasesUpdate, watchedTestFiles?.cropsUpdate]);
 
   useEffect(() => {
     if (id == "new") {
@@ -140,6 +221,7 @@ export default function ProductAction() {
           setValue("title", e?.data?.title);
           setValue("description", e?.data?.description);
           setValue("unit", e?.data?.unit?.id);
+          setValue("visible", e?.data?.visible);
           if (e?.data?.state?.drug_category)
             setValue("state.drug_category", e?.data?.state?.drug_category?.id);
           if (e?.data?.state?.fertilizer_category)
@@ -165,6 +247,12 @@ export default function ProductAction() {
             );
             setImageMulti(e?.data?.gallery);
           }
+          if (e?.data?.drug) {
+            setValuetest("drugId", e?.data?.drug?.id);
+          }
+          if (e?.data?.fertilizer) {
+            setValuetest("fertilizerId", e?.data?.fertilizer?.id);
+          }
           if (!e?.data?.confirmed) {
             e?.data?.state?.items?.length &&
               e?.data?.state?.items?.forEach((_: any, i: number) => {
@@ -176,7 +264,7 @@ export default function ProductAction() {
                     e?.data?.state?.items?.[i]?.crops?.map((e: any) => e?.id)
                   );
                   setValuetest(
-                    `state.items[${i}].crops`,
+                    `cropsUpdate[${i}]`,
                     e?.data?.state?.items?.[i]?.crops
                   );
                 }
@@ -191,11 +279,12 @@ export default function ProductAction() {
                     `state.items[${i}].diseases`,
                     e?.data?.state?.items?.[i]?.diseases?.map((e: any) => e?.id)
                   );
+                  setValuetest(
+                    `diseasesUpdate[${i}]`,
+                    e?.data?.state?.items?.[i]?.diseases
+                  );
                 }
-                setValuetest(
-                  `state.items[${i}].diseases`,
-                  e?.data?.state?.items?.[i]?.diseases
-                );
+
                 if (e?.data?.state?.items?.[i]?.dose_max) {
                   setValue(
                     `state.items[${i}].dose_max`,
@@ -233,6 +322,7 @@ export default function ProductAction() {
         .finally(() => setLoader(false));
     }
   }, [id]);
+
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
@@ -343,81 +433,91 @@ export default function ProductAction() {
                 )}
               </div>
             </div>
-            {watchedFiles?.type == "drug" && (
-              <div className="w-full relative">
-                <Dropdown
-                  filter
-                  id="drug_category"
-                  className=" mr-2 w-full md:w-full"
-                  {...{
-                    ...register("state.drug_category", {
-                      required: t("drugCategoryrequired")
-                    }),
-                    onChange: function (el) {
-                      setValue("state.drug_category", el.value);
-                      clearErrors("state.drug_category");
-                      return el.value;
-                    },
-                    onBlur: function () {}
-                  }}
-                  invalid={
-                    (errors as any)?.state?.drug_category?.message
-                      ? true
-                      : false
+            <div className="w-full flex gap-4  align-items-center">
+              {watchedFiles?.type == "drug" && (
+                <div className="w-full relative">
+                  <Dropdown
+                    filter
+                    id="drug_category"
+                    className=" mr-2 w-full md:w-full"
+                    {...{
+                      ...register("state.drug_category", {
+                        required: t("drugCategoryrequired")
+                      }),
+                      onChange: function (el) {
+                        setValue("state.drug_category", el.value);
+                        clearErrors("state.drug_category");
+                        return el.value;
+                      },
+                      onBlur: function () {}
+                    }}
+                    invalid={
+                      (errors as any)?.state?.drug_category?.message
+                        ? true
+                        : false
+                    }
+                    placeholder={`${t("selectdrugCategory")} `}
+                    value={watchedFiles?.state?.drug_category}
+                    options={drugCategory?.data}
+                    optionValue="id"
+                    optionLabel="name"
+                    highlightOnSelect={false}
+                  />
+                  {(errors as any)?.state?.drug_category?.message && (
+                    <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                      {(errors as any)?.state?.drug_category?.message}
+                    </p>
+                  )}
+                </div>
+              )}
+              {watchedFiles?.type == "fertilizer" && (
+                // floatLabel
+                <div className="w-full relative">
+                  <Dropdown
+                    filter
+                    id="fertilizer"
+                    className=" mr-2 w-full md:w-full"
+                    {...{
+                      ...register("state.fertilizer_category", {
+                        required: t("fertilizerCategoryrequired")
+                      }),
+                      onChange: function (el) {
+                        setValue("state.fertilizer_category", el.value);
+                        clearErrors("state.fertilizer_category");
+                        return el.value;
+                      },
+                      onBlur: function () {}
+                    }}
+                    invalid={
+                      (errors as any)?.state?.fertilizer_category?.message
+                        ? true
+                        : false
+                    }
+                    placeholder={`${t("selectFertilizerCategory")} `}
+                    value={watchedFiles?.state?.fertilizer_category}
+                    options={fertilizerCategory?.data}
+                    optionValue="id"
+                    optionLabel="name"
+                    // checkmark={true}
+                    highlightOnSelect={false}
+                  />
+                  {(errors as any)?.state?.fertilizer_category?.message && (
+                    <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                      {(errors as any)?.state?.fertilizer_category?.message}
+                    </p>
+                  )}
+                </div>
+              )}
+              <label className="w-full flex gap-4  align-items-center">
+                <InputSwitch
+                  checked={watchedFiles?.visible}
+                  onChange={(e: InputSwitchChangeEvent) =>
+                    setValue("visible", e.value)
                   }
-                  placeholder={`${t("selectdrugCategory")} `}
-                  value={watchedFiles?.state?.drug_category}
-                  options={drugCategory?.data}
-                  optionValue="id"
-                  optionLabel="name"
-                  highlightOnSelect={false}
                 />
-                {(errors as any)?.state?.drug_category?.message && (
-                  <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                    {(errors as any)?.state?.drug_category?.message}
-                  </p>
-                )}
-              </div>
-            )}
-            {watchedFiles?.type == "fertilizer" && (
-              // floatLabel
-              <div className="w-full relative">
-                <Dropdown
-                  filter
-                  id="fertilizer"
-                  className=" mr-2 w-full md:w-full"
-                  {...{
-                    ...register("state.fertilizer_category", {
-                      required: t("fertilizerCategoryrequired")
-                    }),
-                    onChange: function (el) {
-                      setValue("state.fertilizer_category", el.value);
-                      clearErrors("state.fertilizer_category");
-                      return el.value;
-                    },
-                    onBlur: function () {}
-                  }}
-                  invalid={
-                    (errors as any)?.state?.fertilizer_category?.message
-                      ? true
-                      : false
-                  }
-                  placeholder={`${t("selectFertilizerCategory")} `}
-                  value={watchedFiles?.state?.fertilizer_category}
-                  options={fertilizerCategory?.data}
-                  optionValue="id"
-                  optionLabel="name"
-                  // checkmark={true}
-                  highlightOnSelect={false}
-                />
-                {(errors as any)?.state?.fertilizer_category?.message && (
-                  <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                    {(errors as any)?.state?.fertilizer_category?.message}
-                  </p>
-                )}
-              </div>
-            )}
-            {/* floatLabel */}
+                <p className="label-my mb-0">{t("visible")}</p>
+              </label>
+            </div>
             <div className="w-full relative">
               <InputTextarea
                 className=" mr-2 w-full"
@@ -467,7 +567,6 @@ export default function ProductAction() {
           />
         </div>
       </div>
-
       {!watchedTestFiles?.confirmed ? (
         <div className="p-4 bg-white border-round-3xl mt-4 mb-8">
           {indexArr?.map((_: any, i: any) => {
@@ -480,41 +579,21 @@ export default function ProductAction() {
                         <Dropdown
                           filter
                           id="crop"
-                          // onMouseDown={() => setCropsSet("")}
                           className=" mr-2 w-full md:w-full"
                           onChange={(e) => {
-                            getDiseesesByCrop(e.value);
-                            if (e?.value) {
-                              setValuetest(
-                                `state.items[${i}].crop`,
-                                crops?.data?.find(
-                                  (de: any) => de?.id == e.value
-                                )
-                              );
+                            getDiseesesByCrop(e.value, "", i, true);
+                            if (e.value) {
+                              setValuetest(`state.items[${i}].crop`, e.value);
                             }
                           }}
-                          filterTemplate={() => (
-                            <InputText
-                              className="w-full"
-                              onChange={debounce((e) => {
-                                if (e.target.value) {
-                                  setCropsSet(e.target.value);
-                                }
-                              }, 700)}
-                            />
-                          )}
-                          value={watchedTestFiles?.state?.items?.[i]?.crop?.id}
+                          onFilter={debounce((e) => {
+                            getCrop(e.filter, i);
+                          }, 700)}
+                          loading={watchedTestFiles.corpsLoading?.[i]}
+                          value={watchedTestFiles?.state?.items?.[i]?.crop}
                           placeholder={`${t("selectCrop")} `}
                           optionValue="id"
-                          options={
-                            watchedTestFiles?.state?.items?.[i]?.crop &&
-                            crops?.data
-                              ? [
-                                  ...crops?.data,
-                                  watchedTestFiles?.state?.items?.[i]?.crop
-                                ]
-                              : crops?.data
-                          }
+                          options={watchedTestFiles.corps?.[i]}
                           optionLabel="name"
                           checkmark={true}
                           highlightOnSelect={false}
@@ -527,57 +606,19 @@ export default function ProductAction() {
                         <MultiSelect
                           filter
                           id="crop"
-                          // onMouseDown={() => setCropsSet("")}
                           onScroll={(e) => console.log(e)}
                           className=" mr-2 w-full md:w-full"
                           onChange={(e) => {
                             setValue(`state.items[${i}].crops`, e.value);
-                            if (!watchedTestFiles?.update) {
-                              setValuetest(
-                                `state.items[${i}].crops`,
-                                e?.value.length
-                                  ? watchedTestFiles?.state?.items?.[i]?.crops
-                                    ? [
-                                        ...watchedTestFiles?.state?.items?.[i]
-                                          ?.crops,
-                                        crops?.data?.find(
-                                          (de: any) =>
-                                            de?.id ==
-                                            e.value[e.value.length - 1]
-                                        )
-                                      ]
-                                    : [
-                                        crops?.data?.find(
-                                          (de: any) =>
-                                            de?.id ==
-                                            e.value[e.value.length - 1]
-                                        )
-                                      ]
-                                  : undefined
-                              );
-                            }
                           }}
-                          filterTemplate={() => (
-                            <InputText
-                              onChange={debounce((e) => {
-                                if (e.target.value) {
-                                  setCropsSet(e.target.value);
-                                }
-                              }, 700)}
-                            />
-                          )}
+                          maxSelectedLabels={3}
+                          onFilter={debounce((e) => {
+                            getCrop(e.filter, i);
+                          }, 700)}
                           value={watchedFiles?.state?.items?.[i]?.crops}
                           placeholder={`${t("selectCrop")} `}
                           optionValue="id"
-                          options={
-                            watchedTestFiles?.state?.items?.[i]?.crops &&
-                            crops?.data
-                              ? [
-                                  ...crops?.data,
-                                  ...watchedTestFiles?.state?.items?.[i]?.crops
-                                ]
-                              : crops?.data
-                          }
+                          options={watchedTestFiles.corps?.[i]}
                           optionLabel="name"
                         />
                       </div>
@@ -587,14 +628,10 @@ export default function ProductAction() {
                       <div className="colm1 relative">
                         <MultiSelect
                           id="disease"
-                          filterTemplate={() => (
-                            <InputText
-                              // className="w-full"
-                              onChange={debounce((e) => {
-                                getDiseesesByCrop("", e.target.value);
-                              }, 700)}
-                            />
-                          )}
+                          maxSelectedLabels={2}
+                          onFilter={debounce((e: any) => {
+                            getDiseesesByCrop("", e.filter, i);
+                          }, 700)}
                           className=" mr-2 w-full"
                           {...{
                             ...register(`state.items[${i}].diseases`, {
@@ -603,40 +640,10 @@ export default function ProductAction() {
                             onChange: function (el) {
                               setValue(`state.items[${i}].diseases`, el.value);
                               clearErrors(`state.items[${i}].diseases`);
-                              console.log(el.value);
-                              if (!watchedTestFiles?.update) {
-                                setValuetest(
-                                  `state.items[${i}].diseases`,
-                                  el?.value.length
-                                    ? watchedTestFiles?.state?.items?.[i]
-                                        ?.diseases
-                                      ? [
-                                          ...watchedTestFiles?.state?.items?.[i]
-                                            ?.diseases,
-                                          diseases?.find(
-                                            (de: any) =>
-                                              de?.id ==
-                                              el?.value[el?.value?.length - 1]
-                                          )
-                                        ]
-                                      : [
-                                          diseases?.find(
-                                            (de: any) =>
-                                              de?.id ==
-                                              el?.value[el?.value?.length - 1]
-                                          )
-                                        ]
-                                    : undefined
-                                );
-                              }
+
                               return el.value;
                             },
                             onBlur: function () {}
-                          }}
-                          onMouseDown={() => {
-                            getDiseesesByCrop(
-                              watchedTestFiles?.state?.items?.[i]?.crop?.id
-                            );
                           }}
                           invalid={
                             (errors as any)?.state?.items?.[i]?.diseases
@@ -647,15 +654,7 @@ export default function ProductAction() {
                           value={watchedFiles?.state?.items?.[i]?.diseases}
                           placeholder={`${t("selectDisease")} `}
                           optionValue="id"
-                          options={
-                            watchedTestFiles?.state?.items?.[i]?.diseases
-                              ? [
-                                  ...diseases,
-                                  ...watchedTestFiles?.state?.items?.[i]
-                                    ?.diseases
-                                ]
-                              : diseases
-                          }
+                          options={watchedTestFiles.diseases?.[i]}
                           filter
                           optionLabel="name"
                         />
@@ -818,7 +817,7 @@ export default function ProductAction() {
                     )}
                   </div>
 
-                  <div className="w-full relative">
+                  <div className="w-full rediseaseslative">
                     {watchedFiles?.type == "drug" ? (
                       <>
                         <InputTextarea
@@ -906,7 +905,7 @@ export default function ProductAction() {
             severity="success"
             className="border-round-3xl px-5"
             onClick={() => {
-              setCropsSet("");
+              setUnitsSet("");
               setIndex(index + 1);
               setIndexArr((state: any) => [index + 1, ...state]);
               clearErrors();
@@ -914,7 +913,18 @@ export default function ProductAction() {
           />
         </div>
       ) : (
-        ""
+        <ProductItems
+          fertilizerItems={fertilizerItems?.data}
+          drugItems={drugItems?.data}
+          type={watchedFiles?.type}
+          page={page}
+          setPage={setPage}
+          pageSize={pageSize}
+          totalProduct={
+            fertilizerItems?.meta?.pagination?.total ||
+            drugItems?.meta?.pagination?.total
+          }
+        />
       )}
 
       {loader && <Loader />}

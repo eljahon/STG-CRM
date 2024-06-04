@@ -7,18 +7,20 @@ import { Button } from "primereact/button";
 
 import { Dialog } from "primereact/dialog";
 import { useTranslation } from "react-i18next";
+import StatusBtn from "../../../ui/status/index.tsx";
 
 export default function ProductPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [page, setPage] = useState<any>(0);
   const [opemNavigate, setopemNavigate] = useState<any>(false);
+  const pageSize = 10;
   const { isLoading, data: product } = useQuery(["products", page], () =>
     GetAllData("products/distribute", {
       populate: "*",
       pagination: {
-        page: page / 10 + 1,
-        pageSize: 20
+        page: page / pageSize + 1,
+        pageSize: pageSize
       }
     })
   );
@@ -67,8 +69,26 @@ export default function ProductPage() {
       field: "type",
       id: 5,
       exportable: false
+    },
+    {
+      header: t("visible"),
+      field: "visible",
+      id: 6,
+      exportable: false,
+      body: (itemData: any) => {
+        return (
+          <StatusBtn
+            className={"inline-block"}
+            label={itemData?.visible ?  t("visible") : t("unvisible")}
+            status={itemData?.visible ? "completed" : "cancelled"}
+          />
+        );
+      }
+      // ItemRender: (itemData, itemcoulmns,index) => {}
     }
   ];
+
+
   const NavigateDialog = (
     <React.Fragment>
       <Button
@@ -95,6 +115,7 @@ export default function ProductPage() {
         data={product?.data}
         columns={columns}
         totalProduct={product?.meta?.pagination?.total}
+        pageSize={pageSize}
         currentPage={page}
         tableTile={t("products")}
         url={"/product"}

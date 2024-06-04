@@ -21,6 +21,8 @@ export default function LoginFrom() {
   // const navigate = useNavigate();
   useEffect(() => {
     window.localStorage.removeItem("authToken");
+    window.localStorage.removeItem("compony");
+    window.localStorage.removeItem("role");
   }, []);
   const handleAuth = async (data: FormValues) => {
     setLoader(true);
@@ -30,6 +32,7 @@ export default function LoginFrom() {
 
         GetMe().then((res: any) => {
           window.localStorage.setItem("role", res?.data?.role?.description);
+          window.localStorage.setItem("compony", res?.data?.company?.id);
           window.location.reload();
           // navigate("/dashboard");
         });
