@@ -155,16 +155,27 @@ export default function ProductAction() {
       filters: { name: { $containsi: crop || undefined } }
     })
       .then((e) => {
-        indexArr?.map((_: any, i: any) => {
-          const newArr = watchedTestFiles?.corps?.[i]
-            ? [...watchedTestFiles?.corps?.[i], ...e?.data]
+        if (indexNumber || indexNumber == 0) {
+          const newArr = watchedTestFiles?.corps?.[indexNumber]
+            ? [...watchedTestFiles?.corps?.[indexNumber], ...e?.data]
             : e?.data;
-          const updateArrAdd = watchedTestFiles?.cropsUpdate?.[i]
-            ? [...watchedTestFiles?.cropsUpdate?.[i], ...newArr]
+          const updateArrAdd = watchedTestFiles?.cropsUpdate?.[indexNumber]
+            ? [...watchedTestFiles?.cropsUpdate?.[indexNumber], ...newArr]
             : newArr;
           const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
-          setValuetest(`corps[${i}]`, uniqueUsersByName);
-        });
+          setValuetest(`corps[${indexNumber}]`, uniqueUsersByName);
+        } else {
+          indexArr?.map((_: any, i: any) => {
+            const newArr = watchedTestFiles?.corps?.[i]
+              ? [...watchedTestFiles?.corps?.[i], ...e?.data]
+              : e?.data;
+            const updateArrAdd = watchedTestFiles?.cropsUpdate?.[i]
+              ? [...watchedTestFiles?.cropsUpdate?.[i], ...newArr]
+              : newArr;
+            const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
+            setValuetest(`corps[${i}]`, uniqueUsersByName);
+          });
+        }
       })
       .catch((errors) => console.log(errors))
       .finally(() => setValuetest(`corpsLoading[${indexNumber}]`, false));
@@ -175,6 +186,7 @@ export default function ProductAction() {
     indexNumber?: any,
     isfilter?: any
   ) => {
+    setValuetest(`diseasesLoading[${indexNumber}]`, true);
     await GetAllData(`diseases`, {
       filters: {
         name: { $containsi: diseases || undefined },
@@ -185,6 +197,17 @@ export default function ProductAction() {
         if (isfilter) {
           setValuetest(`diseases[${indexNumber}]`, e?.data);
           setValue(`state.items[${indexNumber}].diseases`, null);
+        } else if (indexNumber || indexNumber == 0) {
+          const newArr = watchedTestFiles?.diseases?.[indexNumber]
+            ? [...watchedTestFiles?.diseases?.[indexNumber], ...e?.data]
+            : e?.data;
+          const updateArrAdd = watchedTestFiles?.diseasesUpdate?.[indexNumber]
+            ? [...watchedTestFiles?.diseasesUpdate?.[indexNumber], ...newArr]
+            : newArr;
+
+          const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
+          setValuetest(`diseases[${indexNumber}]`, uniqueUsersByName);
+
         } else {
           indexArr?.map((_: any, i: any) => {
             const newArr = watchedTestFiles?.diseases?.[i]
@@ -199,17 +222,17 @@ export default function ProductAction() {
           });
         }
       })
-      .catch((errors) => console.log(errors));
+      .catch((errors) => console.log(errors))
+      .finally(() => setValuetest(`diseasesLoading[${indexNumber}]`, false));
+
   };
 
   const updataFormat = (items: any) => {
     let returnResult = [...JSON.parse(JSON.stringify(items))];
-    console.log(items, "ds");
     for (let i = 0; i < returnResult.length; i++) {
       setIndexArr((state: any) => [i + 1, ...state]);
       if (items?.[i]?.crops) {
         returnResult[i].crops = items?.[i]?.crops?.map((e: any) => e?.id);
-
         setValuetest(`cropsUpdate[${i}]`, items?.[i]?.crops);
       }
       if (items?.[i]?.diseases) {
@@ -232,8 +255,8 @@ export default function ProductAction() {
   }, []);
 
   useEffect(() => {
-    getDiseesesByCrop("", "", index - 1);
-    getCrop("", index - 1);
+    getDiseesesByCrop("", "", id == "new" ? index - 1 : null);
+    getCrop("", id == "new" ? index - 1 : null);
   }, [index, watchedTestFiles?.diseasesUpdate, watchedTestFiles?.cropsUpdate]);
 
   useEffect(() => {
@@ -379,7 +402,7 @@ export default function ProductAction() {
                       clearErrors("unit");
                       return el.value;
                     },
-                    onBlur: function () {}
+                    onBlur: function () { }
                   }}
                   filterTemplate={() => (
                     <InputText
@@ -420,7 +443,7 @@ export default function ProductAction() {
                         clearErrors("state.drug_category");
                         return el.value;
                       },
-                      onBlur: function () {}
+                      onBlur: function () { }
                     }}
                     invalid={
                       (errors as any)?.state?.drug_category?.message
@@ -457,7 +480,7 @@ export default function ProductAction() {
                         clearErrors("state.fertilizer_category");
                         return el.value;
                       },
-                      onBlur: function () {}
+                      onBlur: function () { }
                     }}
                     invalid={
                       (errors as any)?.state?.fertilizer_category?.message
@@ -588,6 +611,10 @@ export default function ProductAction() {
                           onChange={(e) => {
                             setValue(`state.items[${i}].crops`, e.value);
                           }}
+                          loading={
+                            watchedTestFiles.corpsLoading?.[i] ||
+                            watchedTestFiles.corpsLoading?.[0]
+                          }
                           maxSelectedLabels={3}
                           onFilter={debounce((e) => {
                             getCrop(e.filter, i);
@@ -619,8 +646,12 @@ export default function ProductAction() {
                               clearErrors(`state.items[${i}].diseases`);
                               return el.value;
                             },
-                            onBlur: function () {}
+                            onBlur: function () { }
                           }}
+                          loading={
+                            watchedTestFiles.diseasesLoading?.[i] ||
+                            watchedTestFiles.diseasesLoading?.[0]
+                          }
                           invalid={
                             (errors as any)?.state?.items?.[i]?.diseases
                               ?.message
@@ -636,13 +667,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.diseases
                           ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.diseases
-                                ?.message
-                            }
-                          </p>
-                        )}
+                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                              {
+                                (errors as any)?.state?.items?.[i]?.diseases
+                                  ?.message
+                              }
+                            </p>
+                          )}
                       </div>
                     )}
 
@@ -670,13 +701,13 @@ export default function ProductAction() {
                       />
                       {(errors as any)?.state?.items?.[i]?.dose_min
                         ?.message && (
-                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                          {
-                            (errors as any)?.state?.items?.[i]?.dose_min
-                              ?.message
-                          }
-                        </p>
-                      )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.dose_min
+                                ?.message
+                            }
+                          </p>
+                        )}
                     </div>
 
                     <div
@@ -702,13 +733,13 @@ export default function ProductAction() {
                       />
                       {(errors as any)?.state?.items?.[i]?.dose_max
                         ?.message && (
-                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                          {
-                            (errors as any)?.state?.items?.[i]?.dose_max
-                              ?.message
-                          }
-                        </p>
-                      )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.dose_max
+                                ?.message
+                            }
+                          </p>
+                        )}
                     </div>
 
                     <div
@@ -728,7 +759,7 @@ export default function ProductAction() {
                             clearErrors(`state.items[${i}].unit`);
                             return el.value;
                           },
-                          onBlur: function () {}
+                          onBlur: function () { }
                         }}
                         invalid={
                           (errors as any)?.state?.items?.[i]?.unit?.message
@@ -782,13 +813,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.use_count
                           ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.use_count
-                                ?.message
-                            }
-                          </p>
-                        )}
+                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                              {
+                                (errors as any)?.state?.items?.[i]?.use_count
+                                  ?.message
+                              }
+                            </p>
+                          )}
                       </div>
                     )}
                   </div>
@@ -813,13 +844,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.description
                           ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.description
-                                ?.message
-                            }
-                          </p>
-                        )}
+                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                              {
+                                (errors as any)?.state?.items?.[i]?.description
+                                  ?.message
+                              }
+                            </p>
+                          )}
                       </>
                     ) : watchedFiles?.type == "fertilizer" ? (
                       <>
@@ -839,13 +870,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.method
                           ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.method
-                                ?.message
-                            }
-                          </p>
-                        )}
+                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                              {
+                                (errors as any)?.state?.items?.[i]?.method
+                                  ?.message
+                              }
+                            </p>
+                          )}
                       </>
                     ) : (
                       ""
