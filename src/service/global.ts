@@ -75,5 +75,9 @@ const handleError = (error: any) => {
     window.location.replace("/auth/login");
     window.localStorage.removeItem("authToken");
   }
-  toast.error(error?.response?.data?.error?.message);
+  toast.error(
+    error?.response?.data?.error?.message ||
+      error?.response?.data ||
+      "error not given"
+  );
 };

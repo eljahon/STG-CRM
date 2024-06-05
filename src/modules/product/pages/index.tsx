@@ -50,7 +50,6 @@ export default function ProductPage() {
           </>
         );
       }
-      // ItemRender: (itemData, itemcoulmns,index) => {}
     },
     {
       header: t("title"),

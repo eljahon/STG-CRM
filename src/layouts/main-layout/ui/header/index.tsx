@@ -20,9 +20,7 @@ export default function Header() {
 
   const langFormat =()=> {
     const currentLang:string = localStorage.getItem('lng')||'uz';
-    console.log(LangArr)
    const item =  LangArr.find(el =>el.lang === currentLang);
-    console.log(item)
     return item?.lang||'uz';
   }
   useEffect(() => {

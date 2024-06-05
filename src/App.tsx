@@ -14,7 +14,7 @@ function App() {
       setLoading(true);
       await GetMe()
         .then((res: any) => {
-          console.log(res?.data?.company);
+          
           window.localStorage.setItem("role", res?.data?.role?.description);
           if (res?.data?.company) {
             window.localStorage.setItem("compony", res?.data?.company?.id);
