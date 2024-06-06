@@ -334,7 +334,6 @@ export default function ProductAction() {
         <div className="w-8 bg-white border-round-3xl ">
           <div className="w-full flex gap-6 flex-wrap p-4  align-items-start">
             <div className="w-full flex gap-4 align-items-start">
-              {/* floatLabel */}
               <div className="w-full relative">
                 <InputText
                   className=" mr-2 w-full"
@@ -350,7 +349,6 @@ export default function ProductAction() {
                     {errors?.title?.message}
                   </p>
                 )}
-                {/* <label htmlFor="title">Title</label> */}
               </div>
               {/* floatLabel */}
               <div className="w-full relative">

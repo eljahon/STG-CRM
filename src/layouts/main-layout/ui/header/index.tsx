@@ -145,7 +145,7 @@ export default function Header() {
                     ? "/compony/old"
                     : "/compony/new"
                 }
-                className=" no-underline "
+                className="no-underline"
                 style={{ color: "black" }}
               >
                 <p className="py-2 px-4 m-0 hover:bg-blue-50">{t("compony")}</p>

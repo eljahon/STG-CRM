@@ -102,6 +102,9 @@ body {
   width: calc(100% / 3);
 }
 
+.colm2 {
+  width: calc((100% - 10px) / 2);
+}
 
 
 .fixedmu {

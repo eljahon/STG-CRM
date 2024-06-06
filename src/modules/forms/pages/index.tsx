@@ -1,13 +1,23 @@
 import { FormContainer } from "../../../components/Forms";
 import { FieldArray } from "formik";
 import { InputText } from "primereact/inputtext";
-import { Button } from "primereact/button";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import FromAction from "../../../ui/form-top-actions";
+import ProductContentInputs from "../ui/contect";
+import { useQuery } from "react-query";
+import { GetAllData } from "../../../service/global";
 
 export default function ProductPage() {
   const { t } = useTranslation();
   const [loader, setLoader] = useState(false);
+  const { data: units } = useQuery(["units"], () => GetAllData(`units`));
+  const { data: drugCategory } = useQuery("drugCategory", () =>
+    GetAllData("drug-categories")
+  );
+  const { data: fertilizerCategory } = useQuery("fertilizerCategory", () =>
+    GetAllData("fertilizer-categories")
+  );
   return (
     <>
       <FormContainer
@@ -15,12 +25,25 @@ export default function ProductPage() {
         isFormData={false}
         fields={[
           {
-            name: "identifier",
+            name: "title",
             validations: [{ type: "required" }]
           },
           {
-            name: "password",
+            name: "price",
             validations: [{ type: "required" }]
+          },
+          {
+            name: "type",
+            validations: [{ type: "required" }],
+            value: "drug"
+          },
+          {
+            name: "unit",
+            validations: [{ type: "required" }]
+          },
+          {
+            name: "state",
+            validationType: "object"
           },
           {
             name: "friends",
@@ -46,31 +69,22 @@ export default function ProductPage() {
         validateOnMount={false}
       >
         {(formik) => {
-          console.log(formik);
+          console.log(formik.values);
           return (
             <>
-              <div className="mb-5">
-                <InputText
-                  id="identifier"
-                  name="identifier"
-                  value={formik.values.name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  placeholder={t("identifier")}
-                  invalid={Boolean(formik.errors.identifier)}
-                />
-              </div>
-              <div className="mb-5">
-                <InputText
-                  id="password"
-                  name="password"
-                  value={formik.values.name}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  placeholder={t("password")}
-                  invalid={formik.errors.password ? true : false}
-                />
-              </div>
+              <FromAction
+                loader={loader}
+                title={"Product"}
+                cancel={"Cancel"}
+                urlOnCancel={"/forms"}
+              />
+              <ProductContentInputs
+                formik={formik}
+                unitOption={units?.data}
+                drugCategory={drugCategory?.data}
+                fertilizerCategory={fertilizerCategory?.data}
+              />
+
               <div>
                 <FieldArray
                   name="friends"
@@ -117,13 +131,6 @@ export default function ProductPage() {
                   )}
                 />
               </div>
-              {/*<FastField*/}
-              {/*    name="password"*/}
-              {/*    component={InputText}*/}
-              {/*/>*/}
-              <Button loading={loader} type="submit">
-                submit
-              </Button>
             </>
           );
         }}
