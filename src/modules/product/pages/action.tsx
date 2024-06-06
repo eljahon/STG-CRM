@@ -207,7 +207,6 @@ export default function ProductAction() {
 
           const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
           setValuetest(`diseases[${indexNumber}]`, uniqueUsersByName);
-
         } else {
           indexArr?.map((_: any, i: any) => {
             const newArr = watchedTestFiles?.diseases?.[i]
@@ -224,17 +223,21 @@ export default function ProductAction() {
       })
       .catch((errors) => console.log(errors))
       .finally(() => setValuetest(`diseasesLoading[${indexNumber}]`, false));
-
   };
 
   const updataFormat = (items: any) => {
     let returnResult = [...JSON.parse(JSON.stringify(items))];
     for (let i = 0; i < returnResult.length; i++) {
       setIndexArr((state: any) => [i + 1, ...state]);
-      if (items?.[i]?.crops) {
+      if (items?.[i]?.crops?.length) {
         returnResult[i].crops = items?.[i]?.crops?.map((e: any) => e?.id);
         setValuetest(`cropsUpdate[${i}]`, items?.[i]?.crops);
       }
+      if (items?.[i]?.crops?.length == undefined && items?.[i]?.crops) {
+        returnResult[i].crops = items?.[i]?.crops?.id;
+        setValuetest(`cropsUpdate[${i}]`, items?.[i]?.crops);
+      }
+
       if (items?.[i]?.diseases) {
         returnResult[i].diseases = items?.[i]?.diseases?.map((e: any) => e?.id);
 
@@ -402,7 +405,7 @@ export default function ProductAction() {
                       clearErrors("unit");
                       return el.value;
                     },
-                    onBlur: function () { }
+                    onBlur: function () {}
                   }}
                   filterTemplate={() => (
                     <InputText
@@ -443,7 +446,7 @@ export default function ProductAction() {
                         clearErrors("state.drug_category");
                         return el.value;
                       },
-                      onBlur: function () { }
+                      onBlur: function () {}
                     }}
                     invalid={
                       (errors as any)?.state?.drug_category?.message
@@ -480,7 +483,7 @@ export default function ProductAction() {
                         clearErrors("state.fertilizer_category");
                         return el.value;
                       },
-                      onBlur: function () { }
+                      onBlur: function () {}
                     }}
                     invalid={
                       (errors as any)?.state?.fertilizer_category?.message
@@ -646,7 +649,7 @@ export default function ProductAction() {
                               clearErrors(`state.items[${i}].diseases`);
                               return el.value;
                             },
-                            onBlur: function () { }
+                            onBlur: function () {}
                           }}
                           loading={
                             watchedTestFiles.diseasesLoading?.[i] ||
@@ -667,13 +670,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.diseases
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.diseases
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.diseases
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </div>
                     )}
 
@@ -701,13 +704,13 @@ export default function ProductAction() {
                       />
                       {(errors as any)?.state?.items?.[i]?.dose_min
                         ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.dose_min
-                                ?.message
-                            }
-                          </p>
-                        )}
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {
+                            (errors as any)?.state?.items?.[i]?.dose_min
+                              ?.message
+                          }
+                        </p>
+                      )}
                     </div>
 
                     <div
@@ -733,13 +736,13 @@ export default function ProductAction() {
                       />
                       {(errors as any)?.state?.items?.[i]?.dose_max
                         ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.dose_max
-                                ?.message
-                            }
-                          </p>
-                        )}
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {
+                            (errors as any)?.state?.items?.[i]?.dose_max
+                              ?.message
+                          }
+                        </p>
+                      )}
                     </div>
 
                     <div
@@ -759,7 +762,7 @@ export default function ProductAction() {
                             clearErrors(`state.items[${i}].unit`);
                             return el.value;
                           },
-                          onBlur: function () { }
+                          onBlur: function () {}
                         }}
                         invalid={
                           (errors as any)?.state?.items?.[i]?.unit?.message
@@ -813,13 +816,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.use_count
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.use_count
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.use_count
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>
@@ -844,13 +847,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.description
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.description
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.description
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </>
                     ) : watchedFiles?.type == "fertilizer" ? (
                       <>
@@ -870,13 +873,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.method
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.method
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.method
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </>
                     ) : (
                       ""
