@@ -900,9 +900,7 @@ export default function ProductAction() {
                         (_: any, index: any) => index !== i
                       )
                     );
-                    setIndexArr((state: any) =>
-                      state.length > 1 ? state?.slice(0, -1) : state
-                    );
+                    setIndexArr((state: any) =>state?.slice(0, -1));
                   }}
                 />
               </div>
