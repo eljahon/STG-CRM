@@ -687,6 +687,7 @@ export default function ProductAction() {
                       <InputText
                         className="mr-2 w-full pb-3"
                         id="dose_min"
+                        step="any"
                         type="number"
                         placeholder={`${t("dose_min")} `}
                         aria-label="dose_min"
@@ -719,6 +720,7 @@ export default function ProductAction() {
                     >
                       <InputText
                         type="number"
+                        step="any"
                         className="mr-2 w-full pb-3"
                         id="dose_max"
                         placeholder={`${t("dose_max")} `}
@@ -799,6 +801,7 @@ export default function ProductAction() {
                           className="mr-2 w-full pb-3"
                           id="use_count"
                           type="number"
+                          step="any"
                           placeholder={`${t("use_count")} `}
                           aria-label="dose_min"
                           {...register(`state.items[${i}].use_count`, {
@@ -900,7 +903,7 @@ export default function ProductAction() {
                         (_: any, index: any) => index !== i
                       )
                     );
-                    setIndexArr((state: any) =>state?.slice(0, -1));
+                    setIndexArr((state: any) => state?.slice(0, -1));
                   }}
                 />
               </div>
