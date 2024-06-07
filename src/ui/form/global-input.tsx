@@ -1,5 +1,6 @@
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
 
 const GlobalInput = ({
   placeholder,
@@ -12,11 +13,13 @@ const GlobalInput = ({
   formik,
   disabled,
   value,
+  localChange,
   options = [],
   optionLabel,
-  optionValue
+  optionValue,
+  rows,
+  cols
 }: any) => {
- 
   return (
     <div className={` relative ${className && className}`}>
       <p className="label-my">{label} </p>
@@ -26,11 +29,32 @@ const GlobalInput = ({
           id={id}
           name={name}
           value={value}
-          onChange={formik.handleChange}
+          onChange={(e) => {
+            formik.handleChange(e);
+            if (localChange) localChange(e);
+          }}
           onBlur={formik.handleBlur}
           placeholder={placeholder}
           invalid={Boolean(errors)}
           disabled={disabled}
+        />
+      )}
+      {type == "textarea" && (
+        <InputTextarea
+          className="w-full"
+          id={id}
+          name={name}
+          value={value}
+          onChange={(e) => {
+            formik.handleChange(e);
+            if (localChange) localChange(e);
+          }}
+          onBlur={formik.handleBlur}
+          placeholder={placeholder}
+          invalid={Boolean(errors)}
+          disabled={disabled}
+          rows={rows}
+          cols={cols}
         />
       )}
       {type == "select" && (
@@ -38,8 +62,11 @@ const GlobalInput = ({
           className=" mr-2 w-full md:w-full"
           id={id}
           name={name}
-          onChange={formik.handleChange}
-          // onBlur={formik.handleBlur}
+          onChange={(e) => {
+            formik.handleChange(e);
+            if (localChange) localChange(e);
+          }}
+          onBlur={formik.handleBlur}
           value={value}
           placeholder={placeholder}
           options={options}

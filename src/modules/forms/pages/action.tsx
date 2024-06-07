@@ -156,7 +156,6 @@ export default function ProductAction() {
       filters: { name: { $containsi: crop || undefined } }
     })
       .then((e) => {
-        console.log(e, indexArr)
         indexArr?.map((_: any, i: any) => {
           const newArr = watchedTestFiles?.corps?.[i]
             ? [...watchedTestFiles?.corps?.[i], ...e?.data]
@@ -298,7 +297,6 @@ export default function ProductAction() {
     }
   }, [id]);
 
-  console.log('watchedTestFiles', watchedTestFiles,watchedFiles)
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
@@ -546,7 +544,7 @@ export default function ProductAction() {
         <div className="p-4 bg-white border-round-3xl mt-4 mb-8">
           {indexArr?.map((_: any, i: any) => {
             return (
-              <div className="flex align-items-start gap-3 mb-4">
+              <div className="flex align-items-start gap-3 mb-4 ">
                 <div className="w-full">
                   <div className="flex mb-4 gap-2">
                     {watchedFiles?.type == "drug" && (

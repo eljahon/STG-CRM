@@ -1,12 +1,13 @@
 import { FormContainer } from "../../../components/Forms";
 import { FieldArray } from "formik";
-import { InputText } from "primereact/inputtext";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import FromAction from "../../../ui/form-top-actions";
 import ProductContentInputs from "../ui/contect";
 import { useQuery } from "react-query";
 import { GetAllData } from "../../../service/global";
+import Itemsform from "../ui/items-form";
+import { Button } from "primereact/button";
 
 export default function ProductPage() {
   const { t } = useTranslation();
@@ -23,6 +24,8 @@ export default function ProductPage() {
       <FormContainer
         url={"user"}
         isFormData={false}
+        setLoader={setLoader}
+        loaderGlob={loader}
         fields={[
           {
             name: "title",
@@ -62,14 +65,13 @@ export default function ProductPage() {
           setLoader(false);
           console.log("onFinal");
         }}
-        customData={{}}
-        onSubmit={() => {
-          setLoader(true);
-        }}
+        // customData={{}}
+        // onSubmit={() => {
+        // }}
         validateOnMount={false}
       >
         {(formik) => {
-          console.log(formik.values);
+          // console.log(formik.values);
           return (
             <>
               <FromAction
@@ -85,49 +87,33 @@ export default function ProductPage() {
                 fertilizerCategory={fertilizerCategory?.data}
               />
 
-              <div>
+              <div className="p-4 bg-white border-round-3xl mt-4 mb-8">
                 <FieldArray
                   name="friends"
                   render={(arrayHelpers) => (
-                    <div>
-                      {formik.values.friends &&
-                      formik.values.friends.length > 0 ? (
-                        formik.values.friends.map((friend: any, index: any) => (
-                          <div key={index}>
-                            <InputText
-                              id={`friends.${index}`}
-                              name={`friends.${index}`}
-                              value={friend}
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              placeholder={t("identifier")}
-                              invalid={formik.errors.identifier ? true : false}
-                            />
-                            {/*<Field name={`friends.${index}`} />*/}
-                            <button
-                              type="button"
-                              onClick={() => arrayHelpers.remove(index)} // remove a friend from the list
-                            >
-                              -
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => arrayHelpers.push("")} // insert an empty string at a position
-                            >
-                              +
-                            </button>
-                          </div>
-                        ))
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={() => arrayHelpers.push("")}
-                        >
-                          {/* show this when user has removed all friends from the list */}
-                          Add a friend
-                        </button>
-                      )}
-                    </div>
+                    <>
+                      {formik.values.friends && formik.values.friends.length > 0
+                        ? formik.values.friends.map(
+                            (value: any, index: any) => (
+                              <Itemsform
+                                formik={formik}
+                                arrayHelpers={arrayHelpers}
+                                key={index}
+                                value={value}
+                                index={index}
+                              />
+                            )
+                          )
+                        : ""}
+
+                      <Button
+                        severity="success"
+                        className="border-round-3xl px-5"
+                        label={t("add")}
+                        type="button"
+                        onClick={() => arrayHelpers.push("")}
+                      />
+                    </>
                   )}
                 />
               </div>

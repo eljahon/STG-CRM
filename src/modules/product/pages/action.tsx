@@ -208,7 +208,6 @@ export default function ProductAction() {
 
           const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
           setValuetest(`diseases[${indexNumber}]`, uniqueUsersByName);
-
         } else {
           indexArr?.map((_: any, i: any) => {
             const newArr = watchedTestFiles?.diseases?.[i]
@@ -225,7 +224,6 @@ export default function ProductAction() {
       })
       .catch((errors) => console.log(errors))
       .finally(() => setValuetest(`diseasesLoading[${indexNumber}]`, false));
-
   };
 
   const updataFormat = (items: any) => {
@@ -262,7 +260,7 @@ export default function ProductAction() {
   }, [index, watchedTestFiles?.diseasesUpdate, watchedTestFiles?.cropsUpdate]);
 
   useEffect(() => {
-    if (id ==="new") {
+    if (id === "new") {
       setIndexArr([1]);
     } else {
       setLoader(true);
@@ -320,7 +318,6 @@ export default function ProductAction() {
     }
   }, [id]);
 
-  console.log('watchedTestFiles', watchedTestFiles,watchedFiles)
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
@@ -403,7 +400,7 @@ export default function ProductAction() {
                       clearErrors("unit");
                       return el.value;
                     },
-                    onBlur: function () { }
+                    onBlur: function () {}
                   }}
                   filterTemplate={() => (
                     <InputText
@@ -416,14 +413,14 @@ export default function ProductAction() {
                   invalid={errors?.unit?.message ? true : false}
                   placeholder={`${t("selectUnit")} `}
                   value={watchedFiles?.unit || ""}
-                  options={get(units, 'data')}
+                  options={get(units, "data")}
                   optionValue="id"
                   optionLabel="name"
                   highlightOnSelect={false}
                 />
                 {errors?.unit?.message && (
                   <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                    {get(errors, 'unit.message')}
+                    {get(errors, "unit.message")}
                   </p>
                 )}
               </div>
@@ -444,7 +441,7 @@ export default function ProductAction() {
                         clearErrors("state.drug_category");
                         return el.value;
                       },
-                      onBlur: function () { }
+                      onBlur: function () {}
                     }}
                     invalid={
                       (errors as any)?.state?.drug_category?.message
@@ -481,7 +478,7 @@ export default function ProductAction() {
                         clearErrors("state.fertilizer_category");
                         return el.value;
                       },
-                      onBlur: function () { }
+                      onBlur: function () {}
                     }}
                     invalid={
                       (errors as any)?.state?.fertilizer_category?.message
@@ -576,7 +573,7 @@ export default function ProductAction() {
                           id="crop"
                           className=" mr-2 w-full md:w-full"
                           onChange={(e) => {
-                            console.log(e)
+                            console.log(e);
                             getDiseesesByCrop(e.value, "", i, true);
                             if (e.value) {
                               setValuetest(`state.items[${i}].crop`, e.value);
@@ -648,7 +645,7 @@ export default function ProductAction() {
                               clearErrors(`state.items[${i}].diseases`);
                               return el.value;
                             },
-                            onBlur: function () { }
+                            onBlur: function () {}
                           }}
                           loading={
                             watchedTestFiles.diseasesLoading?.[i] ||
@@ -669,13 +666,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.diseases
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.diseases
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.diseases
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </div>
                     )}
 
@@ -703,13 +700,13 @@ export default function ProductAction() {
                       />
                       {(errors as any)?.state?.items?.[i]?.dose_min
                         ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.dose_min
-                                ?.message
-                            }
-                          </p>
-                        )}
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {
+                            (errors as any)?.state?.items?.[i]?.dose_min
+                              ?.message
+                          }
+                        </p>
+                      )}
                     </div>
 
                     <div
@@ -735,13 +732,13 @@ export default function ProductAction() {
                       />
                       {(errors as any)?.state?.items?.[i]?.dose_max
                         ?.message && (
-                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                            {
-                              (errors as any)?.state?.items?.[i]?.dose_max
-                                ?.message
-                            }
-                          </p>
-                        )}
+                        <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                          {
+                            (errors as any)?.state?.items?.[i]?.dose_max
+                              ?.message
+                          }
+                        </p>
+                      )}
                     </div>
 
                     <div
@@ -761,7 +758,7 @@ export default function ProductAction() {
                             clearErrors(`state.items[${i}].unit`);
                             return el.value;
                           },
-                          onBlur: function () { }
+                          onBlur: function () {}
                         }}
                         invalid={
                           (errors as any)?.state?.items?.[i]?.unit?.message
@@ -815,13 +812,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.use_count
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.use_count
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.use_count
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>
@@ -846,13 +843,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.description
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.description
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.description
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </>
                     ) : watchedFiles?.type == "fertilizer" ? (
                       <>
@@ -872,13 +869,13 @@ export default function ProductAction() {
                         />
                         {(errors as any)?.state?.items?.[i]?.method
                           ?.message && (
-                            <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                              {
-                                (errors as any)?.state?.items?.[i]?.method
-                                  ?.message
-                              }
-                            </p>
-                          )}
+                          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+                            {
+                              (errors as any)?.state?.items?.[i]?.method
+                                ?.message
+                            }
+                          </p>
+                        )}
                       </>
                     ) : (
                       ""
@@ -899,9 +896,7 @@ export default function ProductAction() {
                         (_: any, index: any) => index !== i
                       )
                     );
-                    setIndexArr((state: any) =>
-                      state.length > 1 ? state?.slice(0, -1) : state
-                    );
+                    setIndexArr((state: any) => state?.slice(0, -1));
                   }}
                 />
               </div>

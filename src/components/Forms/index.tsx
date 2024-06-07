@@ -46,6 +46,7 @@ interface IFORMCONTAINER {
   validateOnMount?: boolean;
   validate?: any;
   loaderGlob?: any;
+  setLoader?: any;
 }
 export const FormContainer: FC<IFORMCONTAINER> = ({
   url,
@@ -59,6 +60,7 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
   customData,
   onSubmit,
   loaderGlob,
+  setLoader,
   validateOnMount = false,
   ...formProps
 }) => {
@@ -68,7 +70,9 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
 
   const handleSubmit = async (values: any) => {
     const formValues = formHelpers.getFormValues(values, fields, isFormData);
-
+    console.log(formValues);
+    return;
+    setLoader(true);
     if (id == "new" || !id) {
       await AddData(url, formValues)
         .then((res: any) => {
@@ -80,7 +84,10 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
         .catch((errors) => {
           onError(errors);
         })
-        .finally(() => onFinal());
+        .finally(() => {
+          onFinal();
+          setLoader();
+        });
     } else if (id == "old") {
       await UpdateDataOne(url, formValues)
         .then((res: any) => {

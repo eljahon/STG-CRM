@@ -4,6 +4,7 @@ import GlobalInput from "../../../../ui/form/global-input";
 import UploadFile from "../../../../ui/uploadFile";
 import UploadFileSer from "../../../../ui/uploadFileSer";
 import { useParams } from "react-router-dom";
+import SwichInputLoc from "../../../../ui/form/swich-input";
 
 const typeArr: any = [
   {
@@ -59,7 +60,10 @@ const ProductContentInputs = ({
           className={"mb-4 colm2"}
           options={typeArr}
           optionLabel="name"
-          // disabled={id != "new"}
+          localChange={() => {
+            formik.setFieldValue("state", null);
+          }}
+          disabled={id != "new"}
           optionValue="code"
           placeholder={t("selectType")}
           errors={formik.errors.type}
@@ -110,6 +114,26 @@ const ProductContentInputs = ({
             errors={formik.errors.state?.fertilizer_category}
           />
         )}
+
+        <SwichInputLoc
+          formik={formik}
+          className={"mb-4 mt-3 colm2"}
+          value={formik.values.visible}
+          label={t("visible")}
+        />
+        <GlobalInput
+          type="textarea"
+          formik={formik}
+          value={formik.values.description}
+          label={t("description")}
+          name={"description"}
+          id={"description"}
+          className={"mb-4 w-full"}
+          placeholder={t("description")}
+          errors={formik.errors.description}
+          rows={7}
+          cols={20}
+        />
       </div>
       <div className="w-4 p-4 bg-white border-round-3xl">
         {/* <UploadFile
