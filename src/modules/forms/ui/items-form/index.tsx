@@ -5,7 +5,6 @@ import GlobalInput from "../../../../ui/form/global-input";
 
 const Itemsform = ({ arrayHelpers, value, formik, index }: any) => {
   const { t } = useTranslation();
-  console.log(value)
   return (
     <div className="flex align-items-start gap-3 mb-4 w-full">
       <div className="flex align-items-start gap-3 mb-4 w-full">
@@ -23,7 +22,6 @@ const Itemsform = ({ arrayHelpers, value, formik, index }: any) => {
       </div>
       <Button
         className="w-2 max-w-3rem border-round-3xl"
-        // label={t("delete")}
         type="button"
         severity="danger"
         icon="pi pi-trash"
