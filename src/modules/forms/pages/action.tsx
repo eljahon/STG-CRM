@@ -554,7 +554,6 @@ export default function ProductAction() {
                           id="crop"
                           className=" mr-2 w-full md:w-full"
                           onChange={(e) => {
-                            console.log(e)
                             getDiseesesByCrop(e.value, "", i, true);
                             if (e.value) {
                               setValuetest(`state.items[${i}].crop`, e.value);

@@ -1,7 +1,7 @@
 import { FormContainer } from "../../../components/Forms";
 import { FieldArray } from "formik";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FromAction from "../../../ui/form-top-actions";
 import ProductContentInputs from "../ui/contect";
 import { useQuery } from "react-query";
@@ -12,6 +12,7 @@ import { Button } from "primereact/button";
 export default function ProductPage() {
   const { t } = useTranslation();
   const [loader, setLoader] = useState(false);
+  const [cropArr, setCropArr] = useState<any>([]);
   const { data: units } = useQuery(["units"], () => GetAllData(`units`));
   const { data: drugCategory } = useQuery("drugCategory", () =>
     GetAllData("drug-categories")
@@ -19,6 +20,20 @@ export default function ProductPage() {
   const { data: fertilizerCategory } = useQuery("fertilizerCategory", () =>
     GetAllData("fertilizer-categories")
   );
+
+  const { data: crops } = useQuery("crops", () => GetAllData("crops"));
+
+  const getCrop = async (crop?: string, indexNumber?: any) => {
+    await GetAllData(`crops`, {
+      filters: { name: { $containsi: crop || undefined } }
+    })
+      .then((e) => {})
+      .catch((errors) => console.log(errors));
+  };
+
+  useEffect(() => {
+    setCropArr([crops?.data]);
+  }, [crops]);
   return (
     <>
       <FormContainer
@@ -46,13 +61,8 @@ export default function ProductPage() {
           },
           {
             name: "state",
-            validationType: "object"
-          },
-          {
-            name: "friends",
-            validations: [{ type: "required" }],
-            validationType: "array",
-            value: [""]
+            validationType: "object",
+            value: { items: [""] }
           }
         ]}
         onSuccess={(e: any) => {
@@ -71,7 +81,7 @@ export default function ProductPage() {
         validateOnMount={false}
       >
         {(formik) => {
-          // console.log(formik.values);
+          console.log(formik.values.state.items);
           return (
             <>
               <FromAction
@@ -92,15 +102,16 @@ export default function ProductPage() {
                   name="friends"
                   render={(arrayHelpers) => (
                     <>
-                      {formik.values.friends && formik.values.friends.length > 0
-                        ? formik.values.friends.map(
-                            (value: any, index: any) => (
+                      {formik.values.state.items &&
+                      formik.values.state.items.length > 0
+                        ? formik.values.state.items.map(
+                            (_: any, index: any) => (
                               <Itemsform
                                 formik={formik}
                                 arrayHelpers={arrayHelpers}
                                 key={index}
-                                value={value}
                                 index={index}
+                                cropArr={cropArr?.[index]}
                               />
                             )
                           )
@@ -111,7 +122,10 @@ export default function ProductPage() {
                         className="border-round-3xl px-5"
                         label={t("add")}
                         type="button"
-                        onClick={() => arrayHelpers.push("")}
+                        onClick={() => {
+                          arrayHelpers.push("");
+                          console.log(arrayHelpers);
+                        }}
                       />
                     </>
                   )}

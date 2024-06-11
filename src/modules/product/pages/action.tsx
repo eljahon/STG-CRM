@@ -708,7 +708,6 @@ export default function ProductAction() {
                         </p>
                       )}
                     </div>
-
                     <div
                       className="colm1 relative w-full"
                       style={{ maxWidth: "155px" }}
@@ -740,7 +739,6 @@ export default function ProductAction() {
                         </p>
                       )}
                     </div>
-
                     <div
                       className="colm1 relative w-full"
                       style={{ maxWidth: "150px" }}

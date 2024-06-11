@@ -1,23 +1,25 @@
 import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
 import { useTranslation } from "react-i18next";
 import GlobalInput from "../../../../ui/form/global-input";
 
-const Itemsform = ({ arrayHelpers, value, formik, index }: any) => {
+const Itemsform = ({ arrayHelpers, cropArr, formik, index }: any) => {
   const { t } = useTranslation();
   return (
     <div className="flex align-items-start gap-3 mb-4 w-full">
       <div className="flex align-items-start gap-3 mb-4 w-full">
         <GlobalInput
-          type="text"
+          type="select"
           formik={formik}
-          value={formik.values.title}
-          label={t("title")}
-          name={"title"}
+          value={formik.values.state.items?.[index]?.crop}
+          label={`${t("selectCrop")} `}
+          name={`state.items.${index}.crop`}
           id={"title"}
-          placeholder={t("title")}
           className={"mb-4 colm2"}
-          errors={formik.errors.title}
+          options={cropArr}
+          optionLabel="name"
+          optionValue="id"
+          placeholder={`${t("selectCrop")} `}
+          errors={formik.errors.crop}
         />
       </div>
       <Button
