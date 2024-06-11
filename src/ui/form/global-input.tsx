@@ -1,6 +1,7 @@
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
+import { MultiSelect } from "primereact/multiselect";
 
 const GlobalInput = ({
   placeholder,
@@ -18,16 +19,31 @@ const GlobalInput = ({
   optionLabel,
   optionValue,
   rows,
-  cols
+  cols,
+  typeValue,
+  filter
 }: any) => {
+  const debounce = <F extends (...args: any[]) => any>(
+    func: F,
+    delay: number
+  ): ((...args: Parameters<F>) => void) => {
+    let timerId: any;
+    return (...args: Parameters<F>) => {
+      clearTimeout(timerId);
+      timerId = setTimeout(() => {
+        func(...args);
+      }, delay);
+    };
+  };
   return (
     <div className={` relative ${className && className}`}>
       <p className="label-my">{label} </p>
       {type == "text" && (
         <InputText
-          className="w-full"
+          className="w-full pb-3"
           id={id}
           name={name}
+          type={typeValue || "text"}
           value={value}
           onChange={(e) => {
             formik.handleChange(e);
@@ -59,7 +75,7 @@ const GlobalInput = ({
       )}
       {type == "select" && (
         <Dropdown
-          className=" mr-2 w-full md:w-full"
+          className=" mr-2 w-full"
           id={id}
           name={name}
           onChange={(e) => {
@@ -72,6 +88,33 @@ const GlobalInput = ({
           options={options}
           disabled={disabled}
           optionValue={optionValue}
+          optionLabel={optionLabel}
+          filter={filter ? true : false}
+          invalid={Boolean(errors)}
+          onFilter={debounce((e) => {
+            filter(e.filter);
+          }, 700)}
+        />
+      )}
+      {type == "multi" && (
+        <MultiSelect
+          id={id}
+          maxSelectedLabels={2}
+          onFilter={debounce((e) => {
+            filter(e.filter);
+          }, 700)}
+          className="mr-2 w-full"
+          onChange={(e) => {
+            // formik.handleChange(e);
+            if (localChange) localChange(e);
+          }}
+          onBlur={formik.handleBlur}
+          invalid={Boolean(errors)}
+          optionValue={optionValue}
+          value={value}
+          placeholder={placeholder}
+          options={options}
+          filter
           optionLabel={optionLabel}
         />
       )}

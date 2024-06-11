@@ -8,11 +8,12 @@ import { useQuery } from "react-query";
 import { GetAllData } from "../../../service/global";
 import Itemsform from "../ui/items-form";
 import { Button } from "primereact/button";
-
+import lodash from "lodash";
 export default function ProductPage() {
   const { t } = useTranslation();
   const [loader, setLoader] = useState(false);
   const [cropArr, setCropArr] = useState<any>([]);
+  const [diseasesArr, setDiseasesArr] = useState<any>([]);
   const { data: units } = useQuery(["units"], () => GetAllData(`units`));
   const { data: drugCategory } = useQuery("drugCategory", () =>
     GetAllData("drug-categories")
@@ -22,18 +23,62 @@ export default function ProductPage() {
   );
 
   const { data: crops } = useQuery("crops", () => GetAllData("crops"));
+  const { data: diseeses } = useQuery("diseases", () => GetAllData("diseases"));
 
   const getCrop = async (crop?: string, indexNumber?: any) => {
     await GetAllData(`crops`, {
       filters: { name: { $containsi: crop || undefined } }
     })
-      .then((e) => {})
+      .then((e) => {
+        const newArr = cropArr?.[indexNumber]
+          ? [...cropArr?.[indexNumber], ...e?.data]
+          : e?.data;
+        const uniqueUsersByName: any = lodash.uniqBy(newArr, "id");
+        const locArr = [...cropArr];
+        locArr[indexNumber] = uniqueUsersByName;
+        setCropArr(locArr);
+      })
+      .catch((errors) => console.log(errors));
+  };
+
+  const getDiseesesByCrop = async (
+    crop?: string,
+    diseases?: string,
+    indexNumber?: any,
+    isfilter?: any
+  ) => {
+    await GetAllData(`diseases`, {
+      filters: {
+        name: { $containsi: diseases || undefined },
+        crop: crop || undefined
+      }
+    })
+      .then((e) => {
+        if (isfilter) {
+          const locArr = [...diseasesArr];
+          locArr[indexNumber] = e?.data;
+          setDiseasesArr(locArr);
+        } else {
+          const newArr = diseasesArr?.[indexNumber]
+            ? [...diseasesArr?.[indexNumber], ...e?.data]
+            : e?.data;
+          const uniqueUsersByName: any = lodash.uniqBy(newArr, "id");
+          const locArr = [...diseasesArr];
+          locArr[indexNumber] = uniqueUsersByName;
+          setDiseasesArr(locArr);
+        }
+      })
       .catch((errors) => console.log(errors));
   };
 
   useEffect(() => {
     setCropArr([crops?.data]);
   }, [crops]);
+
+  useEffect(() => {
+    setDiseasesArr([diseeses?.data]);
+  }, [diseeses]);
+
   return (
     <>
       <FormContainer
@@ -62,7 +107,9 @@ export default function ProductPage() {
           {
             name: "state",
             validationType: "object",
-            value: { items: [""] }
+            value: {
+              items: [""]
+            }
           }
         ]}
         onSuccess={(e: any) => {
@@ -81,7 +128,6 @@ export default function ProductPage() {
         validateOnMount={false}
       >
         {(formik) => {
-          console.log(formik.values.state.items);
           return (
             <>
               <FromAction
@@ -99,19 +145,36 @@ export default function ProductPage() {
 
               <div className="p-4 bg-white border-round-3xl mt-4 mb-8">
                 <FieldArray
-                  name="friends"
+                  name="state.items"
                   render={(arrayHelpers) => (
                     <>
-                      {formik.values.state.items &&
+                      {formik.values.state?.items &&
                       formik.values.state.items.length > 0
                         ? formik.values.state.items.map(
-                            (_: any, index: any) => (
+                            (valueFormik: any, index: any) => (
                               <Itemsform
                                 formik={formik}
                                 arrayHelpers={arrayHelpers}
                                 key={index}
                                 index={index}
                                 cropArr={cropArr?.[index]}
+                                diseasesArr={diseasesArr?.[index]}
+                                filterCrop={(value: any) => {
+                                  getCrop(value, index);
+                                }}
+                                filterDiseeses={(value: any) => {
+                                  getDiseesesByCrop(
+                                    valueFormik?.crop,
+                                    value,
+                                    index
+                                  );
+                                }}
+                                cropChange={(crop: any) => {
+                                  if (formik.values.type == "drug") {
+                                    getDiseesesByCrop(crop, "", index, true);
+                                  }
+                                }}
+                                unitArr={units?.data}
                               />
                             )
                           )
@@ -123,8 +186,15 @@ export default function ProductPage() {
                         label={t("add")}
                         type="button"
                         onClick={() => {
+                          getCrop("", formik.values.state.items.length);
+                          if (formik.values.type == "drug") {
+                            getDiseesesByCrop(
+                              "",
+                              "",
+                              formik.values.state.items.length
+                            );
+                          }
                           arrayHelpers.push("");
-                          console.log(arrayHelpers);
                         }}
                       />
                     </>

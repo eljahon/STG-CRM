@@ -41,6 +41,7 @@ const ProductContentInputs = ({
         />
         <GlobalInput
           type="text"
+          typeValue="number"
           formik={formik}
           value={formik.values.price}
           label={t("price")}
@@ -62,8 +63,9 @@ const ProductContentInputs = ({
           optionLabel="name"
           localChange={() => {
             formik.setFieldValue("state", null);
+            formik.setFieldValue("state.items", [""]);
           }}
-          disabled={id != "new"}
+          // disabled={id != "new"}
           optionValue="code"
           placeholder={t("selectType")}
           errors={formik.errors.type}
