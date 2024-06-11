@@ -93,6 +93,34 @@ export default function ProductPage() {
         );
       }
       // ItemRender: (itemData, itemcoulmns,index) => {}
+    },
+    {
+      header: t("status"),
+      field: "status",
+      id: 6,
+      exportable: false,
+      body: (itemData: any) => {
+        return (
+          <StatusBtn
+            className={"inline-block"}
+            label={
+              itemData?.confirmed
+                ? t("confirmed")
+                : itemData?.rejected
+                ? t("cancelled")
+                : t("pending")
+            }
+            status={
+              itemData?.confirmed
+                ? "completed"
+                : itemData?.rejected
+                ? "cancelled"
+                : "pending"
+            }
+          />
+        );
+      }
+      // ItemRender: (itemData, itemcoulmns,index) => {}
     }
   ];
 
