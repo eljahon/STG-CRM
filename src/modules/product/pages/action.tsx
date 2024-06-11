@@ -165,16 +165,20 @@ export default function ProductAction() {
           const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
           setValuetest(`corps[${indexNumber}]`, uniqueUsersByName);
         } else {
-          indexArr?.map((_: any, i: any) => {
-            const newArr = watchedTestFiles?.corps?.[i]
-              ? [...watchedTestFiles?.corps?.[i], ...e?.data]
-              : e?.data;
-            const updateArrAdd = watchedTestFiles?.cropsUpdate?.[i]
-              ? [...watchedTestFiles?.cropsUpdate?.[i], ...newArr]
-              : newArr;
-            const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
-            setValuetest(`corps[${i}]`, uniqueUsersByName);
-          });
+          if (indexArr.length) {
+            indexArr?.map((_: any, i: any) => {
+              const newArr = watchedTestFiles?.corps?.[i]
+                ? [...watchedTestFiles?.corps?.[i], ...e?.data]
+                : e?.data;
+              const updateArrAdd = watchedTestFiles?.cropsUpdate?.[i]
+                ? [...watchedTestFiles?.cropsUpdate?.[i], ...newArr]
+                : newArr;
+              const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
+              setValuetest(`corps[${i}]`, uniqueUsersByName);
+            });
+          } else {
+            setValuetest(`corps[${0}]`, e?.data);
+          }
         }
       })
       .catch((errors) => console.log(errors))
@@ -197,28 +201,15 @@ export default function ProductAction() {
         if (isfilter) {
           setValuetest(`diseases[${indexNumber}]`, e?.data);
           setValue(`state.items[${indexNumber}].diseases`, null);
-        } else if (indexNumber || indexNumber == 0) {
+        } else {
           const newArr = watchedTestFiles?.diseases?.[indexNumber]
             ? [...watchedTestFiles?.diseases?.[indexNumber], ...e?.data]
             : e?.data;
           const updateArrAdd = watchedTestFiles?.diseasesUpdate?.[indexNumber]
             ? [...watchedTestFiles?.diseasesUpdate?.[indexNumber], ...newArr]
             : newArr;
-
           const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
           setValuetest(`diseases[${indexNumber}]`, uniqueUsersByName);
-        } else {
-          indexArr?.map((_: any, i: any) => {
-            const newArr = watchedTestFiles?.diseases?.[i]
-              ? [...watchedTestFiles?.diseases?.[i], ...e?.data]
-              : e?.data;
-            const updateArrAdd = watchedTestFiles?.diseasesUpdate?.[i]
-              ? [...watchedTestFiles?.diseasesUpdate?.[i], ...newArr]
-              : newArr;
-
-            const uniqueUsersByName: any = lodash.uniqBy(updateArrAdd, "id");
-            setValuetest(`diseases[${i}]`, uniqueUsersByName);
-          });
         }
       })
       .catch((errors) => console.log(errors))
@@ -233,14 +224,14 @@ export default function ProductAction() {
         returnResult[i].crops = items?.[i]?.crops?.map((e: any) => e?.id);
         setValuetest(`cropsUpdate[${i}]`, items?.[i]?.crops);
       }
-      if (items?.[i]?.crops?.length == undefined && items?.[i]?.crops) {
-        returnResult[i].crops = items?.[i]?.crops?.id;
-        setValuetest(`cropsUpdate[${i}]`, items?.[i]?.crops);
+
+      if (items?.[i]?.crop) {
+        setValuetest(`state.items[${i}].crop`, items?.[i]?.crop?.id);
+        setValuetest(`cropsUpdate[${i}]`, [items?.[i]?.crop]);
       }
 
       if (items?.[i]?.diseases) {
         returnResult[i].diseases = items?.[i]?.diseases?.map((e: any) => e?.id);
-
         setValuetest(`diseasesUpdate[${i}]`, items?.[i]?.diseases);
       }
 
@@ -248,7 +239,6 @@ export default function ProductAction() {
         returnResult[i].unit = items?.[i]?.unit.id;
       }
     }
-    // console.log(returnResult);
 
     return returnResult;
   };
@@ -256,11 +246,13 @@ export default function ProductAction() {
     setValue("type", "drug");
     setValue("visible", true);
   }, []);
-
   useEffect(() => {
     getDiseesesByCrop("", "", id == "new" ? index - 1 : null);
+  }, [index]);
+
+  useEffect(() => {
     getCrop("", id == "new" ? index - 1 : null);
-  }, [index, watchedTestFiles?.diseasesUpdate, watchedTestFiles?.cropsUpdate]);
+  }, [index, watchedTestFiles?.cropsUpdate]);
 
   useEffect(() => {
     if (id == "new") {
@@ -320,7 +312,6 @@ export default function ProductAction() {
         .finally(() => setLoader(false));
     }
   }, [id]);
-
   return (
     <GlobalFrom
       handleSubmit={handleSubmit}
@@ -637,7 +628,11 @@ export default function ProductAction() {
                           id="disease"
                           maxSelectedLabels={2}
                           onFilter={debounce((e: any) => {
-                            getDiseesesByCrop("", e.filter, i);
+                            getDiseesesByCrop(
+                              watchedTestFiles?.state?.items?.[i]?.crop,
+                              e.filter,
+                              i
+                            );
                           }, 700)}
                           className=" mr-2 w-full"
                           {...{
@@ -664,7 +659,10 @@ export default function ProductAction() {
                           value={watchedFiles?.state?.items?.[i]?.diseases}
                           placeholder={`${t("selectDisease")} `}
                           optionValue="id"
-                          options={watchedTestFiles.diseases?.[i]}
+                          options={
+                            watchedTestFiles.diseases?.[i] ||
+                            watchedTestFiles?.diseasesUpdate?.[i]
+                          }
                           filter
                           optionLabel="name"
                         />
