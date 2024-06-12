@@ -5,6 +5,8 @@ import UploadFile from "../../../../ui/uploadFile";
 import UploadFileSer from "../../../../ui/uploadFileSer";
 import { useParams } from "react-router-dom";
 import SwichInputLoc from "../../../../ui/form/swich-input";
+import { useState } from "react";
+import UploadFileMulty from "../../../../ui/uploadFileMulty";
 
 const typeArr: any = [
   {
@@ -21,10 +23,12 @@ const ProductContentInputs = ({
   formik,
   unitOption,
   drugCategory,
+  productOne,
   fertilizerCategory
 }: any) => {
   const { t } = useTranslation();
   const { id } = useParams();
+  const [imageMulti, setImageMulti] = useState<any>(productOne?.gallery || []);
   return (
     <div className="flex gap-4">
       <div className="w-8 bg-white border-round-3xl p-4  gap-2 flex flex-wrap">
@@ -136,25 +140,33 @@ const ProductContentInputs = ({
           rows={7}
           cols={20}
         />
+        <UploadFileMulty
+          className={"mb-4"}
+          formik={formik}
+          value={imageMulti || []}
+          setLocalValue={setImageMulti}
+          valueId={productOne?.gallery?.map((e: any) => e?.id) || []}
+          fieldName={"gallery"}
+        />
       </div>
       <div className="w-4 p-4 bg-white border-round-3xl">
-        {/* <UploadFile
+        <UploadFile
           className={"mb-4"}
-          setValue={setValue}
-          value={image}
-          setError={setError}
-          clearErrors={clearErrors}
-          error={errors}
+          formik={formik}
+          value={productOne?.image?.aws_path}
+          // setError={setError}
+          // clearErrors={clearErrors}
+          error={formik.errors}
           fieldName={"image"}
-        /> */}
-        {/* <UploadFileSer
-          setValue={setValue}
+        />
+        <UploadFileSer
+          formik={formik}
           fieldName={"cer"}
-          value={imageSer}
-          setError={setError}
-          clearErrors={clearErrors}
-          error={errors}
-        /> */}
+          value={productOne?.cer?.aws_path}
+          // setError={setError}
+          // clearErrors={clearErrors}
+          error={formik.errors}
+        />
       </div>
     </div>
   );

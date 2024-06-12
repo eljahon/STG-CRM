@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import FromAction from "../../../ui/form-top-actions";
 import ProductContentInputs from "../ui/contect";
 import { useQuery } from "react-query";
-import { GetAllData } from "../../../service/global";
+import { GetAllData, GetByIdData } from "../../../service/global";
 import Itemsform from "../ui/items-form";
 import { Button } from "primereact/button";
 import lodash from "lodash";
@@ -14,6 +14,12 @@ export default function ProductPage() {
   const [loader, setLoader] = useState(false);
   const [cropArr, setCropArr] = useState<any>([]);
   const [diseasesArr, setDiseasesArr] = useState<any>([]);
+
+  const id: any = 45;
+  const { data: productOne } = useQuery("productId", () =>
+    GetByIdData("products", id, { populate: "*" })
+  );
+
   const { data: units } = useQuery(["units"], () => GetAllData(`units`));
   const { data: drugCategory } = useQuery("drugCategory", () =>
     GetAllData("drug-categories")
@@ -72,12 +78,54 @@ export default function ProductPage() {
   };
 
   useEffect(() => {
-    setCropArr([crops?.data]);
-  }, [crops]);
+    let locArr: any = [];
+    productOne?.data?.state?.items?.map((e: any, i: any) => {
+      if (productOne?.data?.type == "fertilizer") {
+        const newArr =
+          crops?.data && e?.crops ? [...e?.crops, ...crops?.data] : crops?.data;
+        const uniqueUsersByName: any = lodash.uniqBy(newArr, "id");
+        locArr[i] = uniqueUsersByName;
+      } else if (productOne?.data?.type == "drug") {
+        const newArr =
+          crops?.data && e?.crop ? [e?.crop, ...crops?.data] : crops?.data;
+        const uniqueUsersByName: any = lodash.uniqBy(newArr, "id");
+        locArr[i] = uniqueUsersByName;
+      }
+    });
+    setCropArr(locArr);
+  }, [crops, productOne]);
 
   useEffect(() => {
-    setDiseasesArr([diseeses?.data]);
+    if (id == "new") setDiseasesArr([diseeses?.data]);
   }, [diseeses]);
+
+  useEffect(() => {
+    let locArr: any = [];
+    productOne?.data?.state?.items?.map((e: any, i: any) => {
+      locArr[i] = e?.diseases;
+    });
+    setDiseasesArr(locArr);
+  }, [productOne]);
+
+  const updataFormat = (items: any) => {
+    let returnResult = [...JSON.parse(JSON.stringify(items))];
+    for (let i = 0; i < returnResult.length; i++) {
+      if (items?.[i]?.crops) {
+        returnResult[i].crops = items?.[i]?.crops?.map((e: any) => e?.id);
+      }
+      if (items?.[i]?.diseases) {
+        returnResult[i].diseases = items?.[i]?.diseases?.map((e: any) => e?.id);
+      }
+      if (items?.[i]?.crop) {
+        returnResult[i].crop = items?.[i]?.crop?.id;
+      }
+      if (items?.[i]?.unit) {
+        returnResult[i].unit = items?.[i]?.unit.id;
+      }
+    }
+
+    return returnResult;
+  };
 
   return (
     <>
@@ -89,26 +137,53 @@ export default function ProductPage() {
         fields={[
           {
             name: "title",
-            validations: [{ type: "required" }]
+            validations: [{ type: "required" }],
+            value: productOne?.data?.title
           },
           {
             name: "price",
-            validations: [{ type: "required" }]
+            validations: [{ type: "required" }],
+            value: productOne?.data?.price
           },
           {
             name: "type",
             validations: [{ type: "required" }],
-            value: "drug"
+            value: productOne?.data?.type || "drug"
           },
           {
             name: "unit",
-            validations: [{ type: "required" }]
+            validations: [{ type: "required" }],
+            value: productOne?.data?.unit?.id
           },
+          {
+            name: "description",
+            value: productOne?.data?.description
+          },
+          {
+            name: "visible",
+            value: productOne?.data?.visible
+          },
+          {
+            name: "image",
+            value: productOne?.data?.image?.id
+          },
+          {
+            name: "cer",
+            value: productOne?.data?.cer?.id
+          },
+          // {
+          //   name: "gallery",
+          //   value: []
+          // },
+
           {
             name: "state",
             validationType: "object",
             value: {
-              items: [""]
+              drug_category: productOne?.data?.state?.drug_category?.id,
+              fertilizer_category:
+                productOne?.data?.state?.fertilizer_category?.id,
+              items: updataFormat(productOne?.data?.state?.items || []) || [""]
             }
           }
         ]}
@@ -141,6 +216,7 @@ export default function ProductPage() {
                 unitOption={units?.data}
                 drugCategory={drugCategory?.data}
                 fertilizerCategory={fertilizerCategory?.data}
+                productOne={productOne?.data}
               />
 
               <div className="p-4 bg-white border-round-3xl mt-4 mb-8">
@@ -157,7 +233,7 @@ export default function ProductPage() {
                                 arrayHelpers={arrayHelpers}
                                 key={index}
                                 index={index}
-                                cropArr={cropArr?.[index]}
+                                cropArr={cropArr?.[index] || cropArr?.[0]}
                                 diseasesArr={diseasesArr?.[index]}
                                 filterCrop={(value: any) => {
                                   getCrop(value, index);
@@ -179,7 +255,6 @@ export default function ProductPage() {
                             )
                           )
                         : ""}
-
                       <Button
                         severity="success"
                         className="border-round-3xl px-5"

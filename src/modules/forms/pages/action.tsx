@@ -3,7 +3,6 @@ import GlobalFrom from "../../../ui/form/global-from.tsx";
 import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
-// import { FloatLabel } from "primereact/floatlabel";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";

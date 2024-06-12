@@ -64,19 +64,19 @@ const Itemsform = ({
             type="multi"
             formik={formik}
             filter={filterCrop}
-            value={formik.values.state.items?.[index]?.crop}
-            name={`state.items.${index}.crop`}
+            value={formik.values.state.items?.[index]?.crops}
+            name={`state.items.${index}.crops`}
             label={`${t("selectCrop")} `}
-            id={"crop"}
+            id={"crops"}
             className={"mb-4 colm2"}
             options={cropArr}
             optionLabel="name"
             optionValue="id"
             localChange={(e: any) => {
-              formik.setFieldValue(`state.items.${index}.crop`, e.value);
+              formik.setFieldValue(`state.items.${index}.crops`, e.value);
             }}
             placeholder={`${t("selectCrop")} `}
-            errors={formik.errors.crop}
+            errors={formik.errors.crops}
           />
         )}
         <GlobalInput
@@ -92,8 +92,8 @@ const Itemsform = ({
           errors={formik.errors.dose_min}
         />
         <GlobalInput
-           type="text"
-           typeValue="number"
+          type="text"
+          typeValue="number"
           formik={formik}
           value={formik.values.state.items?.[index]?.dose_max}
           name={`state.items.${index}.dose_max`}
@@ -119,8 +119,8 @@ const Itemsform = ({
         />
         {formik.values.type == "fertilizer" && (
           <GlobalInput
-          type="text"
-          typeValue="number"
+            type="text"
+            typeValue="number"
             formik={formik}
             value={formik.values.state.items?.[index]?.use_count}
             name={`state.items.${index}.use_count`}
