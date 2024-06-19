@@ -20,15 +20,15 @@ const columnsdrug = [
     style: { minWidth: "12rem" }
   },
   {
-    header: "dose_max",
-    field: "dose_max",
+    header: "dose_min",
+    field: "dose_min",
     id: 2,
     exportable: false,
     style: { minWidth: "12rem" }
   },
   {
-    header: "dose_min",
-    field: "dose_min",
+    header: "dose_max",
+    field: "dose_max",
     id: 3,
     exportable: false,
     style: { minWidth: "12rem" }
@@ -50,15 +50,15 @@ const columnsfert = [
     style: { minWidth: "12rem" }
   },
   {
-    header: "dose_max",
-    field: "dose_max",
+    header: "dose_min",
+    field: "dose_min",
     id: 2,
     exportable: false,
     style: { minWidth: "12rem" }
   },
   {
-    header: "dose_min",
-    field: "dose_min",
+    header: "dose_max",
+    field: "dose_max",
     id: 3,
     exportable: false,
     style: { minWidth: "12rem" }
