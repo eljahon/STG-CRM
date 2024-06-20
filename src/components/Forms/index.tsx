@@ -67,11 +67,9 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
   const { id } = useParams();
   const { initialValues, validationSchema } =
     formHelpers.createFormSchema(fields);
-
   const handleSubmit = async (values: any) => {
     const formValues = formHelpers.getFormValues(values, fields, isFormData);
-    console.log(formValues);
-    return;
+
     setLoader(true);
     if (id == "new" || !id) {
       await AddData(url, formValues)
@@ -114,14 +112,20 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
         .finally(() => onFinal());
     }
   };
-
+  console.log(validationSchema);
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
       validateOnMount={validateOnMount}
       onSubmit={(value: any) => {
-        isFunction(onSubmit) ? onSubmit(value) : handleSubmit(value);
+        if (customData) {
+          isFunction(onSubmit)
+            ? onSubmit(customData(value))
+            : handleSubmit(customData(value));
+        } else {
+          isFunction(onSubmit) ? onSubmit(value) : handleSubmit(value);
+        }
       }}
       enableReinitialize={true}
     >

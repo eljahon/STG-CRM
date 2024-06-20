@@ -9,9 +9,7 @@ export default function UploadFile({
   fieldName,
   value,
   logo,
-  setError,
   error,
-  clearErrors,
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
@@ -34,7 +32,7 @@ export default function UploadFile({
         img.onload = async () => {
           setaspectRatio((img.width / img.height).toFixed(2));
           setLoadingFile(true);
-          // clearErrors(fieldName);
+          formik.setErrors({});
           const res = await ImageUpload(
             file,
             {
@@ -54,10 +52,10 @@ export default function UploadFile({
       };
       reader.readAsDataURL(file);
     } else {
-      // setError(fieldName, {
-      //   type: "custom",
-      //   message: "The image size must be less than 5 MB."
-      // });
+      formik.setFieldError(fieldName, {
+        type: "custom",
+        message: "The image size must be less than 5 MB."
+      });
       toast.error("The image size must be less than 5 MB.");
     }
   };

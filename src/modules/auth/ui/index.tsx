@@ -31,6 +31,7 @@ export default function LoginFrom() {
         GetMe().then((res: any) => {
           window.localStorage.setItem("role", res?.data?.role?.description);
           window.localStorage.setItem("compony", res?.data?.company?.id);
+          window.localStorage.setItem("fullname", res?.data?.fullname);
           window.location.reload();
           // navigate("/dashboard");
         });

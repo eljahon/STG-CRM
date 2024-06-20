@@ -69,7 +69,7 @@ const ProductContentInputs = ({
             formik.setFieldValue("state", null);
             formik.setFieldValue("state.items", [""]);
           }}
-          // disabled={id != "new"}
+          disabled={id != "new"}
           optionValue="code"
           placeholder={t("selectType")}
           errors={formik.errors.type}
@@ -145,7 +145,7 @@ const ProductContentInputs = ({
           formik={formik}
           value={imageMulti || []}
           setLocalValue={setImageMulti}
-          valueId={productOne?.gallery?.map((e: any) => e?.id) || []}
+          valueId={imageMulti?.map((e: any) => e?.id) || []}
           fieldName={"gallery"}
         />
       </div>
@@ -154,8 +154,7 @@ const ProductContentInputs = ({
           className={"mb-4"}
           formik={formik}
           value={productOne?.image?.aws_path}
-          // setError={setError}
-          // clearErrors={clearErrors}
+       
           error={formik.errors}
           fieldName={"image"}
         />
@@ -163,8 +162,7 @@ const ProductContentInputs = ({
           formik={formik}
           fieldName={"cer"}
           value={productOne?.cer?.aws_path}
-          // setError={setError}
-          // clearErrors={clearErrors}
+          
           error={formik.errors}
         />
       </div>

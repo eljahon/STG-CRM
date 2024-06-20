@@ -106,6 +106,10 @@ body {
   width: calc((100% - 10px) / 2);
 }
 
+.colm3 {
+  width: calc((100% - 10px) / 4);
+  max-width: 250px;
+}
 
 .fixedmu {
   background-color: rgb(0, 0, 0, .3);

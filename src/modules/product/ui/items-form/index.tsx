@@ -27,7 +27,7 @@ const Itemsform = ({
               label={`${t("selectCrop")} `}
               name={`state.items.${index}.crop`}
               id={"crop"}
-              className={"mb-4 colm2"}
+              className={"mb-4 colm3"}
               options={cropArr}
               optionLabel="name"
               optionValue="id"
@@ -47,7 +47,7 @@ const Itemsform = ({
               label={`${t("selectDisease")} `}
               name={`state.items.${index}.diseases`}
               id={"diseases"}
-              className={"mb-4 colm2"}
+              className={"mb-4 colm3"}
               options={diseasesArr}
               optionLabel="name"
               optionValue="id"
@@ -68,7 +68,7 @@ const Itemsform = ({
             name={`state.items.${index}.crops`}
             label={`${t("selectCrop")} `}
             id={"crops"}
-            className={"mb-4 colm2"}
+            className={"mb-4 colm3"}
             options={cropArr}
             optionLabel="name"
             optionValue="id"
@@ -88,7 +88,7 @@ const Itemsform = ({
           placeholder={`${t("dose_min")} `}
           label={t("dose_min")}
           id={"dose_min"}
-          className={"mb-4 colm2"}
+          className={"mb-4 colm3"}
           errors={formik.errors.dose_min}
         />
         <GlobalInput
@@ -100,7 +100,7 @@ const Itemsform = ({
           placeholder={`${t("dose_max")} `}
           label={t("dose_max")}
           id={"dose_max"}
-          className={"mb-4 colm2"}
+          className={"mb-4 colm3"}
           errors={formik.errors.dose_max}
         />
         <GlobalInput
@@ -110,7 +110,7 @@ const Itemsform = ({
           label={`${t("selectCrop")} `}
           name={`state.items.${index}.unit`}
           id={"unit"}
-          className={"mb-4 colm2"}
+          className={"mb-4 colm3"}
           options={unitArr}
           optionLabel="name"
           optionValue="id"
@@ -127,7 +127,7 @@ const Itemsform = ({
             placeholder={`${t("use_count")} `}
             label={t("use_count")}
             id={"use_count"}
-            className={"mb-4 colm2"}
+            className={"mb-4 colm3"}
             errors={formik.errors.use_count}
           />
         )}

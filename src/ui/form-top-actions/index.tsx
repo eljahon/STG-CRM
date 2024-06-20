@@ -31,7 +31,10 @@ const FromAction = ({ title, unfixed, loader, cancel, urlOnCancel }: any) => {
             label={cancel}
             severity="secondary"
             type="button"
-            onClick={() => navigate(urlOnCancel)}
+            onClick={() =>{
+               navigate(urlOnCancel)
+              }
+              }
           />
         )}
       </div>

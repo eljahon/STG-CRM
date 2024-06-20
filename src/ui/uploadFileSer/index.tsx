@@ -5,13 +5,11 @@ import { toast } from "react-toastify";
 import { ProgressBar } from "primereact/progressbar";
 
 export default function UploadFileSer({
-  setValue,
   fieldName,
   value,
   logo,
-  setError,
+  formik,
   error,
-  clearErrors,
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
@@ -28,7 +26,7 @@ export default function UploadFileSer({
   const hendleimg = async (e: any) => {
     if (e.target.files[0] && e.target.files[0]?.size < 5000000) {
       setLoadingFile(true);
-      clearErrors(fieldName);
+      formik.setErrors({});
       const res = await ImageUpload(
         e.target.files[0],
         {
@@ -48,10 +46,10 @@ export default function UploadFileSer({
       } else {
         setIsCer(false);
       }
-      setValue(fieldName, res?.data?.media?.id);
+      formik.setFieldValue(fieldName, res?.data?.media?.id);
       setImage(res?.data?.media?.aws_path);
     } else {
-      setError(fieldName, {
+      formik.setFieldError(fieldName, {
         type: "custom",
         message: "The certifice size must be less than 5 MB."
       });
@@ -60,7 +58,7 @@ export default function UploadFileSer({
   };
 
   const hendleRemoveimg = async () => {
-    setValue(fieldName, null);
+    formik.setFieldValue(fieldName, null);
     setfile(false);
     setImage(null);
   };

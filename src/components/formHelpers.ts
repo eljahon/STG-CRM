@@ -23,10 +23,8 @@ const createFormSchema = (fields: any, languages?: any) => {
       );
     else initialValues[item.name] = "";
 
-    // validationSchema[item.name] = createYupSchema(item, languages, item.name);
     validationSchema[item.name] = createYupSchema(item);
   });
-  // console.log( initialValues, yup.object().shape(validationSchema), validationSchema)
   return {
     initialValues,
     validationSchema: yup.object().shape(validationSchema)
@@ -107,6 +105,10 @@ const mapFormValues = (values:any, fields:any) => {
     } else formValues[field.name] = values[field.name];
 
     if (field.disabled) delete formValues[field.name];
+    
+    if (field.fields && field.fields.length > 0) {
+      formValues[field.name] = mapFormValues(values[field.name], field.fields);
+    }
   });
 
   return formValues;

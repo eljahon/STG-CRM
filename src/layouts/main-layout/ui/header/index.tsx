@@ -4,9 +4,7 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { GetMe } from "../../../../service/global";
 import { useTranslation } from "react-i18next";
 import { LangArr } from "../../../../data";
 
@@ -14,15 +12,16 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [openLang, setOpenLang] = useState(false);
   const [openmadal, setOpenmadal] = useState(false);
-  const { t,i18n } = useTranslation();
-  const { data: me } = useQuery(["meCompony"], () => GetMe());
+  const { t, i18n } = useTranslation();
+  const compony = window.localStorage.getItem("compony");
+  const fullname: any = window.localStorage.getItem("fullname");
   const rolename = window.localStorage.getItem("role") || "";
 
-  const langFormat =()=> {
-    const currentLang:string = localStorage.getItem('lng')||'uz';
-   const item =  LangArr.find(el =>el.lang === currentLang);
-    return item?.lang||'uz';
-  }
+  const langFormat = () => {
+    const currentLang: string = localStorage.getItem("lng") || "uz";
+    const item = LangArr.find((el) => el.lang === currentLang);
+    return item?.lang || "uz";
+  };
   useEffect(() => {
     window.addEventListener("click", () => {
       setOpen(false), setOpenLang(false);
@@ -48,9 +47,9 @@ export default function Header() {
       />
     </React.Fragment>
   );
-  const changeLanguage = (lng:any) => {
+  const changeLanguage = (lng: any) => {
     i18n.changeLanguage(lng);
-    localStorage.setItem('lng', lng)
+    localStorage.setItem("lng", lng);
   };
   return (
     <div className="flex align-items-center justify-content-between px-2 fixed  myflext  pt-4 pb-4">
@@ -98,7 +97,7 @@ export default function Header() {
             {LangArr.map((e: any) => (
               <p
                 key={e?.id}
-                onClick={() =>changeLanguage(e?.lang)}
+                onClick={() => changeLanguage(e?.lang)}
                 className="py-2 px-4 m-0 hover:bg-blue-50"
               >
                 {t(e?.lang)}
@@ -119,7 +118,7 @@ export default function Header() {
               className="pi pi-user "
               style={{ fontSize: "1.2rem", color: "black" }}
             ></i>
-            <p className="m-0 ">{me?.data?.fullname}</p>
+            <p className="m-0 ">{fullname}</p>
           </div>
           <i
             className="pi  pi-angle-down"
@@ -141,7 +140,7 @@ export default function Header() {
             {rolename == "distributor" && (
               <Link
                 to={
-                  me?.data?.company && me?.data?.company != "undefined"
+                  compony && compony != "undefined"
                     ? "/compony/old"
                     : "/compony/new"
                 }
@@ -159,7 +158,6 @@ export default function Header() {
             </p>
           </div>
         </div>
-       
       </div>
 
       <Dialog
