@@ -69,7 +69,6 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
     formHelpers.createFormSchema(fields);
   const handleSubmit = async (values: any) => {
     const formValues = formHelpers.getFormValues(values, fields, isFormData);
-
     setLoader(true);
     if (id == "new" || !id) {
       await AddData(url, formValues)
@@ -112,7 +111,7 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
         .finally(() => onFinal());
     }
   };
-  console.log(validationSchema);
+
   return (
     <Formik
       initialValues={initialValues}

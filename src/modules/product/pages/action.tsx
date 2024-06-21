@@ -242,16 +242,9 @@ export default function ProductPage() {
               fertilizer_category:
                 productOne?.data?.state?.fertilizer_category?.id,
               items: updataFormat(productOne?.data?.state?.items || [""]) || [
-                " "
+                ""
               ]
-            },
-            fields: [
-              {
-                name: "drug_category",
-                validationType: "string",
-                validations: [{ type: "required" }]
-              }
-            ]
+            }
           }
         ]}
         onSuccess={() => {
@@ -275,7 +268,6 @@ export default function ProductPage() {
         validateOnMount={false}
       >
         {(formik) => {
-          // console.log(formik);
           return (
             <>
               <FromAction

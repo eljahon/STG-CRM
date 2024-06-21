@@ -36,7 +36,6 @@ const Itemsform = ({
                 formik.setFieldValue(`state.items.${index}.diseases`, []);
               }}
               placeholder={`${t("selectCrop")}`}
-              errors={formik.errors.crop}
             />
 
             <GlobalInput
@@ -55,7 +54,9 @@ const Itemsform = ({
                 formik.setFieldValue(`state.items.${index}.diseases`, e.value);
               }}
               placeholder={`${t("selectDisease")} `}
-              errors={formik.errors.diseases}
+              required={
+                !formik.values.state.items?.[index]?.diseases ? true : false
+              }
             />
           </>
         )}
@@ -76,7 +77,7 @@ const Itemsform = ({
               formik.setFieldValue(`state.items.${index}.crops`, e.value);
             }}
             placeholder={`${t("selectCrop")} `}
-            errors={formik.errors.crops}
+            required={!formik.values.state.items?.[index]?.crops ? true : false}
           />
         )}
         <GlobalInput
@@ -89,7 +90,9 @@ const Itemsform = ({
           label={t("dose_min")}
           id={"dose_min"}
           className={"mb-4 colm3"}
-          errors={formik.errors.dose_min}
+          required={
+            !formik.values.state.items?.[index]?.dose_min ? true : false
+          }
         />
         <GlobalInput
           type="text"
@@ -101,7 +104,9 @@ const Itemsform = ({
           label={t("dose_max")}
           id={"dose_max"}
           className={"mb-4 colm3"}
-          errors={formik.errors.dose_max}
+          required={
+            !formik.values.state.items?.[index]?.dose_max ? true : false
+          }
         />
         <GlobalInput
           type="select"
@@ -115,7 +120,7 @@ const Itemsform = ({
           optionLabel="name"
           optionValue="id"
           placeholder={`${t("selectCrop")}`}
-          errors={formik.errors.items?.unit}
+          required={!formik.values.state.items?.[index]?.unit ? true : false}
         />
         {formik.values.type == "fertilizer" && (
           <GlobalInput

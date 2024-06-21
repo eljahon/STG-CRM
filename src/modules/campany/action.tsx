@@ -1,139 +1,129 @@
-import { useForm } from "react-hook-form";
-import GlobalFrom from "../../ui/form/global-from";
-// import { FloatLabel } from "primereact/floatlabel";
-import { InputText } from "primereact/inputtext";
-import { InputTextarea } from "primereact/inputtextarea";
-import { useEffect, useState } from "react";
-import UploadFile from "../../ui/uploadFile";
+import { useState } from "react";
 import { GetAllData } from "../../service/global";
 import { useQuery } from "react-query";
 import { useTranslation } from "react-i18next";
 import Loader from "../../ui/loader";
-interface FormData {
-  description: string;
-  name: string;
-  phone: string;
-  logo: string | number;
-}
-export default function CampanySetPage() {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    watch,
-    setError,
-    clearErrors,
-    formState: { errors }
-  } = useForm<FormData>();
-  const { t } = useTranslation();
-  const watchedFiles = watch();
-  const [image, setImage] = useState<any>();
+import { FormContainer } from "../../components/Forms";
+import { useNavigate } from "react-router-dom";
+import GlobalInput from "../../ui/form/global-input";
+import FromAction from "../../ui/form-top-actions";
+import UploadFile from "../../ui/uploadFile";
 
-  const { data: companies,isLoading } = useQuery("meFor", () =>
+export default function CampanySetPage() {
+  const [loader, setLoader] = useState(false);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const { data: companies, isLoading } = useQuery("meFor", () =>
     GetAllData("my-company", { populate: "*" })
   );
 
-  useEffect(() => {
-    setValue("description", companies?.description);
-    setValue("name", companies?.name);
-    setValue("phone", companies?.phone);
-    if (companies?.logo) {
-      setValue("logo", companies?.logo?.id);
-      setImage(companies?.logo?.aws_path);
-    }
-  }, [companies]);
   return (
-    <GlobalFrom
-      handleSubmit={handleSubmit}
-      reset={reset}
-      cancel={t("cancel")}
-      url={
-        companies && companies != "undefined"
-          ? "update-company"
-          : "create-company"
-      }
-      navUrl={"/dashboard"}
-      title={t("company")}
-    > 
-      <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 justify-content-between">
-        <div className="w-8 ">
-          <div className="flex gap-3 w-full mb-5">
-            <div className="w-full relative">
-              <p className="label-my">{t("companyName")} </p>
-              <InputText
-                className=" mr-2 w-full"
-                id="name"
-                placeholder={t("companyName")}
-                aria-label="name"
-                {...register(`name`, { required: "name is required" })}
-                invalid={errors?.name?.message ? true : false}
-                value={watchedFiles?.name || ""}
+    <>
+      <FormContainer
+        url={
+          companies && companies != "undefined"
+            ? "update-company"
+            : "create-company"
+        }
+        isFormData={false}
+        setLoader={setLoader}
+        loaderGlob={loader}
+        fields={[
+          {
+            name: "name",
+            validations: [{ type: "required" }],
+            value: companies?.name
+          },
+          {
+            name: "phone",
+            validations: [{ type: "phone" }, { type: "required" }],
+            value: companies?.phone
+          },
+          {
+            name: "description",
+            value: companies?.description
+          },
+          {
+            name: "logo",
+            value: companies?.logo?.id
+          }
+        ]}
+        onSuccess={(res: any) => {
+          window.localStorage.setItem("compony", res?.data?.id);
+          navigate("/dashboard");
+        }}
+        onError={(e: any) => {
+          console.log(e, "onError");
+        }}
+        onFinal={() => {
+          setLoader(false);
+        }}
+        validateOnMount={false}
+      >
+        {(formik) => {
+          console.log(formik);
+          return (
+            <>
+              <FromAction
+                loader={loader}
+                title={t("company")}
+                cancel={"Cancel"}
+                urlOnCancel={"/dashboard"}
               />
-              {errors?.name?.message && (
-                <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                  {errors?.name?.message}
-                </p>
-              )}
-            </div>
-            <div className="w-full relative">
-              <p className="label-my">{t("phone")} </p>
-              <InputText
-                className=" mr-2 w-full"
-                id="phone"
-                placeholder={t("phone")}
-                aria-label="phone"
-                {...register(`phone`, {
-                  required: "phone is required",
-                  pattern: {
-                    value: /^\+998\d{9}$/,
-                    message:
-                      "Phone number must start with +998 and followed by 9 digits"
-                  }
-                })}
-                invalid={errors?.phone?.message ? true : false}
-                value={watchedFiles?.phone || ""}
-              />
-              {errors?.phone?.message && (
-                <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                  {errors?.phone?.message}
-                </p>
-              )}
-            </div>
-          </div>
-          <div className="w-full relative">
-            <p className="label-my">{t("description")} </p>
-            <InputTextarea
-              className=" mr-2 w-full"
-              id="description"
-              placeholder={t("description")}
-              rows={4}
-              cols={20}
-              {...register(`description`)}
-              value={watchedFiles?.description || ""}
-              invalid={errors?.description?.message ? true : false}
-            />
-            {errors?.description?.message && (
-              <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-                {errors?.description?.message}
-              </p>
-            )}
-          </div>
-        </div>
-        <div className="flex gap-3 w-3">
-          <UploadFile
-            setValue={setValue}
-            logo={true}
-            value={image}
-            fieldName={"logo"}
-            setError={setError}
-            clearErrors={clearErrors}
-            error={errors}
-          />
-        </div>
-      </div>
+              <div className="flex gap-4 bg-white border-round-3xl p-4   flex ">
+                <div className="w-8 gap-2 flex flex-wrap">
+                  <GlobalInput
+                    type="text"
+                    formik={formik}
+                    value={formik.values.name}
+                    label={t("companyName")}
+                    name={"name"}
+                    id={"companyName"}
+                    placeholder={t("companyName")}
+                    className={"mb-4 colm2"}
+                    errors={formik.errors.name}
+                  />
+                  <GlobalInput
+                    type="text"
+                    formik={formik}
+                    value={formik.values.phone}
+                    label={t("phone")}
+                    name={"phone"}
+                    id={"phone"}
+                    placeholder={t("phone")}
+                    className={"mb-4 colm2"}
+                    errors={formik.errors.phone}
+                  />
+                  <GlobalInput
+                    type="textarea"
+                    formik={formik}
+                    value={formik.values.description}
+                    label={t("description")}
+                    name={"description"}
+                    id={"description"}
+                    className={"mb-4 w-full"}
+                    placeholder={t("description")}
+                    errors={formik.errors.description}
+                    rows={7}
+                    cols={20}
+                  />
+                </div>
 
+                <UploadFile
+                  logo={true}
+                  className={"mb-4 w-4"}
+                  formik={formik}
+                  value={companies?.logo?.aws_path}
+                  error={formik.errors}
+                  fieldName={"logo"}
+                />
+              </div>
+            </>
+          );
+        }}
+      </FormContainer>
       {isLoading && <Loader />}
-    </GlobalFrom>
+    </>
   );
 }

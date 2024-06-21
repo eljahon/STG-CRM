@@ -1,93 +1,68 @@
 import { get, isArray, isFunction, isString } from "lodash";
 import { serialize } from "object-to-formdata";
 import * as yup from "yup";
+const createYupSchema = (field: any) => {
+  const { validationType = "string", validations = [], fields = [] } = field;
+  let validator = (yup as any)[validationType]();
+  validations.forEach(({ type, params }: any) => {
+    switch (type) {
+      case "typeError":
+        validator = validator.typeError(params || `Invalid ${validationType}`);
+        break;
+      case "required":
+        validator = validator.required(params || "Required");
+        break;
+      case "email":
+        validator = validator.email(params || "Invalid email");
+        break;
+      case "phone":
+        validator = validator.matches(
+          /^\+998\d{9}$/,
+          "Phone number is not valid"
+        );
+        break;
+      case "min":
+        validator = validator.min(...params);
+        break;
+      default:
+        if (isArray(params)) {
+          validator = validator[type](...params);
+        } else {
+          validator = validator[type](params);
+        }
+        break;
+    }
+  });
 
-const createFormSchema = (fields: any, languages?: any) => {
+  if (validationType === "object" && fields.length > 0) {
+    const nestedSchema: any = {};
+    fields.forEach((nestedField: any) => {
+      nestedSchema[nestedField.name] = createYupSchema(nestedField);
+    });
+    validator = validator.shape(nestedSchema);
+  }
+
+  return validator;
+};
+
+const createFormSchema = (fields: any) => {
   const initialValues: any = {};
   const validationSchema: any = {};
-  fields.forEach((item:any) => {
+  fields.forEach((item: any) => {
     if ("value" in item && item.value !== undefined) {
-      if (item.isLanguageSchema) {
-        initialValues[item.name] = initialValues[item.name] = languages.reduce(
-          (prev:any, lng:any) => ({
-            ...prev,
-            [lng.code]: get(item, `value.${lng.code}`, "")
-          }),
-          {}
-        );
-      } else initialValues[item.name] = item.value;
-    } else if (item.isLanguageSchema)
-      initialValues[item.name] = languages.reduce(
-        (prev:any, item:any) => ({ ...prev, [item.code]: "" }),
-        {}
-      );
-    else initialValues[item.name] = "";
+      initialValues[item.name] = item.value;
+    } else initialValues[item.name] = "";
 
     validationSchema[item.name] = createYupSchema(item);
   });
+
   return {
     initialValues,
     validationSchema: yup.object().shape(validationSchema)
   };
 };
 
-const createYupSchema = (field: any) => {
-  const { validationType = "string", validations = [] } = field;
-
-  let validator = (yup as any )[validationType]();
-  validations.forEach(({ type, params }:any) => {
-    switch (type) {
-      case "typeError":
-        validator = validator.typeError(
-          params ? params : `Invalid ${validationType}`
-        );
-        break;
-      case "required":
-        validator = validator.required(params ? params : "Required");
-        break;
-      // case "isRequired": validator = validator.when(name, (name, schema)=> {
-      // 	console.log(name)
-      // 	if(name)  return schema.required(`${name} is required`);
-      // })
-      // break;
-      case "email":
-        validator = validator.email(params ? params : "Invalid email");
-        break;
-
-      case "phone":
-        validator = validator.matches(
-          /(\+9{2}8 \([0-9]{2}\) [0-9]{3}-[0-9]{2}-[0-9]{2})/g,
-          "Phone number is not valid"
-        );
-        break;
-
-      default:
-        if (isArray(params)) validator = validator[type](...params);
-        else validator = validator[type](params);
-        break;
-    }
-  });
-
-  // if (isFunction(lazy)) {
-  //     validator = lazy(validator, yup);
-  // }
-
-  // if (isBoolean(isLanguageSchema)) {
-  //     validator = validator.shape(
-  //         languages.reduce(
-  //             (prev, item) => ({
-  //                 ...prev,
-  //                 [item.code]: yup.string().typeError("Invalid"),
-  //             }),
-  //             {}
-  //         )
-  //     );
-  // }
-
-  return validator;
-};
-
-const mapFormValues = (values:any, fields:any) => {
+const mapFormValues = (values: any, fields: any) => {
   const formValues: any = {};
 
   fields.forEach((field: any) => {
@@ -105,7 +80,7 @@ const mapFormValues = (values:any, fields:any) => {
     } else formValues[field.name] = values[field.name];
 
     if (field.disabled) delete formValues[field.name];
-    
+
     if (field.fields && field.fields.length > 0) {
       formValues[field.name] = mapFormValues(values[field.name], field.fields);
     }
@@ -128,7 +103,7 @@ const getFormValues = (
   return formValues;
 };
 
-const gerErrorMessage = (error:any) => {
+const gerErrorMessage = (error: any) => {
   const defaultMessage = get(error, "response.data.error.message");
   const customMessage = get(
     Object.values(get(error, "response.data.message", {})),

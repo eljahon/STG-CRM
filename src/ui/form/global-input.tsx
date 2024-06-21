@@ -21,7 +21,8 @@ const GlobalInput = ({
   rows,
   cols,
   typeValue,
-  filter
+  filter,
+  required
 }: any) => {
   const debounce = <F extends (...args: any[]) => any>(
     func: F,
@@ -35,6 +36,7 @@ const GlobalInput = ({
       }, delay);
     };
   };
+
   return (
     <div className={` relative ${className && className}`}>
       <p className="label-my">{label} </p>
@@ -51,8 +53,9 @@ const GlobalInput = ({
           }}
           onBlur={formik.handleBlur}
           placeholder={placeholder}
-          invalid={Boolean(errors)}
+          invalid={Boolean(errors || required)}
           disabled={disabled}
+          required={required}
         />
       )}
       {type == "textarea" && (
@@ -67,10 +70,11 @@ const GlobalInput = ({
           }}
           onBlur={formik.handleBlur}
           placeholder={placeholder}
-          invalid={Boolean(errors)}
+          invalid={Boolean(errors || required)}
           disabled={disabled}
           rows={rows}
           cols={cols}
+          required={required}
         />
       )}
       {type == "select" && (
@@ -90,10 +94,11 @@ const GlobalInput = ({
           optionValue={optionValue}
           optionLabel={optionLabel}
           filter={filter ? true : false}
-          invalid={Boolean(errors)}
+          invalid={Boolean(errors || required)}
           onFilter={debounce((e) => {
             filter(e.filter);
           }, 700)}
+          required={required}
         />
       )}
       {type == "multi" && (
@@ -109,19 +114,27 @@ const GlobalInput = ({
             if (localChange) localChange(e);
           }}
           onBlur={formik.handleBlur}
-          invalid={Boolean(errors)}
+          invalid={Boolean(errors || required)}
           optionValue={optionValue}
           value={value}
           placeholder={placeholder}
           options={options}
           filter
           optionLabel={optionLabel}
+          required={required}
         />
       )}
-      {errors && (
+
+      {required ? (
         <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-          {errors}
+          {"This field  is required"}
         </p>
+      ) : (
+        errors && (
+          <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
+            {errors}
+          </p>
+        )
       )}
     </div>
   );

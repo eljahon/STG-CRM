@@ -32,7 +32,6 @@ export default function UploadFileMulty({
         },
         setProgress
       ).finally(() => setLoading(false));
-      console.log(res?.data);
       if (value?.length) {
         formik.setFieldValue(fieldName, [res?.data?.media?.id, ...valueId]);
         setImage((state: any) => [res?.data?.media, ...state]);
