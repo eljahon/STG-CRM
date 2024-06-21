@@ -1,4 +1,3 @@
-import { InputText } from "primereact/inputtext";
 import { useTranslation } from "react-i18next";
 import GlobalInput from "../../../../ui/form/global-input";
 import UploadFile from "../../../../ui/uploadFile";
