@@ -11,7 +11,9 @@ const Itemsform = ({
   index,
   cropChange,
   filterDiseeses,
-  unitArr
+  unitArr,
+  loaderDis,
+  loaderCrop
 }: any) => {
   const { t } = useTranslation();
   return (
@@ -36,6 +38,7 @@ const Itemsform = ({
                 formik.setFieldValue(`state.items.${index}.diseases`, []);
               }}
               placeholder={`${t("selectCrop")}`}
+              loading={loaderCrop}
             />
 
             <GlobalInput
@@ -50,6 +53,7 @@ const Itemsform = ({
               options={diseasesArr}
               optionLabel="name"
               optionValue="id"
+              loading={loaderDis}
               localChange={(e: any) => {
                 formik.setFieldValue(`state.items.${index}.diseases`, e.value);
               }}
@@ -78,6 +82,7 @@ const Itemsform = ({
             }}
             placeholder={`${t("selectCrop")} `}
             required={!formik.values.state.items?.[index]?.crops ? true : false}
+            loading={loaderCrop}
           />
         )}
         <GlobalInput

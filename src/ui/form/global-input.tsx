@@ -22,7 +22,8 @@ const GlobalInput = ({
   cols,
   typeValue,
   filter,
-  required
+  required,
+  loading
 }: any) => {
   const debounce = <F extends (...args: any[]) => any>(
     func: F,
@@ -98,6 +99,7 @@ const GlobalInput = ({
           onFilter={debounce((e) => {
             filter(e.filter);
           }, 700)}
+          loading={loading}
           required={required}
         />
       )}
@@ -122,6 +124,7 @@ const GlobalInput = ({
           filter
           optionLabel={optionLabel}
           required={required}
+          loading={loading}
         />
       )}
 

@@ -62,7 +62,6 @@ export default function CampanySetPage() {
         validateOnMount={false}
       >
         {(formik) => {
-          console.log(formik);
           return (
             <>
               <FromAction

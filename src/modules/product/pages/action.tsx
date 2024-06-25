@@ -16,6 +16,8 @@ export default function ProductPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [loader, setLoader] = useState(false);
+  const [loaderDis, setLoaderDis] = useState(false);
+  const [loaderCrop, setLoaderCrop] = useState(false);
   const [cropArr, setCropArr] = useState<any>([]);
   const [diseasesArr, setDiseasesArr] = useState<any>([]);
   const [page, setPage] = useState<any>(0);
@@ -41,6 +43,7 @@ export default function ProductPage() {
   const { data: diseeses } = useQuery("diseases", () => GetAllData("diseases"));
 
   const getCrop = async (crop?: string, indexNumber?: any) => {
+    setLoaderCrop(indexNumber);
     await GetAllData(`crops`, {
       filters: { name: { $containsi: crop || undefined } }
     })
@@ -53,7 +56,8 @@ export default function ProductPage() {
         locArr[indexNumber] = uniqueUsersByName;
         setCropArr(locArr);
       })
-      .catch((errors) => console.log(errors));
+      .catch((errors) => console.log(errors))
+      .finally(() => setLoaderCrop(false));
   };
 
   const getDiseesesByCrop = async (
@@ -62,6 +66,7 @@ export default function ProductPage() {
     indexNumber?: any,
     isfilter?: any
   ) => {
+    setLoaderDis(indexNumber);
     await GetAllData(`diseases`, {
       filters: {
         name: { $containsi: diseases || undefined },
@@ -83,7 +88,8 @@ export default function ProductPage() {
           setDiseasesArr(locArr);
         }
       })
-      .catch((errors) => console.log(errors));
+      .catch((errors) => console.log(errors))
+      .finally(() => setLoaderDis(false));
   };
 
   const { data: fertilizerItems } = useQuery(
@@ -183,7 +189,6 @@ export default function ProductPage() {
 
     return returnResult;
   };
-  console.log(diseeses);
   return (
     <>
       <FormContainer
@@ -300,6 +305,10 @@ export default function ProductPage() {
                                   arrayHelpers={arrayHelpers}
                                   key={index}
                                   index={index}
+                                  loaderDis={loaderDis === index ? true : false}
+                                  loaderCrop={
+                                    loaderCrop === index ? true : false
+                                  }
                                   cropArr={cropArr?.[index] || cropArr?.[0]}
                                   diseasesArr={
                                     diseasesArr?.[index] ||
