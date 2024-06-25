@@ -101,6 +101,11 @@ const ProductContentInputs = ({
             optionValue="id"
             placeholder={t("drugCategoryrequired")}
             errors={formik.errors.state?.drug_category}
+            required={
+              !formik.values.state?.drug_category && formik.values.title
+                ? true
+                : false
+            }
           />
         )}
         {formik.values.type == "fertilizer" && (
@@ -117,6 +122,11 @@ const ProductContentInputs = ({
             optionValue="id"
             placeholder={t("fertilizerCategoryrequired")}
             errors={formik.errors.state?.fertilizer_category}
+            required={
+              !formik.values.state?.fertilizer_category && formik.values.title
+                ? true
+                : false
+            }
           />
         )}
 
@@ -153,7 +163,6 @@ const ProductContentInputs = ({
           className={"mb-4"}
           formik={formik}
           value={productOne?.image?.aws_path}
-       
           error={formik.errors}
           fieldName={"image"}
         />
@@ -161,7 +170,6 @@ const ProductContentInputs = ({
           formik={formik}
           fieldName={"cer"}
           value={productOne?.cer?.aws_path}
-          
           error={formik.errors}
         />
       </div>

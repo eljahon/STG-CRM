@@ -22,14 +22,13 @@ export default function ProductPage() {
   const pageSize = 5;
 
   const { id } = useParams();
-  const { data: productId, isLoading: productLoader } = useQuery(
-    "productId",
+  const { data: productOne, isLoading: productLoader } = useQuery(
+    ["productId", id],
     () => GetByIdData("products", id, { populate: "*" }),
     {
       enabled: id !== "new"
     }
   );
-  const productOne = id === "new" ? undefined : productId;
   const { data: units } = useQuery(["units"], () => GetAllData(`units`));
   const { data: drugCategory } = useQuery("drugCategory", () =>
     GetAllData("drug-categories")
@@ -152,7 +151,9 @@ export default function ProductPage() {
   }, [crops, productOne, id]);
 
   useEffect(() => {
-    if (id == "new") setDiseasesArr([diseeses?.data]);
+    if (id == "new") {
+      setDiseasesArr([diseeses?.data]);
+    }
   }, [diseeses, id]);
 
   useEffect(() => {
@@ -182,7 +183,7 @@ export default function ProductPage() {
 
     return returnResult;
   };
-
+  console.log(diseeses);
   return (
     <>
       <FormContainer
@@ -301,7 +302,9 @@ export default function ProductPage() {
                                   index={index}
                                   cropArr={cropArr?.[index] || cropArr?.[0]}
                                   diseasesArr={
-                                    diseasesArr?.[index] || diseasesArr?.[0]
+                                    diseasesArr?.[index] ||
+                                    diseasesArr?.[0] ||
+                                    diseeses?.data
                                   }
                                   filterCrop={(value: any) => {
                                     getCrop(value, index);
