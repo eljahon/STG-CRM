@@ -67,14 +67,14 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
   const { id } = useParams();
   const { initialValues, validationSchema } =
     formHelpers.createFormSchema(fields);
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: any, formikHelper: any) => {
     const formValues = formHelpers.getFormValues(values, fields, isFormData);
     setLoader(true);
     if (id == "new" || !id) {
       await AddData(url, formValues)
         .then((res: any) => {
           if (res?.status == "200" || res?.status == "201") {
-            // formHelpers.resetForm();
+            formikHelper.resetForm();
             onSuccess(res);
           }
         })
@@ -117,13 +117,15 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
       initialValues={initialValues}
       validationSchema={validationSchema}
       validateOnMount={validateOnMount}
-      onSubmit={(value: any) => {
+      onSubmit={async (value: any, formikHelper: any) => {
         if (customData) {
           isFunction(onSubmit)
             ? onSubmit(customData(value))
-            : handleSubmit(customData(value));
+            : await handleSubmit(customData(value), formikHelper);
         } else {
-          isFunction(onSubmit) ? onSubmit(value) : handleSubmit(value);
+          isFunction(onSubmit)
+            ? onSubmit(value)
+            : await handleSubmit(value, formikHelper);
         }
       }}
       enableReinitialize={true}

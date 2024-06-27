@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { AuthLogin } from "../../../service/auth";
 import { useTranslation } from "react-i18next";
 import { GetMe } from "../../../service/global";
+import { Link } from "react-router-dom";
+import LeftBar from "./left-bar";
 
 type FormValues = {
   phone: string;
@@ -48,20 +50,7 @@ export default function LoginFrom() {
       className="flex  my-2 mx-4 bg-white border-round-3xl"
       style={{ boxSizing: "border-box", height: "90vh", overflow: "hidden" }}
     >
-      <div className="h-full w-6 bg-green-600 px-8  flex flex-column  justify-content-center">
-        <div className="w-full  font-medium text-4xl font-bold px-4 py-4">
-          <span className="text-white">GROWZ</span>
-        </div>
-        <h2 className="text-white font-medium text-6xl font-bold  px-4 m-0">
-          Your place to work <br /> Plan. Create. Control.
-        </h2>
-        <img
-          className="w-full"
-          style={{ maxWidth: "600px" }}
-          width={500}
-          src="/marketing-campaign-1-97.svg"
-        />
-      </div>
+      <LeftBar />
       <div className="h-full w-6 flex flex-column  justify-content-center  aling-item-center ">
         <form
           onSubmit={handleSubmit(handleAuth)}
@@ -100,6 +89,9 @@ export default function LoginFrom() {
               {...register(`password`, { required: true })}
             />
           </label>
+          <div className="w-full text-start mb-5">
+            Don't have account <Link to="/auth/sign-up">sign up</Link>
+          </div>
           <Button
             loading={loader}
             severity="success"
@@ -108,42 +100,6 @@ export default function LoginFrom() {
           ></Button>
         </form>
       </div>
-      {/* {loader && <Loader />} */}
     </div>
   );
-}
-
-{
-  /* <form
-className="flex justify-content-center align-items-center "
-style={{ height: "90vh" }}
-onSubmit={handleSubmit(handleAuth)}
->
-<div className="bg-white p-8 pt-6 border-round-xs">
-  <div className="w-full flex justify-content-center">
-    <img src="/Logo.png" width={150} />
-  </div>
-  <label className="block my-3">
-    <p className="label-my"> {t("phone")}</p>
-    <InputText
-      //   variant='success'
-      id="username"
-      type="text"
-      placeholder={t("phone")}
-      {...register(`phone`, { required: true })}
-    />
-  </label>
-  <label className="block mb-4">
-    <p className="label-my">{t("password")}</p>
-    <InputText
-      //   variant="success"
-      id="password"
-      type="password"
-      placeholder={t("password")}
-      {...register(`password`, { required: true })}
-    />
-  </label>
-  <Button label={t("login")} className="w-full"></Button>
-</div>
-</form> */
 }

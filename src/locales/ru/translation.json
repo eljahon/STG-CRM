@@ -68,5 +68,6 @@
   "branchName": "Branch name",
   "district": "Fistrict",
   "fullname": "Full name",
-  "branch": "Branch"
+  "branch": "Branch",
+  "message-register": "Registration was successful, please wait for confirmation from the administrator"
 }
