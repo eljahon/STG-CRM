@@ -29,8 +29,8 @@ const ProductContentInputs = ({
   const { id } = useParams();
   const [imageMulti, setImageMulti] = useState<any>(productOne?.gallery || []);
   return (
-    <div className="flex gap-4">
-      <div className="w-8 bg-white border-round-3xl p-4  gap-2 flex flex-wrap">
+    <div className="flex gap-4 flex-wrap lg:flex-nowrap">
+      <div className="w-full  lg:w-8 bg-white border-round-3xl p-4  gap-2 flex flex-wrap">
         <GlobalInput
           type="text"
           formik={formik}
@@ -42,7 +42,7 @@ const ProductContentInputs = ({
           className={"mb-4 colm2"}
           errors={formik.errors.title}
         />
-        
+
         <GlobalInput
           type="select"
           formik={formik}
@@ -147,7 +147,7 @@ const ProductContentInputs = ({
           fieldName={"gallery"}
         />
       </div>
-      <div className="w-4 p-4 bg-white border-round-3xl">
+      <div className="w-full  lg:w-4 p-4 bg-white border-round-3xl">
         <UploadFile
           className={"mb-4"}
           formik={formik}

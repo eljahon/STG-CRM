@@ -70,8 +70,8 @@ export default function CampanySetPage() {
                 cancel={"Cancel"}
                 urlOnCancel={"/dashboard"}
               />
-              <div className="flex gap-4 bg-white border-round-3xl p-4   flex ">
-                <div className="w-8 gap-2 flex flex-wrap">
+              <div className="flex gap-4 bg-white border-round-3xl p-4  flex-column-reverse  md:flex-row ">
+                <div className="w-full md:w-8 gap-2 flex flex-wrap">
                   <GlobalInput
                     type="text"
                     formik={formik}
@@ -111,7 +111,7 @@ export default function CampanySetPage() {
 
                 <UploadFile
                   logo={true}
-                  className={"mb-4 w-4"}
+                  className={" w-full mb-4 md:w-4"}
                   formik={formik}
                   value={companies?.logo?.aws_path}
                   error={formik.errors}

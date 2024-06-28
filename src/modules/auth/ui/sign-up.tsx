@@ -1,7 +1,7 @@
 import { Button } from "primereact/button";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GlobalInput from "../../../ui/form/global-input";
 import { useQuery } from "react-query";
 import { GetAllData } from "../../../service/global";
@@ -13,6 +13,7 @@ export default function SignUpFrom() {
   const [loader, setLoader] = useState(false);
   const [region, setRegion] = useState(null);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { data: regions, isLoading: regionsLoading } = useQuery("regions", () =>
     GetAllData("regions")
@@ -39,18 +40,21 @@ export default function SignUpFrom() {
         label={"ok"}
         icon="pi pi-check"
         severity="success"
-        onClick={() => setOpen(false)}
+        onClick={() => {
+          setOpen(false);
+          navigate("/auth/login");
+        }}
       />
     </React.Fragment>
   );
 
   return (
     <div
-      className="flex  my-2 mx-4 bg-white border-round-3xl"
+      className="flex aling-item-start  sm:my-2 sm:mx-4 bg-white border-round-3xl"
       style={{ boxSizing: "border-box", height: "90vh" }}
     >
       <LeftBar />
-      <div className="h-full w-6 flex flex-column  justify-content-center  aling-item-center ">
+      <div className="sm:h-full w-full sm:w-6 flex flex-column  justify-content-center  aling-item-center px-4">
         <FormContainer
           url={"register/seller"}
           isFormData={false}
@@ -95,8 +99,12 @@ export default function SignUpFrom() {
           validateOnMount={false}
         >
           {(formik) => {
+            console.log(formik.errors);
             return (
               <div className="w-full m-auto " style={{ maxWidth: "510px" }}>
+                <span className="text-2xl text-green-500 font-bold sm:hidden">
+                  GROWZ
+                </span>
                 <h3 className="text-3xl font-bold ">Sign In to Woorkroom</h3>
                 <GlobalInput
                   type="text"
@@ -187,11 +195,6 @@ export default function SignUpFrom() {
                   id={"confirmPassword"}
                   placeholder={t("confirmPassword")}
                   className={"mb-3 text-start"}
-                  localChange={(e: any) => {
-                    if (e.target.value !== formik.values.password) {
-                      console.log(formik.setFieldError);
-                    }
-                  }}
                 /> */}
                 <div className="w-full  mb-5  ">
                   Already have an account <Link to="/auth/login">login</Link>

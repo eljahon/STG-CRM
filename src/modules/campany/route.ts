@@ -1,8 +1,6 @@
 import CampanySetPage from "./action";
 
 
-
-
 export const CampanyActionRoute = [
     {
       url: "/compony/:id",

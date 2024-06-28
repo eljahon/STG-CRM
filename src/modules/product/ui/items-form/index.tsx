@@ -18,7 +18,7 @@ const Itemsform = ({
   const { t } = useTranslation();
   return (
     <div className="flex align-items-start gap-3 mb-4 w-full">
-      <div className="flex align-items-start gap-3 mb-4 w-full">
+      <div className="flex flex-wrap align-items-start gap-3 mb-4 w-full">
         {formik.values.type == "drug" && (
           <>
             <GlobalInput
@@ -143,8 +143,9 @@ const Itemsform = ({
         )}
       </div>
       <Button
-        className="w-2 max-w-3rem border-round-3xl"
+        className="w-2  max-w-3rem border-round-3xl"
         type="button"
+        style={{ minWidth: "40px" }}
         severity="danger"
         icon="pi pi-trash"
         onClick={() => arrayHelpers.remove(index)}

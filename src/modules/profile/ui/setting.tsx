@@ -1,4 +1,4 @@
-import {  useState } from "react";
+import { useState } from "react";
 import UploadFile from "../../../ui/uploadFile";
 import { GetAllData } from "../../../service/global";
 import { useQuery } from "react-query";
@@ -20,7 +20,7 @@ export default function ProfileSettingPage() {
   const navigate = useNavigate();
 
   return (
-    <>
+    <div className="mb-4">
       <FormContainer
         url={"users-permissions/user-update"}
         isFormData={false}
@@ -68,8 +68,8 @@ export default function ProfileSettingPage() {
                 cancel={"Cancel"}
                 urlOnCancel={"/dashboard"}
               />
-              <div className="flex gap-4 bg-white border-round-3xl p-4   flex ">
-                <div className="w-8 gap-2 flex flex-wrap">
+              <div className="flex gap-4 bg-white border-round-3xl p-4    flex-column-reverse  md:flex-row   ">
+                <div className="w-full md:w-8 gap-2 flex flex-wrap">
                   <GlobalInput
                     type="text"
                     formik={formik}
@@ -118,7 +118,7 @@ export default function ProfileSettingPage() {
 
                 <UploadFile
                   logo={true}
-                  className={"mb-4 w-4"}
+                  className={"mb-4 w-full md:w-4"}
                   formik={formik}
                   value={userMe?.avatar?.aws_path}
                   error={formik.errors}
@@ -130,6 +130,6 @@ export default function ProfileSettingPage() {
         }}
       </FormContainer>
       {isLoading && <Loader />}
-    </>
+    </div>
   );
 }

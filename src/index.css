@@ -84,6 +84,7 @@ body {
   background-color: #F4F9FD;
 }
 
+
 .myflext1 {
   top: 75px;
   left: 270px;
@@ -109,6 +110,7 @@ body {
 }
 
 .colm3 {
+  min-width: 90px;
   width: calc((100% - 10px) / 4);
   max-width: 250px;
 }
@@ -138,4 +140,43 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
   -webkit-line-clamp: 1;
+}
+
+.localMreg {
+  margin-left: 260px;
+}
+
+@media screen and (max-width:991px) {
+  .myflext {
+    width: 100%;
+    left: 0;
+  }
+
+  .myflext1 {
+    width: 100%;
+    left: 0;
+  }
+
+  .myflext2 {
+    width: 100%;
+    left: 0;
+  }
+
+  .localMreg {
+    margin-left: 0px;
+  }
+
+  .colm3 {
+    width: calc((100% - 10px) / 2);
+  }
+}
+
+@media screen and (max-width:500px) {
+  .colm2 {
+    width: 100%;
+  }
+
+  .colm3 {
+    width: 100%;
+  }
 }

@@ -130,7 +130,7 @@ const GlobalInput = ({
 
       {required ? (
         <p className="absolute bottom-1 left-0 my-0 text-red-600 text-[11px]">
-          {"This field  is required"}
+          {"Required"}
         </p>
       ) : (
         errors && (

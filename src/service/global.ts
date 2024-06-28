@@ -51,6 +51,14 @@ export const UpdateDataOne = async (url: string, data: any) => {
     handleError(error);
   }
 };
+export const UpdateData1One = async (url: string, id:any,) => {
+  try {
+    const response = await api.patch(`/${url}/${id}`);
+    return response;
+  } catch (error: any) {
+    handleError(error);
+  }
+};
 
 export const DeleteDataId = async (url: string, id: string) => {
   try {

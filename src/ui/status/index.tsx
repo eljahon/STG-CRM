@@ -16,9 +16,10 @@ const hexToRgb = (hex: any) => {
 
   return `${r}, ${g}, ${b}`;
 };
-const StatusBtn = ({ label, status, className }: any) => {
+const StatusBtn = ({ label, status, className, onClick }: any) => {
   return (
     <p
+      onClick={onClick}
       className={`px-4 py-1 border-round-2xl text-sm font-bold m-0 ${
         className && className
       } `}

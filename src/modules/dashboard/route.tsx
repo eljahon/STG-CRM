@@ -9,7 +9,7 @@ export const DashboardRoute = [
     children: [],
     meta: {
       isLoginIf: false,
-      role: new Set(["distributor", "branch_distributor"])
+      role: new Set(["distributor","seller", "branch_distributor"])
     },
     hideIfchildern: true
   }

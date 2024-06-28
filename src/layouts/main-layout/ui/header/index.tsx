@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LangArr } from "../../../../data";
 
-export default function Header() {
+export default function Header({ setVisible, visible }: any) {
   const [open, setOpen] = useState(false);
   const [openLang, setOpenLang] = useState(false);
   const [openmadal, setOpenmadal] = useState(false);
@@ -52,15 +52,22 @@ export default function Header() {
     localStorage.setItem("lng", lng);
   };
   return (
-    <div className="flex align-items-center justify-content-between px-2 fixed  myflext  pt-4 pb-4">
-      <IconField iconPosition="left">
-        <InputIcon className="pi pi-search"> </InputIcon>
-        <InputText
-          className="border-round-2xl  border-none"
-          v-model="value1"
-          placeholder={t("search")}
-        />
-      </IconField>
+    <div className="flex align-items-center justify-content-between px-2 fixed  myflext  pt-4 pb-4 gap-4">
+      <div className="flex align-items-center gap-4">
+        <i
+          className="pi pi-align-justify lg:hidden ml-4"
+          style={{ fontSize: "1.2rem", color: "black" }}
+          onClick={() => setVisible(!visible)}
+        ></i>
+        <IconField iconPosition="left">
+          <InputIcon className="pi pi-search"> </InputIcon>
+          <InputText
+            className="border-round-2xl  border-none w-full"
+            v-model="value1"
+            placeholder={t("search")}
+          />
+        </IconField>
+      </div>
 
       <div className="flex align-items-center justify-content-end  gap-2">
         <div className="p-3 pb-2   bg-white border-round-2xl cursor-pointer">
@@ -82,7 +89,7 @@ export default function Header() {
               className="pi pi-globe"
               style={{ fontSize: "1.2rem", color: "black" }}
             ></i>
-            <p className="m-0 ">{t(langFormat())}</p>
+            <p className="m-0 hidden md:block">{t(langFormat())}</p>
           </div>
           <i
             className="pi  pi-angle-down"
@@ -110,15 +117,15 @@ export default function Header() {
             e.stopPropagation();
             setOpen(!open);
           }}
-          style={{ minWidth: "150px", padding: "13px" }}
-          className="    bg-white border-round-2xl flex justify-content-between gap-2 align-items-center cursor-pointer relative"
+          style={{ padding: "13px" }}
+          className="  md:min-h-30rem bg-white border-round-2xl flex justify-content-between gap-2 align-items-center cursor-pointer relative"
         >
           <div className="flex align-items-center gap-2">
             <i
               className="pi pi-user "
               style={{ fontSize: "1.2rem", color: "black" }}
             ></i>
-            <p className="m-0 ">{fullname}</p>
+            <p className="m-0  hidden md:block">{fullname}</p>
           </div>
           <i
             className="pi  pi-angle-down"

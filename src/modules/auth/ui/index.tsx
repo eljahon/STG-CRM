@@ -47,16 +47,19 @@ export default function LoginFrom() {
   };
   return (
     <div
-      className="flex  my-2 mx-4 bg-white border-round-3xl"
+      className="flex   sm:my-2 sm:mx-4 bg-white border-round-3xl"
       style={{ boxSizing: "border-box", height: "90vh", overflow: "hidden" }}
     >
       <LeftBar />
-      <div className="h-full w-6 flex flex-column  justify-content-center  aling-item-center ">
+      <div className="h-full w-full sm:w-6 flex flex-column  justify-content-center  aling-item-center px-4">
         <form
           onSubmit={handleSubmit(handleAuth)}
           className="w-full m-auto text-center"
           style={{ maxWidth: "410px" }}
         >
+          <span className="text-2xl text-green-500 font-bold sm:hidden">
+            GROWZ
+          </span>
           <h3 className="text-3xl font-bold">Sign In to Woorkroom</h3>
           <label className="block my-5">
             <p
