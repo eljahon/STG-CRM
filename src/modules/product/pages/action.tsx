@@ -202,11 +202,7 @@ export default function ProductPage() {
             validations: [{ type: "required" }],
             value: productOne?.data?.title
           },
-          {
-            name: "price",
-            validations: [{ type: "required" }],
-            value: productOne?.data?.price
-          },
+         
           {
             name: "type",
             validations: [{ type: "required" }],

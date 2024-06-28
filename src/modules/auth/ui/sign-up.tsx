@@ -95,7 +95,6 @@ export default function SignUpFrom() {
           validateOnMount={false}
         >
           {(formik) => {
-            console.log(formik.errors);
             return (
               <div className="w-full m-auto " style={{ maxWidth: "510px" }}>
                 <h3 className="text-3xl font-bold ">Sign In to Woorkroom</h3>
@@ -149,6 +148,7 @@ export default function SignUpFrom() {
                     formik.setFieldValue(`region`, e.value);
                   }}
                   placeholder={`${t("selectRegion")}`}
+                  errors={formik.errors.region}
                 />
                 <GlobalInput
                   type="select"
@@ -166,6 +166,7 @@ export default function SignUpFrom() {
                     formik.setFieldValue(`District`, e.value);
                   }}
                   placeholder={`${t("selectDistrict")}`}
+                  errors={formik.errors.district}
                 />
                 <GlobalInput
                   type="text"
@@ -181,13 +182,16 @@ export default function SignUpFrom() {
                 {/* <GlobalInput
                   type="text"
                   formik={formik}
-                  value={formik.values.password}
-                  label={t("password")}
-                  name={"password"}
-                  id={"password"}
-                  placeholder={t("password")}
+                  label={t("confirmPassword")}
+                  name={"confirmPassword"}
+                  id={"confirmPassword"}
+                  placeholder={t("confirmPassword")}
                   className={"mb-3 text-start"}
-                  errors={formik.errors.password}
+                  localChange={(e: any) => {
+                    if (e.target.value !== formik.values.password) {
+                      console.log(formik.setFieldError);
+                    }
+                  }}
                 /> */}
                 <div className="w-full  mb-5  ">
                   Already have an account <Link to="/auth/login">login</Link>

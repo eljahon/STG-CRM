@@ -42,18 +42,7 @@ const ProductContentInputs = ({
           className={"mb-4 colm2"}
           errors={formik.errors.title}
         />
-        <GlobalInput
-          type="text"
-          typeValue="number"
-          formik={formik}
-          value={formik.values.price}
-          label={t("price")}
-          name={"price"}
-          id={"price"}
-          className={"mb-4 colm2"}
-          placeholder={t("price")}
-          errors={formik.errors.price}
-        />
+        
         <GlobalInput
           type="select"
           formik={formik}
