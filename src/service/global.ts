@@ -51,9 +51,12 @@ export const UpdateDataOne = async (url: string, data: any) => {
     handleError(error);
   }
 };
-export const UpdateData1One = async (url: string, id:any,) => {
+export const UpdateData1One = async (url: string, id:any,query?:any) => {
   try {
-    const response = await api.patch(`/${url}/${id}`);
+    const params = query
+    ? `?${qs.stringify(query, { arrayFormat: "repeat" })}`
+    : "";
+    const response = await api.patch(`/${url}/${id}${params}`);
     return response;
   } catch (error: any) {
     handleError(error);

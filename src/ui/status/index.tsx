@@ -16,11 +16,11 @@ const hexToRgb = (hex: any) => {
 
   return `${r}, ${g}, ${b}`;
 };
-const StatusBtn = ({ label, status, className, onClick }: any) => {
+const StatusBtn = ({ label, status, className, onClick, loading }: any) => {
   return (
     <p
       onClick={onClick}
-      className={`px-4 py-1 border-round-2xl text-sm font-bold m-0 ${
+      className={` gap-2 px-4 py-1 border-round-2xl text-sm font-bold m-0 ${
         className && className
       } `}
       style={{
@@ -30,7 +30,17 @@ const StatusBtn = ({ label, status, className, onClick }: any) => {
         color: ORDER_STATUS?.[`${status}`]
       }}
     >
-      {label || status}
+      <p className="flex align-items-center gap-2 m-0 ">
+        {loading ? (
+          <i
+            className="pi pi-spin pi-spinner-dotted"
+            style={{ fontSize: "1rem" }}
+          ></i>
+        ) : (
+          ""
+        )}{" "}
+        {label || status}
+      </p>
     </p>
   );
 };

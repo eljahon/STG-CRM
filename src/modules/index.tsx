@@ -2,8 +2,10 @@ import { CampanyActionRoute } from "./campany/route";
 import { DashboardRoute } from "./dashboard/route";
 import { DistributorsRoute } from "./distributor/route";
 import { OrdersRoute } from "./orders/route";
+import { SellerProductRoute } from "./product-seller/route";
 import { ProductRoute } from "./product/route";
 import { ProfileActionRoute } from "./profile/route";
+import { SellerRoute } from "./seller/route";
 
 // const notFound = [
 //   {
@@ -17,12 +19,14 @@ import { ProfileActionRoute } from "./profile/route";
 const routes = [
   //   ...notFound,
   ...DashboardRoute,
-  ...DistributorsRoute,
   ...ProductRoute,
+  ...SellerProductRoute,
   ...CampanyActionRoute,
   ...ProfileActionRoute,
+  ...DistributorsRoute,
+  ...SellerRoute,
   // ...BranchRoute,
-  ...OrdersRoute,
+  ...OrdersRoute
 ];
 const rolename = window.localStorage.getItem("role") || "distributor";
 
