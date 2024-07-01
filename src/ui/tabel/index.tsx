@@ -127,7 +127,7 @@ export default function GolabTable(props: ITable) {
   const dt = useRef<DataTable<Product[]>>(null);
 
   const header = (
-    <div className="flex flex-wrap gap-2 align-items-center justify-content-between border-none">
+    <div className="flex w-full flex-wrap gap-2 align-items-center justify-content-between border-none">
       {tableTile && <h4 className="m-0 text-3xl">{tableTile}</h4>}
       <div className="flex flex-wrap gap-2  ">
         {isFunction(newAdd) && (
@@ -176,7 +176,7 @@ export default function GolabTable(props: ITable) {
     </React.Fragment>
   );
   return (
-    <div>
+    <div className="w-full">
       <Toast ref={toasts} />
       <div className="card mt-4">
         <DataTable

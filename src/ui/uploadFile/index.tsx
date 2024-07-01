@@ -5,13 +5,11 @@ import { toast } from "react-toastify";
 import { ProgressBar } from "primereact/progressbar";
 
 export default function UploadFile({
-  setValue,
+  formik,
   fieldName,
   value,
   logo,
-  setError,
   error,
-  clearErrors,
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
@@ -34,9 +32,10 @@ export default function UploadFile({
         img.onload = async () => {
           setaspectRatio((img.width / img.height).toFixed(2));
           setLoadingFile(true);
-          clearErrors(fieldName);
+          formik.setErrors({});
           const res = await ImageUpload(
-            file,{
+            file,
+            {
               type: "image",
               folder: "other"
             },
@@ -46,15 +45,14 @@ export default function UploadFile({
               toast.error(err?.response?.data?.error?.message);
             })
             .finally(() => setLoadingFile(false));
-
-          setValue(fieldName, res?.data?.media?.id);
           setImage(res?.data?.media?.aws_path);
+          formik.setFieldValue(fieldName, res?.data?.media?.id);
         };
         img.src = event.target.result as string;
       };
       reader.readAsDataURL(file);
     } else {
-      setError(fieldName, {
+      formik.setFieldError(fieldName, {
         type: "custom",
         message: "The image size must be less than 5 MB."
       });
@@ -62,7 +60,7 @@ export default function UploadFile({
     }
   };
   const hendleRemoveimg = async () => {
-    setValue(fieldName, null);
+    formik.setFieldValue(fieldName, null);
     setfile(false);
     setImage(null);
   };

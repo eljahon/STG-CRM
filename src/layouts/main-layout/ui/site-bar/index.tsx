@@ -3,11 +3,12 @@ import { Link, useLocation } from "react-router-dom";
 
 import { filteredRoutes } from "../../../../modules/index.tsx";
 import { Badge } from "primereact/badge";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
+import { Sidebar } from "primereact/sidebar";
 
-export default function RouterDemo() {
+export default function RouterDemo({visible,setVisible}:any) {
   const pashName = useLocation();
-const {t} = useTranslation()
+  const { t } = useTranslation();
   const itemRenderer = (item: any) =>
     item.hideIfchildern && (
       <div
@@ -58,12 +59,25 @@ const {t} = useTranslation()
   ];
 
   return (
-    <div className="w-full max-w-14rem fixed">
-      <Menu
-        model={items}
-        className="w-full border-round-3xl  border-none px-3"
-        style={{ height: "96vh" }}
-      />
-    </div>
+    <>
+      <Sidebar
+        className="lg:hidden"
+        visible={visible}
+        onHide={() => setVisible(false)}
+      >
+        <Menu
+          model={items}
+          className="w-full border-round-3xl  border-none px-3"
+          style={{ height: "96vh" }}
+        />
+      </Sidebar>
+      <div className="w-full max-w-14rem hidden fixed lg:block ">
+        <Menu
+          model={items}
+          className="w-full border-round-3xl  border-none px-3"
+          style={{ height: "96vh" }}
+        />
+      </div>
+    </>
   );
 }

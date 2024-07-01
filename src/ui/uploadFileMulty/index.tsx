@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { ProgressBar } from "primereact/progressbar";
 
 export default function UploadFileMulty({
-  setValue,
+  formik,
   fieldName,
   value = [],
   valueId = [],
@@ -32,13 +32,12 @@ export default function UploadFileMulty({
         },
         setProgress
       ).finally(() => setLoading(false));
-
       if (value?.length) {
-        setValue(fieldName, [res?.data?.media?.id, ...valueId]);
+        formik.setFieldValue(fieldName, [res?.data?.media?.id, ...valueId]);
         setImage((state: any) => [res?.data?.media, ...state]);
         setLocalValue((state: any) => [res?.data?.media, ...state]);
       } else {
-        setValue(fieldName, [res?.data?.media?.id]);
+        formik.setFieldValue(fieldName, [res?.data?.media?.id]);
         setImage([res?.data?.media]);
         setLocalValue([res?.data?.media]);
       }
@@ -49,7 +48,7 @@ export default function UploadFileMulty({
 
   const hendleRemoveimg = async (e: any) => {
     setImage((state: any) => state.filter((aE: any) => aE?.id != e));
-    setValue(
+    formik.setFieldValue(
       fieldName,
       valueId?.filter((aE: any) => aE != e)
     );
@@ -77,20 +76,20 @@ export default function UploadFileMulty({
                 className="pi pi-spin pi-spinner-dotted p-5"
                 style={{ fontSize: "3rem" }}
               ></i>
-             <span
-            style={{
-              fontSize: "1em",
-              color: "var(--text-color-secondary)"
-            }}
-            className="my-3 w-full text-center"
-          >
-            {progress} %
-            <ProgressBar
-              mode="indeterminate"
-              style={{ height: "4px" }}
-              value={progress}
-            ></ProgressBar>
-          </span>
+              <span
+                style={{
+                  fontSize: "1em",
+                  color: "var(--text-color-secondary)"
+                }}
+                className="my-3 w-full text-center"
+              >
+                {progress} %
+                <ProgressBar
+                  mode="indeterminate"
+                  style={{ height: "4px" }}
+                  value={progress}
+                ></ProgressBar>
+              </span>
             </div>
           )}
           {image &&

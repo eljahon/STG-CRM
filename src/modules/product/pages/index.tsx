@@ -67,21 +67,15 @@ export default function ProductPage() {
       exportable: false
     },
     {
-      header: t("price"),
-      field: "price",
-      id: 4,
-      exportable: false
-    },
-    {
       header: t("type"),
       field: "type",
-      id: 5,
+      id: 4,
       exportable: false
     },
     {
       header: t("visible"),
       field: "visible",
-      id: 6,
+      id: 5,
       exportable: false,
       body: (itemData: any) => {
         return (

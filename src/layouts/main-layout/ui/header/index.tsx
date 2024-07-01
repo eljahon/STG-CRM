@@ -4,27 +4,24 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import React, { useEffect, useState } from "react";
-import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { GetMe } from "../../../../service/global";
 import { useTranslation } from "react-i18next";
 import { LangArr } from "../../../../data";
 
-export default function Header() {
+export default function Header({ setVisible, visible }: any) {
   const [open, setOpen] = useState(false);
   const [openLang, setOpenLang] = useState(false);
   const [openmadal, setOpenmadal] = useState(false);
-  const { t,i18n } = useTranslation();
-  const { data: me } = useQuery(["meCompony"], () => GetMe());
+  const { t, i18n } = useTranslation();
+  const compony = window.localStorage.getItem("compony");
+  const fullname: any = window.localStorage.getItem("fullname");
   const rolename = window.localStorage.getItem("role") || "";
 
-  const langFormat =()=> {
-    const currentLang:string = localStorage.getItem('lng')||'uz';
-    console.log(LangArr)
-   const item =  LangArr.find(el =>el.lang === currentLang);
-    console.log(item)
-    return item?.lang||'uz';
-  }
+  const langFormat = () => {
+    const currentLang: string = localStorage.getItem("lng") || "uz";
+    const item = LangArr.find((el) => el.lang === currentLang);
+    return item?.lang || "uz";
+  };
   useEffect(() => {
     window.addEventListener("click", () => {
       setOpen(false), setOpenLang(false);
@@ -50,20 +47,27 @@ export default function Header() {
       />
     </React.Fragment>
   );
-  const changeLanguage = (lng:any) => {
+  const changeLanguage = (lng: any) => {
     i18n.changeLanguage(lng);
-    localStorage.setItem('lng', lng)
+    localStorage.setItem("lng", lng);
   };
   return (
-    <div className="flex align-items-center justify-content-between px-2 fixed  myflext  pt-4 pb-4">
-      <IconField iconPosition="left">
-        <InputIcon className="pi pi-search"> </InputIcon>
-        <InputText
-          className="border-round-2xl  border-none"
-          v-model="value1"
-          placeholder={t("search")}
-        />
-      </IconField>
+    <div className="flex align-items-center justify-content-between px-2 fixed  myflext  pt-4 pb-4 gap-4">
+      <div className="flex align-items-center gap-4">
+        <i
+          className="pi pi-align-justify lg:hidden ml-4"
+          style={{ fontSize: "1.2rem", color: "black" }}
+          onClick={() => setVisible(!visible)}
+        ></i>
+        <IconField iconPosition="left">
+          <InputIcon className="pi pi-search"> </InputIcon>
+          <InputText
+            className="border-round-2xl  border-none w-full"
+            v-model="value1"
+            placeholder={t("search")}
+          />
+        </IconField>
+      </div>
 
       <div className="flex align-items-center justify-content-end  gap-2">
         <div className="p-3 pb-2   bg-white border-round-2xl cursor-pointer">
@@ -85,7 +89,7 @@ export default function Header() {
               className="pi pi-globe"
               style={{ fontSize: "1.2rem", color: "black" }}
             ></i>
-            <p className="m-0 ">{t(langFormat())}</p>
+            <p className="m-0 hidden md:block">{t(langFormat())}</p>
           </div>
           <i
             className="pi  pi-angle-down"
@@ -100,7 +104,7 @@ export default function Header() {
             {LangArr.map((e: any) => (
               <p
                 key={e?.id}
-                onClick={() =>changeLanguage(e?.lang)}
+                onClick={() => changeLanguage(e?.lang)}
                 className="py-2 px-4 m-0 hover:bg-blue-50"
               >
                 {t(e?.lang)}
@@ -113,15 +117,15 @@ export default function Header() {
             e.stopPropagation();
             setOpen(!open);
           }}
-          style={{ minWidth: "150px", padding: "13px" }}
-          className="    bg-white border-round-2xl flex justify-content-between gap-2 align-items-center cursor-pointer relative"
+          style={{ padding: "13px" }}
+          className="  md:min-h-30rem bg-white border-round-2xl flex justify-content-between gap-2 align-items-center cursor-pointer relative"
         >
           <div className="flex align-items-center gap-2">
             <i
               className="pi pi-user "
               style={{ fontSize: "1.2rem", color: "black" }}
             ></i>
-            <p className="m-0 ">{me?.data?.fullname}</p>
+            <p className="m-0  hidden md:block">{fullname}</p>
           </div>
           <i
             className="pi  pi-angle-down"
@@ -143,11 +147,11 @@ export default function Header() {
             {rolename == "distributor" && (
               <Link
                 to={
-                  me?.data?.company && me?.data?.company != "undefined"
+                  compony && compony != "undefined"
                     ? "/compony/old"
                     : "/compony/new"
                 }
-                className=" no-underline "
+                className="no-underline"
                 style={{ color: "black" }}
               >
                 <p className="py-2 px-4 m-0 hover:bg-blue-50">{t("compony")}</p>
@@ -161,7 +165,6 @@ export default function Header() {
             </p>
           </div>
         </div>
-       
       </div>
 
       <Dialog

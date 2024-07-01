@@ -14,10 +14,10 @@ function App() {
       setLoading(true);
       await GetMe()
         .then((res: any) => {
-          console.log(res?.data?.company);
           window.localStorage.setItem("role", res?.data?.role?.description);
           if (res?.data?.company) {
             window.localStorage.setItem("compony", res?.data?.company?.id);
+            window.localStorage.setItem("fullname", res?.data?.fullname);
           } else {
             window.localStorage.removeItem("compony");
           }

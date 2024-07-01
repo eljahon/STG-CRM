@@ -24,7 +24,7 @@ export default function ProfilePasswordPage() {
       cancel={false}
       unfixed={true}
     >
-      <div className="w-full bg-white border-round-3xl py-6 px-4 flex gap-5 ">
+      <div className="w-full bg-white border-round-3xl py-6 px-4 flex flex-wrap gap-5 ">
         <div className="card">
           <p className="label-my">{t("currentpassword")}</p>
           <Password
