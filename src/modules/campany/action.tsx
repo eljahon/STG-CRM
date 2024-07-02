@@ -67,7 +67,7 @@ export default function CampanySetPage() {
               <FromAction
                 loader={loader}
                 title={t("company")}
-                cancel={"Cancel"}
+                cancel={t("cancel")}
                 urlOnCancel={"/dashboard"}
               />
               <div className="flex gap-4 bg-white border-round-3xl p-4  flex-column-reverse  md:flex-row ">

@@ -67,6 +67,30 @@
   "branchName": "Filial nomi",
   "district": "Tuman",
   "fullname": "Toíliq nomi",
-  "message-register": "Registration was successful, please wait for confirmation from the administrator"
+  "message-register": "Registration was successful, please wait for confirmation from the administrator",
+  "ownerName": "Owner name",
+  "sellerName": "Seller Name",
+  "selectRegion": "Select District",
+  "selectDistrict": "Select District",
+  "seller": "Seller",
+  "status": "Status",
+  "selectType": "Select Type",
+  "name": "Name",
+  "all": "all",
+  "pending": "Pending",
+  "accepted": "Accepted",
+  "shipping": "Shipping",
+  "completed": "Completed",
+  "cancelled": "Cancelled",
+  "rejected": "Rejected",
+  "reject": "Reject",
+  "rejectText": "Do you wanna Rejected",
+  "confirmText": "Do you wanna follow",
+  "distributors": "Distributor",
+  "alldistributors": "All Distributor",
+  "mydistributors": "My Distributor",
+  "follow": "Follow",
+  "count": "Count",
+  "productName": "Product Name"
+  
 }
-

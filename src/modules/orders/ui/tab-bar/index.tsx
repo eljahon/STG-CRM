@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import paramsToObject from "../../../../hooks/paramsToObject";
+import { useTranslation } from "react-i18next";
 const statusArr = [
   {
     name: "all",
@@ -30,6 +31,7 @@ const statusArr = [
 
 const TabBar = ({ className }: any) => {
   const [params, setSearchParam] = useSearchParams();
+  const { t } = useTranslation();
   const [status, setstatus] = useState<any>(params.get("status") || "all");
   return (
     <div
@@ -38,15 +40,15 @@ const TabBar = ({ className }: any) => {
       }`}
       style={{ maxWidth: "265px", minHeight: `80vh` }}
     >
-      {statusArr?.map((e: any, index:number) => (
+      {statusArr?.map((e: any, index: number) => (
         <div
-            key={index}
+          key={index}
           onClick={() => {
             setstatus(e?.name);
             if (e?.name == "all") {
               setSearchParam({
                 ...paramsToObject(params.entries()),
-                status:""
+                status: ""
               });
             } else {
               setSearchParam({
@@ -68,7 +70,7 @@ const TabBar = ({ className }: any) => {
               e?.name == status ? "text-green-500" : "text-gray-500"
             }`}
           >
-            {e?.name}
+            {t(e?.name)}{" "}
           </p>
         </div>
       ))}

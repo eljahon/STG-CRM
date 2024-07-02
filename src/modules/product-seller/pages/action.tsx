@@ -125,8 +125,8 @@ export default function SellerProductAction() {
             <>
               <FromAction
                 loader={loader}
-                title={id == "new" ? t("addProduct") : t("updateProduct")}
-                cancel={"Cancel"}
+                title={t("product")}
+                cancel={t("cancel")}
                 urlOnCancel={"/product-seller"}
               />
               <div className="flex gap-2 bg-white flex-wrap border-round-3xl p-4">
