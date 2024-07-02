@@ -10,9 +10,9 @@ const SellerProductPage = () => {
   const pageSize = 10;
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { data: seller, isLoading } = useQuery(["product-seller", page], () =>
-    GetAllData("product-seller", {
-      populate: "*",
+  const { data: seller, isLoading } = useQuery(["seller-products", page], () =>
+    GetAllData("seller-products", {
+      populate: "product, product.company, product.image",
       pagination: {
         page: page / pageSize + 1,
         pageSize: pageSize
@@ -21,17 +21,53 @@ const SellerProductPage = () => {
   );
   const columns = [
     {
-      header: t("name"),
-      field: "seller.name",
+      header: t("image"),
+      field: "avatar.aws_path",
       id: 1,
+      // sortable: true,
+      exportable: false,
+      body: (itemData: any) => {
+        return (
+          <>
+            {itemData?.product?.image?.aws_path ? (
+              <img
+                src={
+                  import.meta.env.VITE_APP_AWS_PATH +
+                  itemData?.product?.image?.aws_path
+                }
+                width={50}
+                height={50}
+              />
+            ) : (
+              <i className="pi pi-image" style={{ fontSize: "2rem" }} />
+            )}
+          </>
+        );
+      }
+    },
+    {
+      header: t("companyName"),
+      field: "product.company.name",
+      id: 2,
       exportable: false
     },
     {
-      header: t("phone"),
-      field: "seller.phone",
-      id: 2,
+      header: t("productName"),
+      field: "product.title",
+      id: 3,
       exportable: false
-      // style: { minWidth: "12rem" }
+    },
+    {
+      header: t("price"),
+      field: "price",
+      id: 4,
+      exportable: false
+    },
+    {
+      header: t("count"),
+      field: "count",
+      id: 5,
+      exportable: false
     }
   ];
   return (
@@ -53,12 +89,14 @@ const SellerProductPage = () => {
             newAdd={() => {
               navigate("/product-seller/new");
             }}
+            Isupdate={true}
             pageChange={(event: any) => {
               setPage(event.first);
             }}
-            // deleteFunction={(rowItem: any) => {
-            //   console.log(rowItem);
-            // }}
+            deleteFunction={(rowItem: any) => {
+              console.log(rowItem);
+            }}
+            deleteUrl={"seller-products"}
           />
         </div>
       </div>
