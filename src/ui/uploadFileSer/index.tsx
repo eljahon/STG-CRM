@@ -10,11 +10,12 @@ export default function UploadFileSer({
   logo,
   formik,
   error,
+  type,
   className
 }: any) {
   const [image, setImage] = useState<any>(value);
   const [file, setfile] = useState<any>(false);
-  const [iscer, setIsCer] = useState<any>(false);
+  const [iscer, setIsCer] = useState<any>(type == "application/pdf" ? true :  false);
   const [imageOpen, setImageOpen] = useState<any>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
   const [progress, setProgress] = useState<any>(0);
