@@ -10,7 +10,6 @@ import Tab from "../tab";
 const Mydistributors = () => {
   const [params] = useSearchParams();
   const [page, setPage] = useState<any>(0);
-
   const pageSize = 10;
   const { t } = useTranslation();
   const { data: distributors, isLoading } = useQuery(

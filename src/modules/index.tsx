@@ -1,7 +1,6 @@
 import { CampanyActionRoute } from "./campany/route";
 import { DashboardRoute } from "./dashboard/route";
 import { DistributorsRoute } from "./distributor/route";
-import { OrdersRoute } from "./orders/route";
 import { SellerProductRoute } from "./product-seller/route";
 import { ProductRoute } from "./product/route";
 import { ProfileActionRoute } from "./profile/route";
@@ -24,9 +23,9 @@ const routes = [
   ...CampanyActionRoute,
   ...ProfileActionRoute,
   ...DistributorsRoute,
-  ...SellerRoute,
+  ...SellerRoute
   // ...BranchRoute,
-  ...OrdersRoute
+  // ...OrdersRoute
 ];
 const rolename = window.localStorage.getItem("role") || "distributor";
 

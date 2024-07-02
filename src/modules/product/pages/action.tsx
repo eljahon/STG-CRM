@@ -274,8 +274,8 @@ export default function ProductPage() {
             <>
               <FromAction
                 loader={loader}
-                title={"Product"}
-                cancel={"Cancel"}
+                title={t("product")}
+                cancel={t("cancel")}
                 urlOnCancel={"/product"}
               />
               <ProductContentInputs

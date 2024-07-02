@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import paramsToObject from "../../../../hooks/paramsToObject";
+import { useTranslation } from "react-i18next";
 const statusArr = [
-
   {
     name: "pending",
     icons: "pi pi-spinner-dotted"
@@ -18,6 +18,7 @@ const statusArr = [
 ];
 
 const Tab = ({ className }: any) => {
+  const { t } = useTranslation();
   const [params, setSearchParam] = useSearchParams();
   const [status, setstatus] = useState<any>(params.get("status") || "pending");
   return (
@@ -56,7 +57,7 @@ const Tab = ({ className }: any) => {
               e?.name == status ? "text-green-500" : "text-gray-500"
             }`}
           >
-            {e?.name}
+            {t(e?.name)}
           </p>
         </div>
       ))}

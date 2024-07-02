@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import paramsToObject from "../../../../hooks/paramsToObject";
+import { useTranslation } from "react-i18next";
 const typeArr = [
   {
-    name: "all distributors",
-    value:"all",
+    name: "alldistributors",
+    value: "all",
     icons: "pi pi-bolt"
   },
   {
-    name: "my distributor",
-    value:"my",
+    name: "mydistributors",
+    value: "my",
     icons: "pi pi-spinner-dotted"
   }
 ];
 
 const TabBar = ({ className }: any) => {
   const [params, setSearchParam] = useSearchParams();
+  const { t } = useTranslation();
   const [type, settype] = useState<any>(params.get("type") || "all");
   return (
     <div
@@ -54,7 +56,7 @@ const TabBar = ({ className }: any) => {
               e?.value == type ? "text-green-500" : "text-gray-500"
             }`}
           >
-            {e?.name}
+            {t(e?.name)}
           </p>
         </div>
       ))}
