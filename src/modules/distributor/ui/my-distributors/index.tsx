@@ -24,23 +24,22 @@ const Mydistributors = () => {
               ? false
               : params.get("status") == "accepted"
               ? true
-              : undefined,
+              : false,
           rejected:
             params.get("status") == "pending"
               ? false
-              : params.get("status") == "cancelled"
+              : params.get("status") == "rejected"
               ? true
-              : undefined
+              : false
         }
       })
   );
   const columns = [
     {
-      header: t("fullname"),
-      field: "owner.fullname",
+      header: t("companyName"),
+      field: "company.name",
       id: 1,
-      exportable: false,
-      style: { minWidth: "12rem" }
+      exportable: false
     },
     {
       header: t("phone"),
@@ -48,12 +47,6 @@ const Mydistributors = () => {
       id: 2,
       exportable: false
       // style: { minWidth: "12rem" }
-    },
-    {
-      header: t("companyName"),
-      field: "company.name",
-      id: 4,
-      exportable: false
     },
     {
       header: t("status"),
@@ -64,10 +57,10 @@ const Mydistributors = () => {
           <StatusBtn
             className={"inline-block"}
             label={
-                itemData?.rejected == true
-                ? t("cancelled")
+              itemData?.rejected == true
+                ? t("rejected")
                 : itemData?.confirmed == true
-                ? t("completed")
+                ? t("accepted")
                 : t("pending")
             }
             status={

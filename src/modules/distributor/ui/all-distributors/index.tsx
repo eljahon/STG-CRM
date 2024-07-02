@@ -1,14 +1,16 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { GetAllData, UpdateData1One } from "../../../../service/global";
 import StatusBtn from "../../../../ui/status";
 import { toast } from "react-toastify";
 import GolabTable from "../../../../ui/tabel";
+import { Button } from "primereact/button";
 
 const Alldistributors = () => {
   const [page, setPage] = useState<any>(0);
-
+  const [loadingType, setloadingType] = useState<any>(0);
+  const queryClient = useQueryClient();
   const pageSize = 10;
   const { t } = useTranslation();
   const { data: distributors, isLoading } = useQuery(
@@ -24,11 +26,10 @@ const Alldistributors = () => {
   );
   const columns = [
     {
-      header: t("fullname"),
-      field: "owner.fullname",
+      header: t("companyName"),
+      field: "name",
       id: 1,
-      exportable: false,
-      style: { minWidth: "12rem" }
+      exportable: false
     },
     {
       header: t("phone"),
@@ -37,33 +38,72 @@ const Alldistributors = () => {
       exportable: false
       // style: { minWidth: "12rem" }
     },
-    {
-      header: t("companyName"),
-      field: "name",
-      id: 4,
-      exportable: false
-    },
+
     {
       header: t("follow"),
       id: 5,
       exportable: false,
       body: (itemData: any) => {
+        // isFollowed
+        // isPending
+        // isRejected
         return (
           <StatusBtn
             className={"inline-block"}
-            label={"Follow"}
-            status={"completed"}
-            onClick={async () => {
-              await UpdateData1One("follow/company", itemData?.id).then(
-                (res: any) => {
-                  if (res?.status == "200" || res?.status == "201") {
-                    toast.success("Company followed successfully");
-                  }
-                }
-              );
-            }}
+            loading={loadingType == itemData?.id ? true : false}
+            label={
+              itemData?.isFollowed == true
+                ? t("followed")
+                : itemData?.isPending == true
+                ? t("pending")
+                : itemData?.isRejected == true
+                ? t("rejected")
+                : t("follow")
+            }
+            status={
+              itemData?.isFollowed == true
+                ? "completed"
+                : itemData?.isPending == true
+                ? "pending"
+                : itemData?.isRejected == true
+                ? "cancelled"
+                : "accepted"
+            }
           />
         );
+      }
+    },
+    {
+      id: 6,
+      exportable: false,
+      style: { maxWidth: "100px" },
+      body: (itemData: any) => {
+        if (
+          !itemData?.isFollowed &&
+          !itemData?.isPending &&
+          !itemData?.isRejected
+        ) {
+          return (
+            <div className="flex justify-content-end gap-4">
+              <Button
+                label={t("follow")}
+                outlined
+                loading={itemData?.id == loadingType}
+                onClick={async () => {
+                  setloadingType(itemData?.id);
+                  await UpdateData1One("follow/company", itemData?.id)
+                    .then((res: any) => {
+                      if (res?.status == "200" || res?.status == "201") {
+                        queryClient.invalidateQueries(["distributors"]);
+                        toast.success("Company followed successfully");
+                      }
+                    })
+                    .finally(() => setloadingType(false));
+                }}
+              />
+            </div>
+          );
+        }
       }
     }
   ];

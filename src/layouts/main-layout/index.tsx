@@ -13,9 +13,14 @@ export default function MainLayout() {
         className="w-full relative localMreg"
         style={{
           // marginLeft: "260px",
-          marginTop: ["/product", "/distributor", "/orders", "/dashboard"].includes(
-            location.pathname as any
-          )
+          marginTop: [
+            "/product",
+            "/distributor",
+            "/orders",
+            "/dashboard",
+            "/seller",
+            "/product-seller"
+          ].includes(location.pathname as any)
             ? "50px"
             : "190px"
         }}

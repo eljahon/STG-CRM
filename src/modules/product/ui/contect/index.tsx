@@ -158,6 +158,7 @@ const ProductContentInputs = ({
         <UploadFileSer
           formik={formik}
           fieldName={"cer"}
+          type={productOne?.cer?.mime_type  }
           value={productOne?.cer?.aws_path}
           error={formik.errors}
         />

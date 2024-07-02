@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import paramsToObject from "../../../../hooks/paramsToObject";
 const statusArr = [
-
   {
     name: "pending",
     icons: "pi pi-spinner-dotted"
@@ -31,17 +30,10 @@ const Tab = ({ className }: any) => {
           key={index}
           onClick={() => {
             setstatus(e?.name);
-            if (e?.name == "all") {
-              setSearchParam({
-                ...paramsToObject(params.entries()),
-                status: ""
-              });
-            } else {
-              setSearchParam({
-                ...paramsToObject(params.entries()),
-                status: e?.name
-              });
-            }
+            setSearchParam({
+              ...paramsToObject(params.entries()),
+              status: e?.name
+            });
           }}
           className={`flex gap-3 align-items-center pl-3 pr-5 py-3 cursor-pointer border-round-2xl hover:bg-green-50 myhover-text ${
             e?.name == status ? "bg-green-50" : ""

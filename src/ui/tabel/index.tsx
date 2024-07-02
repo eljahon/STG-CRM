@@ -77,6 +77,7 @@ export default function GolabTable(props: ITable) {
   const isCheckEvent = () => {
     return isFunction(deleteFunction) || isFunction(showFunction) || false;
   };
+
   const { t } = useTranslation();
   const [deleteId, setDeleteId] = useState<any>(false);
   const columnsList = [
@@ -118,6 +119,7 @@ export default function GolabTable(props: ITable) {
       }
     }
   ];
+
   const [deleteProductDialog, setDeleteProductDialog] =
     useState<boolean>(false);
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
@@ -200,9 +202,11 @@ export default function GolabTable(props: ITable) {
           header={header}
           selectionMode="multiple"
         >
-          {columnsList?.map((e: any) => (
-            <Column key={e.id} {...e}></Column>
-          ))}
+          {columnsList?.map((e: any) => {
+            if (e) {
+              return <Column key={e.id} {...e}></Column>;
+            }
+          })}
           {/* <Column header="Agent" filterField="representative" showFilterMatchModes={false} filterMenuStyle={{ width: '14rem' }} style={{ minWidth: '14rem' }}
                      filter filterElement={representativeFilterTemplate} /> */}
         </DataTable>
