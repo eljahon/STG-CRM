@@ -60,7 +60,7 @@ export default function UploadFile({
     }
   };
   const hendleRemoveimg = async () => {
-    formik.setFieldValue(fieldName, null);
+    formik.setFieldValue(fieldName, 0);
     setfile(false);
     setImage(null);
   };

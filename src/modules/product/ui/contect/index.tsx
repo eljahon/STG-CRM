@@ -148,7 +148,6 @@ const ProductContentInputs = ({
           formik={formik}
           value={imageMulti || []}
           setLocalValue={setImageMulti}
-          valueId={imageMulti?.map((e: any) => e?.id) || []}
           fieldName={"gallery"}
         />
       </div>
