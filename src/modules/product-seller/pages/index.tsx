@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import StatusBtn from "../../../ui/status";
 import { Dropdown } from "primereact/dropdown";
 import debounce from "../../../hooks/debounce";
+import ProductDetails from "../ui/product-madal";
 
 const statuses = [
   {
@@ -20,6 +21,7 @@ const statuses = [
 ];
 const SellerProductPage = () => {
   const [page, setPage] = useState<any>(0);
+  const [productId, setProductId] = useState<any>(null);
   const pageSize = 8;
   const navigate = useNavigate();
   const [filterValue, setFilterValue] = useState<any>(null);
@@ -28,7 +30,7 @@ const SellerProductPage = () => {
     ["seller-products", page, filterValue],
     () =>
       GetAllData("seller-products", {
-        populate: "product, product.company, product.image",
+        populate: "product, product.company, product.image, product.gallery ",
         pagination: {
           page: page / pageSize + 1,
           pageSize: pageSize
@@ -91,20 +93,6 @@ const SellerProductPage = () => {
           </>
         );
       }
-      // filter: true
-      // filterElement: () => {
-      //   return (
-      //     <Button
-      //       type="button"
-      //       icon="pi pi-filter-slash"
-      //       label="Clear"
-      //       outlined
-      //       onClick={() => {
-      //         setFilterValue(null);
-      //       }}
-      //     />
-      //   );
-      // }
     },
     {
       header: t("companyName"),
@@ -176,6 +164,9 @@ const SellerProductPage = () => {
           pageSize={pageSize}
           totalProduct={seller?.meta?.pagination?.total}
           currentPage={page}
+          showFunction={(e: any) => {
+            setProductId(e);
+          }}
           url={"/product-seller"}
           onFilter={debounce((e: any) => setFilterValue(e.filters), 700)}
           tableTile={t("products")}
@@ -192,6 +183,10 @@ const SellerProductPage = () => {
           deleteUrl={"seller-products"}
         />
       </div>
+
+      {productId && (
+        <ProductDetails data={productId} close={() => setProductId(null)} />
+      )}
     </div>
   );
 };

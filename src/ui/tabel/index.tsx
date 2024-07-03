@@ -102,6 +102,16 @@ export default function GolabTable(props: ITable) {
                   onClick={() => navigate(url + "/" + itemData?.id)}
                 />
               )}
+              {isFunction(showFunction) && (
+                <Button
+                  icon="pi pi-eye"
+                  className="mr-2 h-2rem w-2rem"
+                  rounded
+                  outlined
+                  severity="secondary"
+                  onClick={() => showFunction(itemData)}
+                />
+              )}
               {isFunction(deleteFunction) && (
                 <Button
                   icon="pi pi-trash"
@@ -202,7 +212,7 @@ export default function GolabTable(props: ITable) {
           dataKey="id"
           onFilter={onFilter && onFilter}
           header={header}
-          filterDisplay={onFilter && "row" }
+          filterDisplay={onFilter && "row"}
           selectionMode="multiple"
         >
           {columnsList?.map((e: any) => {

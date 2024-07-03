@@ -185,6 +185,7 @@ export default function ProductPage() {
           <span>{t("logToCompony")}</span>
         </div>
       </Dialog>
+      
     </>
   );
 }

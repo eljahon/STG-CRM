@@ -48,12 +48,14 @@ export default function UploadFileMulty({
 
   const hendleRemoveimg = async (e: any) => {
     setImage((state: any) => state.filter((aE: any) => aE?.id != e));
+    setLocalValue((state: any) => state.filter((aE: any) => aE?.id != e));
+
     formik.setFieldValue(
       fieldName,
       valueId?.filter((aE: any) => aE != e)
     );
   };
-
+ 
   return (
     <div className={`w-full ${className && className}`}>
       <label className="w-6 ">
