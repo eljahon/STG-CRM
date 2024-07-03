@@ -53,6 +53,7 @@ interface ITable {
   isLoading?: any;
   Isupdate?: any;
   pageSize?: any;
+  onFilter?: any;
 }
 export default function GolabTable(props: ITable) {
   const {
@@ -70,7 +71,8 @@ export default function GolabTable(props: ITable) {
     checked,
     isLoading,
     pageSize,
-    Isupdate
+    Isupdate,
+    onFilter
   } = props;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -198,8 +200,9 @@ export default function GolabTable(props: ITable) {
               : () => {}
           }
           dataKey="id"
-          // globalFilter={globalFilter}
+          onFilter={onFilter && onFilter}
           header={header}
+          filterDisplay={onFilter && "row" }
           selectionMode="multiple"
         >
           {columnsList?.map((e: any) => {
