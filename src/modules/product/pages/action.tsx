@@ -277,7 +277,6 @@ export default function ProductPage() {
                 loader={loader}
                 title={t("product")}
                 cancel={t("cancel")}
-                urlOnCancel={"/product"}
               />
               <ProductContentInputs
                 formik={formik}

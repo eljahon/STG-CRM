@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import GolabTable from "../../../ui/tabel/index.tsx";
 import { useQuery } from "react-query";
 import { GetAllData } from "../../../service/global.ts";
 import React, { useState } from "react";
 import { Button } from "primereact/button";
-
+import paramsToObject from "../../../hooks/paramsToObject";
 import { Dialog } from "primereact/dialog";
 import { useTranslation } from "react-i18next";
 import StatusBtn from "../../../ui/status/index.tsx";
@@ -12,9 +12,10 @@ import StatusBtn from "../../../ui/status/index.tsx";
 export default function ProductPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [page, setPage] = useState<any>(0);
+  const [params, setSearchParam] = useSearchParams();
+  const [page, setPage] = useState<any>(params.get("page") || 0);
   const [opemNavigate, setopemNavigate] = useState<any>(false);
-  const pageSize = 10;
+  const pageSize = 20;
   const { isLoading, data: product } = useQuery(["products", page], () =>
     GetAllData("products/distribute", {
       populate: "*",
@@ -24,7 +25,7 @@ export default function ProductPage() {
       }
     })
   );
-  // { limit: 10, page: page / 10 + 1 }
+
   const compony = window.localStorage.getItem("compony");
   const columns = [
     {
@@ -155,6 +156,10 @@ export default function ProductPage() {
         }}
         pageChange={(event: any) => {
           setPage(event.first);
+          setSearchParam({
+            ...paramsToObject(params.entries()),
+            page: event.first
+          });
         }}
         deleteFunction={(rowItem: any) => {
           console.log(rowItem);
@@ -185,7 +190,6 @@ export default function ProductPage() {
           <span>{t("logToCompony")}</span>
         </div>
       </Dialog>
-      
     </>
   );
 }
