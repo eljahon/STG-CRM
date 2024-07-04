@@ -250,7 +250,7 @@ export default function ProductPage() {
           }
         ]}
         onSuccess={() => {
-          navigate("/product");
+          navigate(-1);
         }}
         onError={(e: any) => {
           console.log(e, "onError");
