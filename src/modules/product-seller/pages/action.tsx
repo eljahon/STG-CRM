@@ -104,7 +104,7 @@ export default function SellerProductAction() {
           {
             name: "visible",
             validations: [{ type: "required" }],
-            value: productOne?.visible || true
+            value: id == "new" ? true : productOne?.visible
           }
         ]}
         onSuccess={() => {

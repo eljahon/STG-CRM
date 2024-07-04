@@ -21,10 +21,9 @@ const TabBar = ({ className }: any) => {
   const [type, settype] = useState<any>(params.get("type") || "all");
   return (
     <div
-      className={`w-full bg-white border-round-2xl py-4 px-2  ${
+      className={`w-full bg-white border-round-2xl flex min-w-10 lg:block py-4 px-2  ${
         className && className
       }`}
-      style={{ maxWidth: "265px", minHeight: `80vh` }}
     >
       {typeArr?.map((e: any, index: number) => (
         <div

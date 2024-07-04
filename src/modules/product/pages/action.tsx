@@ -202,7 +202,7 @@ export default function ProductPage() {
             validations: [{ type: "required" }],
             value: productOne?.data?.title
           },
-         
+
           {
             name: "type",
             validations: [{ type: "required" }],
@@ -262,7 +262,7 @@ export default function ProductPage() {
           let returnResult: any = JSON.parse(JSON.stringify(value));
           !returnResult["image"] && delete returnResult["image"];
           !returnResult["cer"] && delete returnResult["cer"];
-          !returnResult["gallery"]?.length && delete returnResult["gallery"];
+          // !returnResult["gallery"]?.length && delete returnResult["gallery"];
           return returnResult;
         }}
         // onSubmit={() => {
@@ -270,13 +270,13 @@ export default function ProductPage() {
         validateOnMount={false}
       >
         {(formik) => {
+          console.log(formik);
           return (
             <>
               <FromAction
                 loader={loader}
                 title={t("product")}
                 cancel={t("cancel")}
-                urlOnCancel={"/product"}
               />
               <ProductContentInputs
                 formik={formik}

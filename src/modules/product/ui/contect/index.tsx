@@ -4,7 +4,7 @@ import UploadFile from "../../../../ui/uploadFile";
 import UploadFileSer from "../../../../ui/uploadFileSer";
 import { useParams } from "react-router-dom";
 import SwichInputLoc from "../../../../ui/form/swich-input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UploadFileMulty from "../../../../ui/uploadFileMulty";
 
 const typeArr: any = [
@@ -28,6 +28,11 @@ const ProductContentInputs = ({
   const { t } = useTranslation();
   const { id } = useParams();
   const [imageMulti, setImageMulti] = useState<any>(productOne?.gallery || []);
+
+  useEffect(() => {
+    setImageMulti(productOne?.gallery || []);
+  }, [productOne?.gallery]);
+
   return (
     <div className="flex gap-4 flex-wrap lg:flex-nowrap">
       <div className="w-full  lg:w-8 bg-white border-round-3xl p-4  gap-2 flex flex-wrap">
@@ -143,7 +148,6 @@ const ProductContentInputs = ({
           formik={formik}
           value={imageMulti || []}
           setLocalValue={setImageMulti}
-          valueId={imageMulti?.map((e: any) => e?.id) || []}
           fieldName={"gallery"}
         />
       </div>
@@ -158,7 +162,7 @@ const ProductContentInputs = ({
         <UploadFileSer
           formik={formik}
           fieldName={"cer"}
-          type={productOne?.cer?.mime_type  }
+          type={productOne?.cer?.mime_type}
           value={productOne?.cer?.aws_path}
           error={formik.errors}
         />

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ImageUpload } from "../../utils/uplaoadFile";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -8,18 +8,13 @@ export default function UploadFileMulty({
   formik,
   fieldName,
   value = [],
-  valueId = [],
   setLocalValue,
   className
 }: any) {
-  const [image, setImage] = useState<any>(value);
   const [imageOpen, setImageOpen] = useState<any>(null);
   const [loadingFile, setLoading] = useState<boolean>(false);
   const [progress, setProgress] = useState<any>(0);
   const { t } = useTranslation();
-  useEffect(() => {
-    setImage(value);
-  }, [value]);
 
   const hendleimg = async (e: any) => {
     if (e.target.files[0] && e.target.files[0]?.size < 5000000) {
@@ -33,12 +28,13 @@ export default function UploadFileMulty({
         setProgress
       ).finally(() => setLoading(false));
       if (value?.length) {
-        formik.setFieldValue(fieldName, [res?.data?.media?.id, ...valueId]);
-        setImage((state: any) => [res?.data?.media, ...state]);
+        formik.setFieldValue(fieldName, [
+          res?.data?.media?.id,
+          ...value?.map((e: any) => e?.id)
+        ]);
         setLocalValue((state: any) => [res?.data?.media, ...state]);
       } else {
         formik.setFieldValue(fieldName, [res?.data?.media?.id]);
-        setImage([res?.data?.media]);
         setLocalValue([res?.data?.media]);
       }
     } else {
@@ -47,10 +43,11 @@ export default function UploadFileMulty({
   };
 
   const hendleRemoveimg = async (e: any) => {
-    setImage((state: any) => state.filter((aE: any) => aE?.id != e));
+    setLocalValue((state: any) => state.filter((aE: any) => aE?.id != e));
+
     formik.setFieldValue(
       fieldName,
-      valueId?.filter((aE: any) => aE != e)
+      value?.filter((aE: any) => aE?.id != e)
     );
   };
 
@@ -68,7 +65,7 @@ export default function UploadFileMulty({
           onChange={(e) => hendleimg(e)}
         />
       </label>
-      {image.length ? (
+      {value.length ? (
         <div className="flex  flex=wrap gap-2 mt-3">
           {loadingFile && (
             <div className="flex align-items-center flex-column">
@@ -92,8 +89,8 @@ export default function UploadFileMulty({
               </span>
             </div>
           )}
-          {image &&
-            image?.map((e: any, i: any) => (
+          {value &&
+            value?.map((e: any, i: any) => (
               <div
                 key={i}
                 className="w-full relative imageFlex"

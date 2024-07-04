@@ -146,10 +146,20 @@ body {
   margin-left: 260px;
 }
 
+.min-w-10 {
+  min-height: 80vh;
+  max-width: 265px;
+}
+
 @media screen and (max-width:991px) {
   .myflext {
     width: 100%;
     left: 0;
+  }
+
+  .min-w-10 {
+    min-height: auto;
+    max-width: 100%;
   }
 
   .myflext1 {

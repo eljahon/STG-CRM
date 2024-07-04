@@ -15,7 +15,9 @@ export default function UploadFileSer({
 }: any) {
   const [image, setImage] = useState<any>(value);
   const [file, setfile] = useState<any>(false);
-  const [iscer, setIsCer] = useState<any>(type == "application/pdf" ? true :  false);
+  const [iscer, setIsCer] = useState<any>(
+    type == "application/pdf" ? true : false
+  );
   const [imageOpen, setImageOpen] = useState<any>(false);
   const [loadingFile, setLoadingFile] = useState<boolean>(false);
   const [progress, setProgress] = useState<any>(0);
@@ -23,7 +25,13 @@ export default function UploadFileSer({
   useEffect(() => {
     setImage(value);
   }, [value]);
-
+  useEffect(() => {
+    if (type == "application/pdf") {
+      setIsCer(true);
+    } else {
+      setIsCer(false);
+    }
+  }, [type]);
   const hendleimg = async (e: any) => {
     if (e.target.files[0] && e.target.files[0]?.size < 5000000) {
       setLoadingFile(true);
@@ -59,7 +67,7 @@ export default function UploadFileSer({
   };
 
   const hendleRemoveimg = async () => {
-    formik.setFieldValue(fieldName, null);
+    formik.setFieldValue(fieldName, 0);
     setfile(false);
     setImage(null);
   };

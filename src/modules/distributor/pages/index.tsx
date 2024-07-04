@@ -7,7 +7,7 @@ const DistributorPage = () => {
   const [params] = useSearchParams();
   return (
     <div className="mt-5 tabhight w-full">
-      <div className="w-full flex gap-5">
+      <div className="w-full flex gap-5 flex-column lg:flex-row">
         <TabBar />
         {params.get("type") == "my" ? <Mydistributors /> : <Alldistributors />}
       </div>
