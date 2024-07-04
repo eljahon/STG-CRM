@@ -29,6 +29,12 @@ export default function ProductPage() {
   const compony = window.localStorage.getItem("compony");
   const columns = [
     {
+      header: t("id"),
+      field: "id",
+      id: 2,
+      exportable: false
+    },
+    {
       header: t("image"),
       field: "avatar.aws_path",
       id: 1,
