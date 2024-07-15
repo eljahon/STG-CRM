@@ -92,5 +92,9 @@
   "mydistributors": "My Distributors",
   "follow": "Follow",
   "count": "Count",
-  "productName": "Product Name"
+  "productName": "Product Name",
+  "finance": "Finance",
+  "bank_account": "Bank account",
+  "mfo": "MFO",
+  "inn": "INN"
 }

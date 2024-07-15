@@ -59,7 +59,6 @@ export default function ProfileSettingPage() {
         validateOnMount={false}
       >
         {(formik) => {
-          console.log(formik);
           return (
             <>
               <FromAction
@@ -94,6 +93,7 @@ export default function ProfileSettingPage() {
                     optionLabel="name"
                     optionValue="id"
                     placeholder={`${t("gender")}`}
+                    errors={formik.errors.gender}
                     // required={
                     //   !formik.values.region ? true : false
                     // }

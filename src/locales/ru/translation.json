@@ -91,5 +91,9 @@
   "mydistributors": "Мои дистрибьюторы",
   "follow": "Следовать",
   "count": "Количество",
-  "productName": "Название продукта"
+  "productName": "Название продукта",
+  "finance": "Finance",
+  "bank_account": "Bank account",
+  "mfo": "MFO",
+  "inn": "INN"
 }

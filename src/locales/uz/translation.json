@@ -91,5 +91,9 @@
   "mydistributors": "Mening distributorlarim",
   "follow": "Kuzatib borish",
   "count": "Soni",
-  "productName": "Mahsulot nomi"
+  "productName": "Mahsulot nomi",
+  "finance": "Finance",
+  "bank_account": "Bank account",
+  "mfo": "MFO",
+  "inn": "INN"
 }
