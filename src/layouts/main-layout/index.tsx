@@ -19,6 +19,7 @@ export default function MainLayout() {
             "/orders",
             "/dashboard",
             "/seller",
+            "/order-seller",
             "/product-seller"
           ].includes(location.pathname as any)
             ? "50px"

@@ -1,6 +1,7 @@
 import { CampanyActionRoute } from "./campany/route";
 import { DashboardRoute } from "./dashboard/route";
 import { DistributorsRoute } from "./distributor/route";
+import { SellerOrderRoute } from "./orders-seller/route";
 import { SellerProductRoute } from "./product-seller/route";
 import { ProductRoute } from "./product/route";
 import { ProfileActionRoute } from "./profile/route";
@@ -22,8 +23,9 @@ const routes = [
   ...SellerProductRoute,
   ...CampanyActionRoute,
   ...ProfileActionRoute,
+  ...SellerOrderRoute,
   ...DistributorsRoute,
-  ...SellerRoute
+  ...SellerRoute,
   // ...BranchRoute,
   // ...OrdersRoute
 ];

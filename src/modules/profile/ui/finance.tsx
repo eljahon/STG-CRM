@@ -20,7 +20,7 @@ export default function FinancePage() {
   return (
     <div className="mb-4">
       <FormContainer
-        url={"seller/update"}
+        url={"seller/updateFinance"}
         isFormData={false}
         setLoader={setLoader}
         loaderGlob={loader}

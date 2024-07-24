@@ -56,6 +56,15 @@ export default function ProfileSettingPage() {
         onFinal={() => {
           setLoader(false);
         }}
+        customData={(value: any) => {
+          let returnResult: any = JSON.parse(JSON.stringify(value));
+          console.log(returnResult["avatar"]);
+          returnResult["avatar"] === 0 || returnResult["avatar"] == ""
+            ? (returnResult["avatar"] = null)
+            : "";
+
+          return returnResult;
+        }}
         validateOnMount={false}
       >
         {(formik) => {

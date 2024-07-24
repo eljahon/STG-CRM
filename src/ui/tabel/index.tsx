@@ -140,23 +140,26 @@ export default function GolabTable(props: ITable) {
 
   const dt = useRef<DataTable<Product[]>>(null);
 
-  const header = (
-    <div className="flex w-full flex-wrap gap-2 align-items-center justify-content-between border-none">
-      {tableTile && <h4 className="m-0 text-3xl">{tableTile}</h4>}
-      <div className="flex flex-wrap gap-2  ">
-        {isFunction(newAdd) && (
-          <Button
-            className="border-round-3xl px-4"
-            label={t("new")}
-            icon="pi pi-plus"
-            severity="success"
-            onClick={newAdd}
-          />
-        )}
-        {/* {isFunction(checked) && <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={() => setDeleteProductDialog(true)} disabled={!selectedProducts || !selectedProducts.length} />} */}
+  const header =
+    tableTile && newAdd ? (
+      <div className="flex w-full flex-wrap gap-2 align-items-center justify-content-between border-none">
+        {tableTile && <h4 className="m-0 text-3xl">{tableTile}</h4>}
+        <div className="flex flex-wrap gap-2  ">
+          {isFunction(newAdd) && (
+            <Button
+              className="border-round-3xl px-4"
+              label={t("new")}
+              icon="pi pi-plus"
+              severity="success"
+              onClick={newAdd}
+            />
+          )}
+          {/* {isFunction(checked) && <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={() => setDeleteProductDialog(true)} disabled={!selectedProducts || !selectedProducts.length} />} */}
+        </div>
       </div>
-    </div>
-  );
+    ) : (
+      ""
+    );
 
   const deleteProductDialogFooter = (
     <React.Fragment>
