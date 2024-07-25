@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import UploadFile from "../../../ui/uploadFile";
 import { GetAllData } from "../../../service/global";
 import { useQuery } from "react-query";
 import { useTranslation } from "react-i18next";
