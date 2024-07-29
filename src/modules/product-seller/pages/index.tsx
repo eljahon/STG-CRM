@@ -15,7 +15,7 @@ const statuses = [
     label: "visible"
   },
   {
-    value: "cancelled",
+    value: "canceled",
     label: "unvisible"
   }
 ];
@@ -49,7 +49,7 @@ const SellerProductPage = () => {
           },
           visible: {
             $containsi:
-              filterValue?.["visible"]?.value == "cancelled"
+              filterValue?.["visible"]?.value == "canceled"
                 ? false
                 : filterValue?.["visible"]?.value == "completed"
                 ? true
@@ -120,7 +120,7 @@ const SellerProductPage = () => {
           <StatusBtn
             className={"inline-block"}
             label={itemData?.visible ? t("visible") : t("unvisible")}
-            status={itemData?.visible ? "completed" : "cancelled"}
+            status={itemData?.visible ? "completed" : "canceled"}
           />
         );
       },

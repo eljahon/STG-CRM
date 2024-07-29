@@ -81,7 +81,7 @@
   "accepted": "Qabul qilingan",
   "shipping": "Yetkazib berish",
   "completed": "Tugallangan",
-  "cancelled": "Bekor qilingan",
+  "canceled": "Bekor qilingan",
   "rejected": "Rad etilgan",
   "reject": "Rad etish",
   "rejectText": "Haqiqatan ham rad etmoqchimisiz",

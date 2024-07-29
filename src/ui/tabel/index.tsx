@@ -82,6 +82,7 @@ export default function GolabTable(props: ITable) {
 
   const { t } = useTranslation();
   const [deleteId, setDeleteId] = useState<any>(false);
+
   const columnsList = [
     ...columns,
     isCheckEvent() && {

@@ -66,7 +66,7 @@ const Alldistributors = () => {
                 : itemData?.isPending == true
                 ? "pending"
                 : itemData?.isRejected == true
-                ? "cancelled"
+                ? "canceled"
                 : "accepted"
             }
           />

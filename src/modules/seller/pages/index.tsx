@@ -77,7 +77,7 @@ const SellerPage = () => {
               itemData?.confirmed
                 ? "completed"
                 : itemData?.rejected
-                ? "cancelled"
+                ? "canceled"
                 : "pending"
             }
           />

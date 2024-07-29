@@ -3,7 +3,7 @@ const ORDER_STATUS: any = {
   accepted: "#FF9800",
   shipping: "#8576FF",
   completed: "#4CCD99",
-  cancelled: "#FF204E"
+  canceled: "#FF204E"
 };
 
 const hexToRgb = (hex: any) => {

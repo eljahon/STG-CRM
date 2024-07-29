@@ -82,7 +82,7 @@
   "accepted": "Accepted",
   "shipping": "Shipping",
   "completed": "Completed",
-  "cancelled": "Cancelled",
+  "canceled": "canceled",
   "rejected": "Rejected",
   "reject": "Reject",
   "rejectText": "Do you want to reject?",

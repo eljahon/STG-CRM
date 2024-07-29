@@ -24,12 +24,12 @@ const statusArr = [
     icons: "pi pi-check"
   },
   {
-    name: "cancelled",
+    name: "canceled",
     icons: "pi pi-times"
   }
 ];
 
-const TabBar = ({ className }: any) => {
+const TabBar = ({ className, count }: any) => {
   const [params, setSearchParam] = useSearchParams();
   const { t } = useTranslation();
   const [status, setstatus] = useState<any>(params.get("status") || "all");
@@ -65,11 +65,20 @@ const TabBar = ({ className }: any) => {
             style={{ color: e?.name == status ? "green" : "gray" }}
           />
           <p
-            className={`font-semibold text-base  m-0 ${
+            className={`font-semibold text-base  text-nowrap m-0 ${
               e?.name == status ? "text-green-500" : "text-gray-500"
             }`}
           >
             {t(e?.name)}{" "}
+            {count && count[e?.name] && (
+              <span
+                className={`text-xs ${
+                  e?.name == status ? "text-green-500" : "text-gray-500"
+                }`}
+              >
+                ({count[e?.name]})
+              </span>
+            )}{" "}
           </p>
         </div>
       ))}

@@ -1,37 +1,29 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
-import { GetAllData } from "../../../service/global";
+import { GetAllData, GetByIdData } from "../../../service/global";
 import GolabTable from "../../../ui/tabel";
 import debounce from "../../../hooks/debounce";
 import OrderDetails from "../ui/order-madal";
 import TabBar from "../ui/tab-bar";
 import getSocket from "../../../service/socket";
 import StatusBtn from "../../../ui/status";
-
+import lodash from "lodash";
+import { useSearchParams } from "react-router-dom";
 const SellerOrderPage = () => {
   const [page, setPage] = useState<any>(0);
+  const [params] = useSearchParams();
   const [productId, setProductId] = useState<any>(null);
+  const [sellerArr, setSelllerArr] = useState<any>([]);
+  const [orderId, setOrderId] = useState<any>(null);
+  const [orderCount, setOrderCount] = useState();
   const pageSize = 15;
   const [filterValue, setFilterValue] = useState<any>(null);
   const { t } = useTranslation();
   const socket = getSocket();
 
-  useEffect(() => {
-    socket.connect();
-    socket.emit("count");
-    socket.on("clients", (res: any) => {
-      console.log("listing", res);
-    });
-
-    return () => {
-      // socket.off("clients");
-      socket.disconnect();
-    };
-  }, []);
-
   const { data: seller, isLoading } = useQuery(
-    ["seller/orders", page, filterValue],
+    ["seller/orders", page, filterValue, params.get("status")],
     () =>
       GetAllData("seller/orders", {
         populate: "*",
@@ -40,7 +32,7 @@ const SellerOrderPage = () => {
           pageSize: pageSize
         },
         filters: {
-          product: {
+          order: {
             company: {
               name: {
                 $containsi:
@@ -51,17 +43,29 @@ const SellerOrderPage = () => {
               $containsi: filterValue?.["product.title"]?.value || undefined
             }
           },
-          visible: {
-            $containsi:
-              filterValue?.["visible"]?.value == "cancelled"
-                ? false
-                : filterValue?.["visible"]?.value == "completed"
-                ? true
-                : undefined
-          }
+          status: params.get("status") || undefined
         }
       })
   );
+
+  const { data: orderCountData } = useQuery("orderCount", () =>
+    GetAllData("seller/orders/count")
+  );
+  useEffect(() => {
+    socket.connect();
+    socket.on("order", async (res: any) => {
+      setOrderId(res?.id);
+    });
+    socket.on("orderCounts", async (res: any) => {
+      setOrderCount(res);
+      console.log(res);
+    });
+    return () => {
+      socket.off("order");
+      socket.off("orderCounts");
+      socket.disconnect();
+    };
+  }, []);
 
   const columns = [
     {
@@ -122,13 +126,42 @@ const SellerOrderPage = () => {
     }
   ];
 
+  useEffect(() => {
+    setSelllerArr(seller?.data);
+  }, [seller]);
+
+  useEffect(() => {
+    setOrderCount(orderCountData?.data);
+  }, [orderCountData]);
+
+  useEffect(() => {
+    const fetchone = async () => {
+      await GetByIdData("orders", orderId, { populate: "*" })
+        .then((data) => {
+          const updatedItems = [...sellerArr];
+          updatedItems[index] = data?.data;
+          setSelllerArr(updatedItems);
+        })
+        .catch((error: any) => {
+          console.error(error);
+        })
+        .finally(() => {
+          setOrderId(null);
+        });
+    };
+    const index = lodash.findIndex(sellerArr, { id: orderId });
+    if (index !== -1) {
+      fetchone();
+    }
+  }, [orderId]);
+
   return (
     <div className="w-full flex gap-5">
       <div className="w-full">
-        <TabBar />
+        <TabBar count={orderCount} />
         <GolabTable
           isLoading={isLoading}
-          data={seller?.data}
+          data={sellerArr}
           columns={columns}
           pageSize={pageSize}
           totalProduct={seller?.meta?.pagination?.total}

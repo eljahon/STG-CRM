@@ -81,7 +81,7 @@
   "accepted": "Принято",
   "shipping": "Доставка",
   "completed": "Завершено",
-  "cancelled": "Отменено",
+  "canceled": "Отменено",
   "rejected": "Отклонено",
   "reject": "Отклонить",
   "rejectText": "Вы хотите отклонить?",

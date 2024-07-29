@@ -24,7 +24,7 @@ const statusArr = [
     icons: "pi pi-check"
   },
   {
-    name: "cancelled",
+    name: "canceled",
     icons: "pi pi-times"
   }
 ];
