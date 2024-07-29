@@ -2,6 +2,8 @@ import { Galleria } from "primereact/galleria";
 import GlobalMadal from "../../../../ui/global-modal";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import StatusBtn from "../../../../ui/status";
+import { Button } from "primereact/button";
 
 const InfoTepmlate = ({ title, text, icons, children }: any) => {
   return (
@@ -20,7 +22,7 @@ const InfoTepmlate = ({ title, text, icons, children }: any) => {
   );
 };
 
-const OrderDetails = ({ close, data }: any) => {
+const OrderDetails = ({ close, cencel, changeStatus, data }: any) => {
   const { t } = useTranslation();
   const [imageOpen, setImagesOpen] = useState<any>(null);
 
@@ -36,7 +38,7 @@ const OrderDetails = ({ close, data }: any) => {
   };
 
   return (
-    <GlobalMadal close={close} title={t("product")}>
+    <GlobalMadal close={close} title={t("product")} >
       <div className="flex gap-8">
         {data?.product?.image ? (
           <div className="w-full flex max-w-20rem  h-full  relative imageFlex  flex-column">
@@ -76,9 +78,14 @@ const OrderDetails = ({ close, data }: any) => {
               text={data?.product?.title}
               icons="pi pi-th-large"
             />
+            <InfoTepmlate
+              title={t("address")}
+              text={data?.address}
+              icons="pi pi-map-marker"
+            />
             <InfoTepmlate title={"Price"} icons={"pi pi-wallet"}>
               <p className="m-0 font-normal text-base text-green-600 testWraP ml-1">
-                {data?.price} som
+                {data?.total_price} som
               </p>
             </InfoTepmlate>
             <InfoTepmlate title={"Count"} icons={"pi pi-wave-pulse"}>
@@ -91,6 +98,13 @@ const OrderDetails = ({ close, data }: any) => {
               text={data?.product?.type}
               icons={"pi pi-sitemap"}
             />
+            <InfoTepmlate title={"Status"} icons={"pi pi-wave-pulse"}>
+              <StatusBtn
+                status={data?.status}
+                label={t(data?.status)}
+                className={"inline-block"}
+              />
+            </InfoTepmlate>
           </div>
           <div className="w-full flex flex-column justify-content-between">
             <InfoTepmlate
@@ -99,16 +113,55 @@ const OrderDetails = ({ close, data }: any) => {
               icons={"pi pi-building"}
             />
             <InfoTepmlate
-              title={"Phone number"}
+              title={t("companyPhone")}
               text={data?.product?.company?.phone}
               icons={"pi pi-phone"}
             />
-
             <InfoTepmlate
               title={t("aboutCompany")}
               text={data?.product?.company?.description}
               icons={"pi pi-comment"}
             />
+            <InfoTepmlate
+              title={t("clientname")}
+              text={data?.client?.fullname}
+              icons={"pi pi-building"}
+            />
+            <InfoTepmlate
+              title={t("clientPhone")}
+              text={data?.client?.phone}
+              icons={"pi pi-phone"}
+            />
+            {data.status == "pending" || data.status == "accepted" ? (
+              <InfoTepmlate title={"changeStatus"} icons={"pi pi-wave-pulse"}>
+                {data?.is_paid && (
+                  <Button
+                    icon={
+                      data?.status == "pending" ? "pi pi-check" : "pi pi-truck"
+                    }
+                    tooltip="tooltip"
+                    tooltipOptions={{ position: "bottom" }}
+                    className="mr-2 h-2rem w-2rem"
+                    rounded
+                    outlined
+                    onClick={changeStatus}
+                  />
+                )}
+                {data.status == "pending" && (
+                  <Button
+                    rounded
+                    outlined
+                    className="mr-2 h-2rem w-2rem"
+                    icon="pi pi-times"
+                    severity="danger"
+                    tooltip="tooltip"
+                    onClick={cencel}
+                  />
+                )}
+              </InfoTepmlate>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

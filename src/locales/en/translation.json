@@ -80,6 +80,7 @@
   "all": "All",
   "pending": "Pending",
   "accepted": "Accepted",
+  "accept": "Accept",
   "shipping": "Shipping",
   "completed": "Completed",
   "canceled": "canceled",

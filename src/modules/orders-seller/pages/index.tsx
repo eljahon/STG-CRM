@@ -1,7 +1,12 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "react-query";
-import { GetAllData, GetByIdData } from "../../../service/global";
+import {
+  AddidData,
+  GetAllData,
+  GetByIdData,
+  UpdateData1One
+} from "../../../service/global";
 import GolabTable from "../../../ui/tabel";
 import debounce from "../../../hooks/debounce";
 import OrderDetails from "../ui/order-madal";
@@ -10,6 +15,11 @@ import getSocket from "../../../service/socket";
 import StatusBtn from "../../../ui/status";
 import lodash from "lodash";
 import { useSearchParams } from "react-router-dom";
+import { Button } from "primereact/button";
+import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { toast } from "react-toastify";
+import { Dialog } from "primereact/dialog";
+import { InputText } from "primereact/inputtext";
 const SellerOrderPage = () => {
   const [page, setPage] = useState<any>(0);
   const [params] = useSearchParams();
@@ -17,8 +27,10 @@ const SellerOrderPage = () => {
   const [sellerArr, setSelllerArr] = useState<any>([]);
   const [orderId, setOrderId] = useState<any>(null);
   const [orderCount, setOrderCount] = useState();
-  const pageSize = 15;
   const [filterValue, setFilterValue] = useState<any>(null);
+  const [visibleCancel, setVisibleCancel] = useState(false);
+  const [CancelReason, setCancelReason] = useState<any>(null);
+  const pageSize = 15;
   const { t } = useTranslation();
   const socket = getSocket();
 
@@ -51,6 +63,17 @@ const SellerOrderPage = () => {
   const { data: orderCountData } = useQuery("orderCount", () =>
     GetAllData("seller/orders/count")
   );
+
+  const { data: oneOrder } = useQuery(
+    ["oneOrder", productId],
+    () =>
+      GetByIdData("orders", productId, {
+        populate: "*"
+      }),
+    {
+      enabled: productId ? true : false
+    }
+  );
   useEffect(() => {
     socket.connect();
     socket.on("order", async (res: any) => {
@@ -58,7 +81,6 @@ const SellerOrderPage = () => {
     });
     socket.on("orderCounts", async (res: any) => {
       setOrderCount(res);
-      console.log(res);
     });
     return () => {
       socket.off("order");
@@ -99,18 +121,11 @@ const SellerOrderPage = () => {
       filter: true,
       filterPlaceholder: t("search")
     },
-    {
-      header: t("count"),
-      field: "count",
-      id: 5,
-      exportable: false,
-      filter: true,
-      filterPlaceholder: t("search")
-    },
+
     {
       header: t("status"),
       field: "status",
-      id: 6,
+      id: 5,
       exportable: false,
       body: (itemData: any) => {
         return (
@@ -120,9 +135,71 @@ const SellerOrderPage = () => {
             status={itemData?.status}
           />
         );
-      },
-      filter: true,
-      filterPlaceholder: t("search")
+      }
+    },
+    {
+      header: t("count"),
+      field: "count",
+      id: 6,
+      exportable: false
+    },
+    {
+      header: t("is_paid"),
+      field: "is_paid",
+      id: 7,
+      exportable: false,
+      body: (itemData: any) => {
+        return (
+          <StatusBtn
+            className={"inline-block"}
+            label={itemData?.is_paid ? t("paid") : t("unPaid")}
+            status={itemData?.is_paid ? "completed" : "canceled"}
+          />
+        );
+      }
+    },
+    {
+      id: 8,
+      exportable: false,
+      body: (itemData: any) => {
+        if (itemData.status == "pending" || itemData.status == "accepted")
+          return (
+            <div className="flex gap-2">
+              {itemData?.is_paid && (
+                <Button
+                  icon={
+                    itemData?.status == "pending"
+                      ? "pi pi-check"
+                      : "pi pi-truck"
+                  }
+                  onClick={() =>
+                    confirm1({
+                      message: "Are you sure you want to change status?",
+                      type: itemData?.status,
+                      id: itemData?.id
+                    })
+                  }
+                  tooltip="tooltip"
+                  tooltipOptions={{ position: "bottom" }}
+                  className="mr-2 h-2rem w-2rem"
+                  rounded
+                  outlined
+                />
+              )}
+              {itemData.status == "pending" && (
+                <Button
+                  rounded
+                  outlined
+                  className="mr-2 h-2rem w-2rem"
+                  icon="pi pi-times"
+                  severity="danger"
+                  tooltip="tooltip"
+                  onClick={() => setVisibleCancel(itemData?.id)}
+                />
+              )}
+            </div>
+          );
+      }
     }
   ];
 
@@ -133,14 +210,22 @@ const SellerOrderPage = () => {
   useEffect(() => {
     setOrderCount(orderCountData?.data);
   }, [orderCountData]);
-
   useEffect(() => {
     const fetchone = async () => {
       await GetByIdData("orders", orderId, { populate: "*" })
         .then((data) => {
           const updatedItems = [...sellerArr];
-          updatedItems[index] = data?.data;
-          setSelllerArr(updatedItems);
+          if (
+            data?.data?.status == params.get("status") ||
+            params.get("status") == "" ||
+            !params.get("status")
+          ) {
+            updatedItems[index] = data?.data;
+            setSelllerArr(updatedItems);
+          } else {
+            updatedItems.splice(index, 1);
+            setSelllerArr(updatedItems);
+          }
         })
         .catch((error: any) => {
           console.error(error);
@@ -155,6 +240,57 @@ const SellerOrderPage = () => {
     }
   }, [orderId]);
 
+  const confirm1 = ({ message, type, id }: any) => {
+    confirmDialog({
+      message: message,
+      header: "Confirmation",
+      icon: "pi pi-exclamation-triangle",
+      accept: async () => {
+        await UpdateData1One(
+          type == "pending" ? "accept/order" : "shipping/order",
+          id
+        )
+          .then((res: any) => {
+            if (res?.status == "200" || res?.status == "201") {
+              toast.success("Order status changed successfully");
+              setProductId(null);
+            }
+          })
+          .catch(() => console.log("err"));
+      }
+    });
+  };
+  const NavigateDialog = (
+    <React.Fragment>
+      <Button
+        label={t("no")}
+        icon="pi pi-times"
+        outlined
+        onClick={() => setVisibleCancel(false)}
+      />
+      <Button
+        label={"yes"}
+        icon="pi pi-check"
+        severity="danger"
+        onClick={async () => {
+          if (CancelReason) {
+            await AddidData("cancel/order", visibleCancel, {
+              cancel_reason: CancelReason
+            })
+              .then((res: any) => {
+                if (res?.status == "200" || res?.status == "201") {
+                  toast.success("Order status changed successfully");
+                  setProductId(null);
+                }
+              })
+              .catch(() => console.log("err"));
+          } else {
+            toast.error("please write reason");
+          }
+        }}
+      />
+    </React.Fragment>
+  );
   return (
     <div className="w-full flex gap-5">
       <div className="w-full">
@@ -167,7 +303,7 @@ const SellerOrderPage = () => {
           totalProduct={seller?.meta?.pagination?.total}
           currentPage={page}
           showFunction={(e: any) => {
-            setProductId(e);
+            setProductId(e.id);
           }}
           url={"/product-seller"}
           onFilter={debounce((e: any) => setFilterValue(e.filters), 700)}
@@ -176,9 +312,48 @@ const SellerOrderPage = () => {
           }}
         />
       </div>
+      <ConfirmDialog baseZIndex={100000000000024} />
 
-      {productId && (
-        <OrderDetails data={productId} close={() => setProductId(null)} />
+      <Dialog
+        header="Confirmation"
+        visible={visibleCancel ? true : false}
+        style={{ width: "40vw" }}
+        baseZIndex={100000000000024}
+        onHide={() => {
+          if (!visibleCancel) return;
+          setVisibleCancel(false);
+        }}
+        footer={NavigateDialog}
+      >
+        <div className="mb-4 flex gap-1 align-items-center">
+          <i className="pi pi-exclamation-triangle"></i>
+          <p className="m-0">Do you realy wanna cancel this order</p>
+        </div>
+        <p className="m-0">{t("cancel_reason_lebel")}</p>
+        <InputText
+          className="w-full"
+          value={CancelReason}
+          placeholder={t("cancel_reason")}
+          onChange={(e) => setCancelReason(e.target.value)}
+        />
+      </Dialog>
+      {oneOrder && productId && (
+        <OrderDetails
+          cencel={() => {
+            setVisibleCancel(productId);
+          }}
+          data={oneOrder?.data}
+          close={() => {
+            setProductId(null);
+          }}
+          changeStatus={() => {
+            confirm1({
+              message: "Are you sure you want to change status?",
+              type: oneOrder?.data?.status,
+              id: productId
+            });
+          }}
+        />
       )}
     </div>
   );

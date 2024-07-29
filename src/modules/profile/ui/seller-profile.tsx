@@ -96,7 +96,7 @@ export default function ProfileSettingSelerPage() {
         validateOnMount={false}
       >
         {(formik) => {
-          console.log(formik);
+          console.log(formik.values.location);
           return (
             <>
               <FromAction
@@ -206,14 +206,14 @@ export default function ProfileSettingSelerPage() {
                   <YandexMap
                     value={
                       formik.values.location && [
-                        formik.values.location?.long,
-                        formik.values.location?.lat
+                        formik.values.location?.lat,
+                        formik.values.location?.long
                       ]
                     }
                     onLocationSelect={(e) => {
                       formik.setFieldValue("location", {
-                        lat: e[1],
-                        long: e[0]
+                        lat: e[0],
+                        long: e[1]
                       });
                     }}
                   />

@@ -30,7 +30,10 @@ const StatusBtn = ({ label, status, className, onClick, loading }: any) => {
         color: ORDER_STATUS?.[`${status}`]
       }}
     >
-      <p className="flex align-items-center gap-2 m-0 ">
+      <p
+        className="flex align-items-center gap-2 m-0 text-nowrap"
+        style={{ textWrap: "nowrap" }}
+      >
         {loading ? (
           <i
             className="pi pi-spin pi-spinner-dotted"
