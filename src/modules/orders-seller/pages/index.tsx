@@ -281,6 +281,7 @@ const SellerOrderPage = () => {
                 if (res?.status == "200" || res?.status == "201") {
                   toast.success("Order status changed successfully");
                   setProductId(null);
+                  setVisibleCancel(false);
                 }
               })
               .catch(() => console.log("err"));
