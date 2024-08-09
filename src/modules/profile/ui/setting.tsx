@@ -56,10 +56,18 @@ export default function ProfileSettingPage() {
         onFinal={() => {
           setLoader(false);
         }}
+        customData={(value: any) => {
+          let returnResult: any = JSON.parse(JSON.stringify(value));
+          console.log(returnResult["avatar"]);
+          returnResult["avatar"] === 0 || returnResult["avatar"] == ""
+            ? (returnResult["avatar"] = null)
+            : "";
+
+          return returnResult;
+        }}
         validateOnMount={false}
       >
         {(formik) => {
-          console.log(formik);
           return (
             <>
               <FromAction
@@ -94,6 +102,7 @@ export default function ProfileSettingPage() {
                     optionLabel="name"
                     optionValue="id"
                     placeholder={`${t("gender")}`}
+                    errors={formik.errors.gender}
                     // required={
                     //   !formik.values.region ? true : false
                     // }

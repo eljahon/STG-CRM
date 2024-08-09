@@ -79,9 +79,10 @@
   "all": "barchasi",
   "pending": "Kutilmoqda",
   "accepted": "Qabul qilingan",
+  "accept": "Qabul qilish",
   "shipping": "Yetkazib berish",
   "completed": "Tugallangan",
-  "cancelled": "Bekor qilingan",
+  "canceled": "Bekor qilingan",
   "rejected": "Rad etilgan",
   "reject": "Rad etish",
   "rejectText": "Haqiqatan ham rad etmoqchimisiz",
@@ -91,5 +92,9 @@
   "mydistributors": "Mening distributorlarim",
   "follow": "Kuzatib borish",
   "count": "Soni",
-  "productName": "Mahsulot nomi"
+  "productName": "Mahsulot nomi",
+  "finance": "Finance",
+  "bank_account": "Bank account",
+  "mfo": "MFO",
+  "inn": "INN"
 }

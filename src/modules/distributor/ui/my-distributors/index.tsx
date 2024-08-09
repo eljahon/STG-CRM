@@ -64,7 +64,7 @@ const Mydistributors = () => {
             }
             status={
               itemData?.rejected == true
-                ? "cancelled"
+                ? "canceled"
                 : itemData?.confirmed == true
                 ? "completed"
                 : "pending"

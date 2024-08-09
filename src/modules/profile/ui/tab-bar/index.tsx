@@ -2,50 +2,53 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import paramsToObject from "../../../../hooks/paramsToObject";
 import { useTranslation } from "react-i18next";
-const statusArr = [
+const distArr = [
   {
-    name: "all",
-    icons: "pi pi-bolt"
+    name: "profile",
+    icons: "pi pi-user"
   },
   {
-    name: "pending",
-    icons: "pi pi-spinner-dotted"
-  },
-  {
-    name: "accepted",
-    icons: "pi pi-check-square"
-  },
-  {
-    name: "shipping",
-    icons: "pi pi-truck"
-  },
-  {
-    name: "completed",
-    icons: "pi pi-check"
-  },
-  {
-    name: "canceled",
-    icons: "pi pi-times"
+    name: "password",
+    icons: "pi pi-key"
   }
 ];
 
+const sellerArr = [
+  {
+    name: "profile",
+    icons: "pi pi-user"
+  },
+  {
+    name: "password",
+    icons: "pi pi-key"
+  },
+  {
+    name: "profile-seller",
+    icons: "pi pi-user"
+  },
+  {
+    name: "finance",
+    icons: "pi pi-chart-scatter"
+  }
+];
 const TabBar = ({ className }: any) => {
   const [params, setSearchParam] = useSearchParams();
   const { t } = useTranslation();
-  const [status, setstatus] = useState<any>(params.get("status") || "all");
+  const [status, setstatus] = useState<any>(params.get("status") || "profile");
+  const arr =
+    window.localStorage.getItem("role") == "seller" ? sellerArr : distArr;
   return (
     <div
-      className={`w-full bg-white border-round-2xl py-4 px-2  ${
+      className={`w-full flex bg-white gap-2  border-round-2xl mb-4 py-2 px-2  ${
         className && className
       }`}
-      style={{ maxWidth: "265px", minHeight: `80vh` }}
     >
-      {statusArr?.map((e: any, index: number) => (
+      {arr?.map((e: any, index: number) => (
         <div
           key={index}
           onClick={() => {
             setstatus(e?.name);
-            if (e?.name == "all") {
+            if (e?.name == "profile") {
               setSearchParam({
                 ...paramsToObject(params.entries()),
                 status: ""
@@ -66,7 +69,7 @@ const TabBar = ({ className }: any) => {
             style={{ color: e?.name == status ? "green" : "gray" }}
           />
           <p
-            className={`font-semibold text-base  m-0 ${
+            className={`font-semibold text-base   m-0 ${
               e?.name == status ? "text-green-500" : "text-gray-500"
             }`}
           >

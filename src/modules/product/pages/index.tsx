@@ -89,7 +89,7 @@ export default function ProductPage() {
           <StatusBtn
             className={"inline-block"}
             label={itemData?.visible ? t("visible") : t("unvisible")}
-            status={itemData?.visible ? "completed" : "cancelled"}
+            status={itemData?.visible ? "completed" : "canceled"}
           />
         );
       }
@@ -108,14 +108,14 @@ export default function ProductPage() {
               itemData?.confirmed
                 ? t("confirmed")
                 : itemData?.rejected
-                ? t("cancelled")
+                ? t("canceled")
                 : t("pending")
             }
             status={
               itemData?.confirmed
                 ? "completed"
                 : itemData?.rejected
-                ? "cancelled"
+                ? "canceled"
                 : "pending"
             }
           />

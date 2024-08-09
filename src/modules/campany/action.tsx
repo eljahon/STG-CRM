@@ -60,6 +60,15 @@ export default function CampanySetPage() {
           setLoader(false);
         }}
         validateOnMount={false}
+        customData={(value: any) => {
+          let returnResult: any = JSON.parse(JSON.stringify(value));
+          console.log(returnResult["logo"]);
+          returnResult["logo"] === 0 || returnResult["logo"] == ""
+            ? (returnResult["logo"] = null)
+            : "";
+
+          return returnResult;
+        }}
       >
         {(formik) => {
           return (

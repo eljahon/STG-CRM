@@ -1,5 +1,5 @@
 // src/YandexMap.tsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { YMaps, Map, Placemark } from "@pbe/react-yandex-maps";
 
 interface YandexMapProps {
@@ -9,45 +9,39 @@ interface YandexMapProps {
   height?: any;
 }
 
-const YandexMap: React.FC<YandexMapProps> = ({
-  onLocationSelect,
-  value,
-  disable,
-  height
-}) => {
-  const [coords, setCoords] = useState<number[]>(value || [41.2995, 69.2401]); // Default to Tashkent, Uzbekistan
+const YandexMap: React.FC<YandexMapProps> = React.memo(
+  ({ onLocationSelect, value, disable, height }) => {
+    const [coords, setCoords] = useState<number[]>(value || [41.2995, 69.2401]); // Default to Tashkent, Uzbekistan
+    const [mapState, setMapState] = useState({ center: coords, zoom: 13 });
 
-  const handleMapClick = (e: any) => {
-    const newCoords = e.get("coords") as number[];
-    setCoords(newCoords);
-    onLocationSelect(newCoords);
-  };
+    const handleMapClick = (e: any) => {
+      const newCoords = e.get("coords") as number[];
+      setCoords(newCoords);
+      onLocationSelect(newCoords);
+    };
 
-  // const handleSearchResultSelect = (e: any) => {
-  //   const results = e.get("target").getResultsArray();
-  //   if (results.length) {
-  //     const firstResultCoords = results[0].geometry.getCoordinates();
-  //     setCoords(firstResultCoords);
-  //     onLocationSelect(firstResultCoords);
-  //   }
-  // };
+    useEffect(() => {
+      setCoords(value);
+      setMapState((prevState) => ({ ...prevState, center: value }));
+    }, [value]);
 
-  return (
-    <YMaps>
-      <Map
-        defaultState={{ center: coords, zoom: 13 }}
-        width="100%"
-        height={height || "500px"}
-        onClick={!disable && handleMapClick}
-      >
-        <Placemark geometry={coords} />
-        {/* <SearchControl
+    return (
+      <YMaps>
+        <Map
+          state={mapState}
+          width="100%"
+          height={height || "500px"}
+          onClick={!disable && handleMapClick}
+        >
+          <Placemark geometry={coords} />
+          {/* <SearchControl
           options={{ float: "right" }}
           onResultShow={handleSearchResultSelect}
         /> */}
-      </Map>
-    </YMaps>
-  );
-};
+        </Map>
+      </YMaps>
+    );
+  }
+);
 
 export default YandexMap;

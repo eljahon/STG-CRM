@@ -102,7 +102,7 @@ body {
 }
 
 .colm1 {
-  width: calc(100% / 3);
+  width: calc((100% - 20px) / 3);
 }
 
 .colm2 {
@@ -113,6 +113,11 @@ body {
   min-width: 90px;
   width: calc((100% - 10px) / 4);
   max-width: 250px;
+}
+
+.colm4 {
+  min-width: 90px;
+  width: calc((100% - 40px) / 4);
 }
 
 .fixedmu {
@@ -149,6 +154,10 @@ body {
 .min-w-10 {
   min-height: 80vh;
   max-width: 265px;
+}
+
+.p-autocomplete-input {
+  width: 100% !important;
 }
 
 @media screen and (max-width:991px) {

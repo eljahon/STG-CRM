@@ -80,9 +80,10 @@
   "all": "All",
   "pending": "Pending",
   "accepted": "Accepted",
+  "accept": "Accept",
   "shipping": "Shipping",
   "completed": "Completed",
-  "cancelled": "Cancelled",
+  "canceled": "canceled",
   "rejected": "Rejected",
   "reject": "Reject",
   "rejectText": "Do you want to reject?",
@@ -92,5 +93,9 @@
   "mydistributors": "My Distributors",
   "follow": "Follow",
   "count": "Count",
-  "productName": "Product Name"
+  "productName": "Product Name",
+  "finance": "Finance",
+  "bank_account": "Bank account",
+  "mfo": "MFO",
+  "inn": "INN"
 }

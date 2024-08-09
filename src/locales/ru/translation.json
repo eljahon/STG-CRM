@@ -79,9 +79,10 @@
   "all": "все",
   "pending": "В ожидании",
   "accepted": "Принято",
+  "accept": "Принимать",
   "shipping": "Доставка",
   "completed": "Завершено",
-  "cancelled": "Отменено",
+  "canceled": "Отменено",
   "rejected": "Отклонено",
   "reject": "Отклонить",
   "rejectText": "Вы хотите отклонить?",
@@ -91,5 +92,9 @@
   "mydistributors": "Мои дистрибьюторы",
   "follow": "Следовать",
   "count": "Количество",
-  "productName": "Название продукта"
+  "productName": "Название продукта",
+  "finance": "Finance",
+  "bank_account": "Bank account",
+  "mfo": "MFO",
+  "inn": "INN"
 }

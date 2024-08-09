@@ -1,3 +1,4 @@
+import { AutoComplete } from "primereact/autocomplete";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
@@ -23,7 +24,9 @@ const GlobalInput = ({
   typeValue,
   filter,
   required,
-  loading
+  loading,
+  AutoCompleteItem,
+  onSelect
 }: any) => {
   const debounce = <F extends (...args: any[]) => any>(
     func: F,
@@ -125,6 +128,27 @@ const GlobalInput = ({
           optionLabel={optionLabel}
           required={required}
           loading={loading}
+        />
+      )}
+
+      {type == "autoComplete" && (
+        <AutoComplete
+          value={value}
+          id={id}
+          className="w-full pb-3"
+          name={name}
+          placeholder={placeholder}
+          width={"100%"}
+          suggestions={options}
+          completeMethod={debounce((e) => {
+            if (localChange) localChange(e);
+          }, 700)}
+          onChange={(e) => {
+            formik.handleChange(e);
+          }}
+          onSelect={onSelect}
+          invalid={Boolean(errors || required)}
+          itemTemplate={AutoCompleteItem}
         />
       )}
 
