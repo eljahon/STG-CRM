@@ -61,12 +61,16 @@ export default function SellerProductAction() {
       }
     })
       .then((e) => {
+        if (copmid && !e?.data.length) {
+          setProductArr([]);
+        } else {
           const newArr = productArr ? [...productArr, ...e?.data] : e?.data;
           const updateDate = productOne?.product
             ? [productOne.product, ...newArr]
             : newArr;
           const uniqueUsersByName: any = lodash.uniqBy(updateDate, "id");
           setProductArr(uniqueUsersByName);
+        }
       })
       .catch((errors) => console.log(errors))
       .finally(() => setProductLoaging(false));
@@ -150,6 +154,7 @@ export default function SellerProductAction() {
                   placeholder={`${t("companyName")}`}
                   loading={compLoaging}
                 />
+
                 <GlobalInput
                   type="select"
                   filter={(e: any) => getProduct(e)}
