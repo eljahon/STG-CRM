@@ -39,11 +39,12 @@ export default function SellerProductAction() {
       }
     })
       .then((e) => {
+        console.log(e);
         const newArr: any = compArr ? [...compArr, ...e?.data] : e?.data;
         const updateDate = productOne?.product?.company
           ? [productOne.product, ...newArr]
           : newArr;
-        const uniqueUsersByName: any = lodash.uniqBy(updateDate, "company.id");
+        const uniqueUsersByName: any = lodash.uniqBy(updateDate, "id");
         setCompArr(uniqueUsersByName);
       })
       .catch((errors) => console.log(errors))
@@ -54,17 +55,18 @@ export default function SellerProductAction() {
     GetAllData("products", {
       populate: "*",
       filters: {
+        confirmed: true,
         company: copmid || undefined,
         title: { $containsi: product || undefined }
       }
     })
       .then((e) => {
-        const newArr = productArr ? [...productArr, ...e?.data] : e?.data;
-        const updateDate = productOne?.product
-          ? [productOne.product, ...newArr]
-          : newArr;
-        const uniqueUsersByName: any = lodash.uniqBy(updateDate, "id");
-        setProductArr(uniqueUsersByName);
+          const newArr = productArr ? [...productArr, ...e?.data] : e?.data;
+          const updateDate = productOne?.product
+            ? [productOne.product, ...newArr]
+            : newArr;
+          const uniqueUsersByName: any = lodash.uniqBy(updateDate, "id");
+          setProductArr(uniqueUsersByName);
       })
       .catch((errors) => console.log(errors))
       .finally(() => setProductLoaging(false));
@@ -143,8 +145,7 @@ export default function SellerProductAction() {
                   optionLabel="name"
                   optionValue="id"
                   localChange={(e: any) => {
-                    console.log(e);
-                    // getProduct("", e.value);
+                    getProduct("", e.value);
                   }}
                   placeholder={`${t("companyName")}`}
                   loading={compLoaging}
