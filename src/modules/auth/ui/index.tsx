@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import { AuthLogin } from "../../../service/auth";
 import { useTranslation } from "react-i18next";
 import { GetMe } from "../../../service/global";
-import { Link } from "react-router-dom";
 import LeftBar from "./left-bar";
 
 type FormValues = {
@@ -92,9 +91,9 @@ export default function LoginFrom() {
               {...register(`password`, { required: true })}
             />
           </label>
-          <div className="w-full text-start mb-5">
+          {/* <div className="w-full text-start mb-5">
             Don't have account <Link to="/auth/sign-up">sign up</Link>
-          </div>
+          </div> */}
           <Button
             loading={loader}
             severity="success"

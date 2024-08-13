@@ -79,22 +79,7 @@ export default function ProductPage() {
       id: 4,
       exportable: false
     },
-    {
-      header: t("visible"),
-      field: "visible",
-      id: 5,
-      exportable: false,
-      body: (itemData: any) => {
-        return (
-          <StatusBtn
-            className={"inline-block"}
-            label={itemData?.visible ? t("visible") : t("unvisible")}
-            status={itemData?.visible ? "completed" : "canceled"}
-          />
-        );
-      }
-      // ItemRender: (itemData, itemcoulmns,index) => {}
-    },
+ 
     {
       header: t("status"),
       field: "status",

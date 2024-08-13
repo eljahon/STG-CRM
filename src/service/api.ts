@@ -18,7 +18,6 @@ api.interceptors.request.use(
     if (isPublicApi) {
       config.headers["Authorization"] = `Bearer ${isPublicApi}`;
     }
-
     return config;
   },
   (error: any) => {
