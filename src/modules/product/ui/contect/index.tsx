@@ -3,7 +3,6 @@ import GlobalInput from "../../../../ui/form/global-input";
 import UploadFile from "../../../../ui/uploadFile";
 import UploadFileSer from "../../../../ui/uploadFileSer";
 import { useParams } from "react-router-dom";
-import SwichInputLoc from "../../../../ui/form/swich-input";
 import { useEffect, useState } from "react";
 import UploadFileMulty from "../../../../ui/uploadFileMulty";
 
@@ -124,12 +123,6 @@ const ProductContentInputs = ({
           />
         )}
 
-        <SwichInputLoc
-          formik={formik}
-          className={"mb-4 mt-3 colm2"}
-          value={formik.values.visible}
-          label={t("visible")}
-        />
         <GlobalInput
           type="textarea"
           formik={formik}

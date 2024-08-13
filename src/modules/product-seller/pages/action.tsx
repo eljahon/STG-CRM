@@ -32,14 +32,10 @@ export default function SellerProductAction() {
 
   const getComp = async (copm?: string) => {
     setCompLoaging(true);
-    GetAllData("seller/companies", {
+    GetAllData("companies", {
       populate: "*",
       filters: {
-        confirmed: true,
-        rejected: false,
-        company: {
-          name: { $containsi: copm || undefined }
-        }
+        name: { $containsi: copm || undefined }
       }
     })
       .then((e) => {
@@ -55,7 +51,7 @@ export default function SellerProductAction() {
   };
   const getProduct = async (product?: string, copmid?: any) => {
     setProductLoaging(true);
-    GetAllData("distributor/products", {
+    GetAllData("products", {
       populate: "*",
       filters: {
         company: copmid || undefined,
@@ -136,16 +132,19 @@ export default function SellerProductAction() {
                     getComp(e);
                   }}
                   formik={formik}
-                  value={productOne?.product?.company?.id}
+                  value={
+                    formik.values.company || productOne?.product?.company?.id
+                  }
                   label={`${t("companyName")} `}
                   name={`company`}
                   id={"company"}
                   className={"mb-4 colm2 "}
                   options={compArr}
-                  optionLabel="company.name"
-                  optionValue="company.id"
+                  optionLabel="name"
+                  optionValue="id"
                   localChange={(e: any) => {
-                    getProduct("", e.value);
+                    console.log(e);
+                    // getProduct("", e.value);
                   }}
                   placeholder={`${t("companyName")}`}
                   loading={compLoaging}

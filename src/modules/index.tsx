@@ -25,7 +25,7 @@ const routes = [
   ...ProfileActionRoute,
   ...SellerOrderRoute,
   ...DistributorsRoute,
-  ...SellerRoute,
+  ...SellerRoute
   // ...BranchRoute,
   // ...OrdersRoute
 ];

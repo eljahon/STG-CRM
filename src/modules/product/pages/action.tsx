@@ -217,10 +217,7 @@ export default function ProductPage() {
             name: "description",
             value: productOne?.data?.description
           },
-          {
-            name: "visible",
-            value: id == "new" ? true : productOne?.data?.visible
-          },
+        
           {
             name: "image",
             value: productOne?.data?.image?.id
