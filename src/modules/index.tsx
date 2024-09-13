@@ -17,7 +17,6 @@ import { SellerRoute } from "./seller/route";
 // ];
 
 const routes = [
-  //   ...notFound,
   ...DashboardRoute,
   ...ProductRoute,
   ...SellerProductRoute,
@@ -30,9 +29,4 @@ const routes = [
   // ...OrdersRoute
 ];
 const rolename = window.localStorage.getItem("role") || "distributor";
-
-const data = routes.map((el) => {
-  return el?.meta?.role?.has(rolename) ? el : null;
-});
-
-export const filteredRoutes = data.filter((el) => el !== null);
+export const filteredRoutes = routes.filter((el) => el?.meta?.role?.has(rolename));
