@@ -5,6 +5,7 @@ import { PrimeReactProvider } from "primereact/api";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider } from "react-query";
 import App from "./App.tsx";
+import {store} from "./store/store.ts";
 
 
 import "primereact/resources/themes/lara-light-cyan/theme.css";
@@ -16,15 +17,19 @@ import "primeflex/primeflex.css"; // flex
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 import { queryClient } from "./service/api";
+import {Provider} from "react-redux";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+
     <BrowserRouter>
       <PrimeReactProvider>
+          <Provider store={store}>
         <QueryClientProvider client={queryClient}>
           <App />
           <ToastContainer />
         </QueryClientProvider>
+          </Provider>
       </PrimeReactProvider>
     </BrowserRouter>
   </React.StrictMode>

@@ -112,9 +112,13 @@ import { AuthLogin } from "../../../service/auth";
 import {useTranslation} from "react-i18next";
 import {FormValues} from "../../../types";
 import {useNavigate} from "react-router-dom";
+import {useAppDispatch} from "../../../hooks/store.ts";
+import {isLogin} from "../../../store/reducer";
+
 const LoginPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate()
+    const dispatch = useAppDispatch()
   const [isSubmit, setIsSubmit] = useState(false);
   const [registorData, setRegistorData] = useState<FormValues>({
     phone: '+998998971097',
@@ -136,6 +140,7 @@ const handleClick =()=> {
         console.log(res)
         localStorage.setItem("authToken", res?.token);
         localStorage.setItem("role", res?.user?.role?.name)
+          dispatch(isLogin())
         navigate("/dashboard")
       })
   // setTimeout(() => {

@@ -4,6 +4,8 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import React, { useEffect, useState } from "react";
+import {useAppDispatch} from "../../../../hooks/store.ts";
+import {isLogout} from "../../../../store/reducer";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LangArr } from "../../../../data";
@@ -16,7 +18,7 @@ export default function Header({ setVisible, visible }: any) {
   const compony = window.localStorage.getItem("compony");
   const fullname: any = window.localStorage.getItem("fullname");
   const rolename = window.localStorage.getItem("role") || "";
-
+  const dispatch = useAppDispatch()
   const langFormat = () => {
     const currentLang: string = localStorage.getItem("lng") || "uz";
     const item = LangArr.find((el) => el.lang === currentLang);
@@ -41,8 +43,7 @@ export default function Header({ setVisible, visible }: any) {
         icon="pi pi-check"
         severity="danger"
         onClick={() => {
-          window.localStorage.removeItem("authToken");
-          window.location.reload();
+          dispatch(isLogout())
         }}
       />
     </React.Fragment>
