@@ -7,8 +7,8 @@ import { useTranslation } from "react-i18next";
 import { Sidebar } from "primereact/sidebar";
 
 export default function RouterDemo({visible,setVisible}:any) {
+    const { t } = useTranslation();
   const pashName = useLocation();
-  const { t } = useTranslation();
   const itemRenderer = (item: any) =>
     item.hideIfchildern && (
       <div
@@ -39,19 +39,12 @@ export default function RouterDemo({visible,setVisible}:any) {
         return (
           <span className="inline-flex align-items-center gap-1 px-4 py-4">
             <span className="font-medium text-xl font-semibold">
-              <span className="text-green-500">GROWZ</span>
+              <span className="text-green-500">{t('logotext')}</span>
             </span>
           </span>
         );
       }
     },
-    // {
-    //     label: 'Router Link',
-    //     icon: 'pi pi-palette',
-    //     url: '/unstyled',
-    //     template: itemRenderer
-    // },
-
     ...filteredRoutes.map((el) => ({
       ...el,
       template: (item: any) => itemRenderer(item)

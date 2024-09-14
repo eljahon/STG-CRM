@@ -3,15 +3,12 @@
 // import { useEffect, useState } from "react";
 // import { useForm } from "react-hook-form";
 // import { toast } from "react-toastify";
-// import { AuthLogin } from "../../../service/auth";
+
 // import { useTranslation } from "react-i18next";
 // import { GetMe } from "../../../service/global";
 // import LeftBar from "./left-bar";
 //
-// type FormValues = {
-//   phone: string;
-//   password: string;
-// };
+
 //
 // export default function LoginFrom() {
 //   const [loader, setLoader] = useState(false);
@@ -105,22 +102,46 @@
 //     </div>
 //   );
 // }
-import {useState } from 'react';
-import { Checkbox } from 'primereact/checkbox';
+import {useEffect, useState} from 'react';
 import { Button } from 'primereact/button';
 import { Password } from 'primereact/password';
 import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import Logo from '@/assets/logo.svg'
+import { AuthLogin } from "../../../service/auth";
 import {useTranslation} from "react-i18next";
+import {FormValues} from "../../../types";
+import {useNavigate} from "react-router-dom";
 const LoginPage = () => {
   const { t } = useTranslation();
-  const [password, setPassword] = useState('');
-  const [checked, setChecked] = useState(false);
-
-  // const router = useRouter();
+  const navigate = useNavigate()
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [registorData, setRegistorData] = useState<FormValues>({
+    phone: '+998998971097',
+    password: 'p@ssword',
+    platform_id: '5268f6e6-597d-4f07-b208-d3cfd729d740',
+    vehicle_id: '5268f6e6-597d-4f07-b208-d3cfd729d740'
+  })
   const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden');
+  // useEffect(() => {
+  //   localStorage.removeItem("authToken");
+  //   // window.localStorage.removeItem("compony");
+  //   localStorage.removeItem("role");
+  // }, []);
+const handleClick =()=> {
+  setIsSubmit(true)
 
+  AuthLogin(registorData)
+      .then(res => {
+        console.log(res)
+        localStorage.setItem("authToken", res?.token);
+        localStorage.setItem("role", res?.user?.role?.name)
+        navigate("/dashboard")
+      })
+  // setTimeout(() => {
+  //   setIsSubmit(false)
+  // },1500)
+}
   return (
       <div className={containerClassName}>
         <div className="flex flex-column align-items-center justify-content-center">
@@ -140,20 +161,30 @@ const LoginPage = () => {
               </div>
 
               <div>
-                <label htmlFor="email1" className="block text-900 text-xl font-medium mb-2">
+                <label htmlFor="login" className="block text-900 text-xl font-medium mb-2">
                   {t('login')}
                 </label>
-                <InputText id="email1" type="text" placeholder="Email address" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} />
+                <InputText onChange={(e)=> {
+                  console.log(e.target.value)
+                  setRegistorData(old => ({
+                    ...old, phone:e.target.value
+                  }))
+                }} invalid={!Boolean(registorData.phone)} id="login" type="text" placeholder="Email address" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} value={registorData.phone} />
 
                 <label htmlFor="password1" className="block text-900 font-medium text-xl mb-2">
                   {t('password')}
                 </label>
-                <Password inputId="password1" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"></Password>
+                <Password toggleMask feedback={false} invalid={!Boolean(registorData.password)} inputId="password1" value={registorData.password} onChange={(e) => {
+                  setRegistorData(old => ({
+                    ...old, password:e.target.value
+                  }))
+                }} placeholder="Password" className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"></Password>
+                  {/*<small>{error.password}</small>*/}
 
                 <div className="flex align-items-center justify-content-between mb-5 gap-5">
 
                 </div>
-                <Button label={t('submit')} className="w-full p-3 text-xl"></Button>
+                <Button severity="warning" disabled={!Boolean(registorData.phone&&registorData.password)} loading={isSubmit} label={t('submit')} onClick={handleClick} className="w-full p-3 text-xl"></Button>
               </div>
             </div>
           </div>

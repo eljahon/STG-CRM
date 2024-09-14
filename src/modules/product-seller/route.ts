@@ -10,7 +10,7 @@ export const SellerProductRoute = [
     children: [],
     meta: {
       isLoginIf: false,
-      role: new Set(["seller"])
+      role: new Set(["superadmin"])
     },
     hideIfchildern: true
   },
@@ -18,8 +18,8 @@ export const SellerProductRoute = [
     url: "/product-seller/:id",
     Element: SellerProductAction,
     meta: {
-      isLoginIf: false,
-      role: new Set(["seller"])
+      isLoginIf: true,
+      role: new Set(["superadmin"])
     }
   }
 ];

@@ -8,8 +8,8 @@ export const DashboardRoute = [
     icon: "pi pi-chart-bar",
     children: [],
     meta: {
-      isLoginIf: false,
-      role: new Set(["distributor","seller", "branch_distributor"])
+      isLoginIf: true,
+      role: new Set(['superadmin'])
     },
     hideIfchildern: true
   }

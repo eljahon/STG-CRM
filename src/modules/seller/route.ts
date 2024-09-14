@@ -8,8 +8,8 @@ export const SellerRoute = [
     icon: "pi pi-th-large",
     children: [],
     meta: {
-      isLoginIf: false,
-      role: new Set(["distributor"])
+      isLoginIf: true,
+      role: new Set(["superadmin"])
     },
     hideIfchildern: true
   },
@@ -17,8 +17,8 @@ export const SellerRoute = [
     url: "/seller/:id",
     Element: SellerPage,
     meta: {
-      isLoginIf: false,
-      role: new Set(["distributor"])
+      isLoginIf: true,
+      role: new Set(["superadmin"])
     }
   }
 ];

@@ -60,3 +60,13 @@ export type {
     AppMailProps,
     AppMenuItem
 };
+export type FormValues = {
+    phone: string;
+    password: string;
+    platform_id: string,
+    vehicle_id: string
+};
+export type FormValuesIsError = {
+    phone: boolean;
+    password: boolean;
+};

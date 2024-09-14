@@ -5,7 +5,7 @@ export const CampanyActionRoute = [
     {
       url: "/compony/:id",
       Element: CampanySetPage,
-      meta: { isLoginIf: false, role: new Set(["distributor"]) },
+      meta: { isLoginIf: true, role: new Set(["admin"]) },
     },
   ];
   

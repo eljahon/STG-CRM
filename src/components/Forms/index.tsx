@@ -5,29 +5,6 @@ import { formHelpers } from "../formHelpers.ts";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AddData, UpdateData, UpdateDataOne } from "../../service/global.ts";
-
-// type TFIELDS = {
-//   name: string;
-//   value: any;
-//   validationType: string;
-//   validations: any;
-//   lazy: () => void;
-//   submitKey: string;
-//   onSubmitValue: () => void;
-//   isLanguageSchema: boolean;
-// };
-// interface propTypes  {
-//     url: string,
-//     method: string,
-//     children: ReactNode,
-//     isFormData: boolean,
-//     fields: TFIELDS[]
-//     axiosConfig: any,
-//     normalizeData: () => never,
-//     onSuccess: () => never,
-//     onError: () => never,
-//     onFinal: () => never,
-// }
 interface IFORMCONTAINER {
   url: string;
   formik?: FormikProps<any>;

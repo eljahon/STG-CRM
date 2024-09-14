@@ -8,12 +8,12 @@ export const ProductRoute = [
     label: "product",
     icon: "pi pi-th-large",
     children: [],
-    meta: { isLoginIf: false, role: new Set(["distributor"]) },
+    meta: { isLoginIf: true, role: new Set(["superadmin"]) },
     hideIfchildern: true
   },
   {
     url: "/product/:id",
     Element: ProductAction,
-    meta: { isLoginIf: false, role: new Set(["distributor"]) }
+    meta: { isLoginIf: true, role: new Set(["superadmin"]) }
   }
 ];

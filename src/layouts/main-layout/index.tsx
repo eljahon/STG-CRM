@@ -14,13 +14,12 @@ export default function MainLayout() {
         style={{
           // marginLeft: "260px",
           marginTop: [
-            "/product",
+
             "/distributor",
             "/orders",
             "/dashboard",
             "/seller",
-            "/order-seller",
-            "/product-seller"
+            "/order-seller"
           ].includes(location.pathname as any)
             ? "50px"
             : "190px"

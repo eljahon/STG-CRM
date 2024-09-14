@@ -1,20 +1,23 @@
 import { Routes, Route } from "react-router-dom";
 import { filteredRoutes } from "../modules/index";
-import { Fragment } from "react";
+import React, {Fragment} from "react";
 import { authRoute } from "../modules/auth/route";
 import MainLayout from "../layouts/main-layout/index";
 interface Imeta  {
-     role: Set<string>
+     role: Set<string>,
+    isLoginIf: boolean
 }
 
 interface IRouter  {
     url: string;
-    Element: any;
+    Element:React.FC,
     children?: IRouter[],
     meta?: Imeta ,
+    label?:string,
+    icon?:string
     hideIfchildern?: boolean
 }
-const nestedRoutes = (routes: any) =>
+const nestedRoutes = (routes: IRouter[]) =>
     routes.map(({ Element, url, children}: IRouter) => {
         if (children?.length) {
             return (
@@ -40,7 +43,6 @@ export const AuthorizedRoutes = () => {
 
 export const UnAuthorizedRoutes = () => (
     <Routes>
-        {/* <Route path="*" element={<Loading />} /> */}
         {authRoute.map(({ Element, url }: IRouter) => (
             <Route key={url} path={url} element={<Element />} />
         ))}

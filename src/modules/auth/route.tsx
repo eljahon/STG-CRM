@@ -8,7 +8,7 @@ export const authRoute = [
     label: "Login",
     icon: "",
     children: [],
-    meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
+    meta: { isLoginIf: false, role: new Set(["admin"]) },
     hideIfchildern: false
   },
   {
@@ -17,7 +17,7 @@ export const authRoute = [
     label: "SignUp",
     icon: "",
     children: [],
-    meta: { isLoginIf: false, role: new Set(["SuperAdmin"]) },
+    meta: { isLoginIf: false, role: new Set(["admin"]) },
     hideIfchildern: false
   }
 ];

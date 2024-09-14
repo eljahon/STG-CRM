@@ -1,7 +1,8 @@
 import api from "./api";
+import {FormValues} from "../types";
 
-export const AuthLogin = async (data:any) => {
-  const response = await api.post("/users-permissions/login-distributor", data);
+export const AuthLogin = async (data:FormValues) => {
+  const response = await api.post("/auth/login", data);
   return response?.data;
 };
 export const Loginout = async () => {

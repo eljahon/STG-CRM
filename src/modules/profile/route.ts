@@ -5,8 +5,8 @@ export const ProfileActionRoute = [
     url: "/profile",
     Element: ProfilePage,
     meta: {
-      isLoginIf: false,
-      role: new Set(["distributor","seller", "branch_distributor"])
+      isLoginIf: true,
+      role: new Set(["superadmin"])
     }
   }
 ];
