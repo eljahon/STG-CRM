@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { AuthorizedRoutes, UnAuthorizedRoutes } from "./router/index";
-import { GetMe } from "./service/global";
+// import { GetMe } from "./service/global";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppSelector } from "./hooks/store.ts";
 import "../i18";

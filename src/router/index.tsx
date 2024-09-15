@@ -2,7 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import { filteredRoutes } from "../modules/index";
 import React, { Fragment } from "react";
 import { authRoute } from "../modules/auth/route";
-import MainLayout from "../layouts/main-layout/index";
+// import MainLayout from "../layout/main-layout/index";
+import Layout from "../layout/layout.tsx";
 interface Imeta {
   role: Set<string>;
   isLoginIf: boolean;
@@ -34,7 +35,7 @@ const nestedRoutes = (routes: IRouter[]) =>
 export const AuthorizedRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
+      <Route path="/" element={<Layout />}>
         {nestedRoutes(filteredRoutes)}
       </Route>
       {/* <Route path="*" element={<Loading />} /> */}

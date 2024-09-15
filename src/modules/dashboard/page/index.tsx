@@ -5,7 +5,7 @@ import { DataTable } from "primereact/datatable";
 import { Menu } from "primereact/menu";
 import { useContext, useEffect, useRef, useState } from "react";
 import { ProductService } from "../../../service/ProductService";
-import { LayoutContext } from "../../../layouts/context/layoutcontext";
+import { LayoutContext } from "../../../layout/context/layoutcontext";
 import { Demo } from "../../../types";
 import { ChartData, ChartOptions } from "chart.js";
 import { Link } from "react-router-dom";

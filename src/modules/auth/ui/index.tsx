@@ -44,14 +44,14 @@
 //   return (
 //     <div
 //       className="flex   sm:my-2 sm:mx-4 bg-white border-round-3xl"
-//       style={{ boxSizing: "border-box", height: "90vh", overflow: "hidden" }}
+//       styles={{ boxSizing: "border-box", height: "90vh", overflow: "hidden" }}
 //     >
 //       <LeftBar />
 //       <div className="h-full w-full sm:w-6 flex flex-column  justify-content-center  aling-item-center px-4">
 //         <form
 //           onSubmit={handleSubmit(handleAuth)}
 //           className="w-full m-auto text-center"
-//           style={{ maxWidth: "410px" }}
+//           styles={{ maxWidth: "410px" }}
 //         >
 //           <span className="text-2xl text-green-500 font-bold sm:hidden">
 //             GROWZ
@@ -60,7 +60,7 @@
 //           <label className="block my-5">
 //             <p
 //               className="label-my text-left text-base font-bold"
-//               style={{ color: "#7D8592" }}
+//               styles={{ color: "#7D8592" }}
 //             >
 //               {" "}
 //               {t("phone")}
@@ -76,7 +76,7 @@
 //           <label className="block mb-5">
 //             <p
 //               className="label-my text-left text-base font-bold"
-//               style={{ color: "#7D8592" }}
+//               styles={{ color: "#7D8592" }}
 //             >
 //               {t("password")}
 //             </p>
