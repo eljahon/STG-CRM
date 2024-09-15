@@ -2,14 +2,12 @@ import { useEffect, useState } from "react";
 import { AuthorizedRoutes, UnAuthorizedRoutes } from "./router/index";
 import { GetMe } from "./service/global";
 import { useLocation, useNavigate } from "react-router-dom";
-import GlobalLoader from "./ui/global-loader";
-import {useAppSelector} from "./hooks/store.ts";
+import { useAppSelector } from "./hooks/store.ts";
 import "../i18";
 function App() {
-  const [loading, setLoading] = useState<boolean>(false);
   // const [isAuth, setIsAuth] = useState<boolean>(Boolean(localStorage.getItem("authToken")));
   const navigate = useNavigate();
-  const isAuth = useAppSelector((state) => state.Auth.isAuth)
+  const isAuth = useAppSelector((state) => state.Auth.isAuth) || null;
   const location = useLocation();
   // useEffect(() => {
   //   const fetchData = async () => {

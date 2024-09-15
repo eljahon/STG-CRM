@@ -1,33 +1,35 @@
-import { Outlet, useLocation } from "react-router-dom";
-import Header from "./ui/header/index";
-import RouterDemo from "./ui/site-bar/index";
+import { Outlet } from "react-router-dom";
+import { Sidebar } from "./ui/sidebar/sidebar";
 import { useState } from "react";
+import { Header } from "./ui/header";
 
 export default function MainLayout() {
-  const location = useLocation();
-  const [visible, setVisible] = useState(false);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+  const toggleSidebarBtn = () => {
+    setIsSidebarVisible(!isSidebarVisible);
+  };
+
   return (
-    <div className="flex gap-5 Container">
-      <RouterDemo setVisible={setVisible} visible={visible} />
-      <div
-        className="w-full relative localMreg"
-        style={{
-          // marginLeft: "260px",
-          marginTop: [
+    <div>
+      <Header toggleSideBar={toggleSidebarBtn} />
+      <div className="layout_main">
+        {isSidebarVisible && (
+          <div
+            className={`sidebar layout-sidebar ${
+              isSidebarVisible ? "" : "hidden_sidebar"
+            }`}
+          >
+            <Sidebar />
+          </div>
+        )}
 
-            "/distributor",
-            "/orders",
-            "/dashboard",
-            "/seller",
-            "/order-seller"
-          ].includes(location.pathname as any)
-            ? "50px"
-            : "190px"
-        }}
-      >
-        <Header setVisible={setVisible} visible={visible} />
-
-        <Outlet />
+        <div
+          className={`content bg-white border-round-xl ${
+            isSidebarVisible ? "with_sidebar" : "full_width"
+          }`}
+        >
+          <Outlet />
+        </div>
       </div>
     </div>
   );

@@ -102,101 +102,139 @@
 //     </div>
 //   );
 // }
-import {useEffect, useState} from 'react';
-import { Button } from 'primereact/button';
-import { Password } from 'primereact/password';
-import { InputText } from 'primereact/inputtext';
-import { classNames } from 'primereact/utils';
-import Logo from '@/assets/logo.svg'
+import { useState } from "react";
+import { Button } from "primereact/button";
+import { Password } from "primereact/password";
+import { InputText } from "primereact/inputtext";
+import { classNames } from "primereact/utils";
+import Logo from "@/assets/logo.svg";
 import { AuthLogin } from "../../../service/auth";
-import {useTranslation} from "react-i18next";
-import {FormValues} from "../../../types";
-import {useNavigate} from "react-router-dom";
-import {useAppDispatch} from "../../../hooks/store.ts";
-import {isLogin} from "../../../store/reducer";
+import { useTranslation } from "react-i18next";
+import { FormValues } from "../../../types";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../hooks/store.ts";
+import { isLogin } from "../../../store/reducer";
 
 const LoginPage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate()
-    const dispatch = useAppDispatch()
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [isSubmit, setIsSubmit] = useState(false);
   const [registorData, setRegistorData] = useState<FormValues>({
-    phone: '+998998971097',
-    password: 'p@ssword',
-    platform_id: '5268f6e6-597d-4f07-b208-d3cfd729d740',
-    vehicle_id: '5268f6e6-597d-4f07-b208-d3cfd729d740'
-  })
-  const containerClassName = classNames('surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden');
+    phone: "+998998971097",
+    password: "p@ssword",
+    platform_id: "5268f6e6-597d-4f07-b208-d3cfd729d740",
+    vehicle_id: "5268f6e6-597d-4f07-b208-d3cfd729d740",
+  });
+  const containerClassName = classNames(
+    "surface-ground flex align-items-center justify-content-center min-h-screen min-w-screen overflow-hidden"
+  );
   // useEffect(() => {
   //   localStorage.removeItem("authToken");
   //   // window.localStorage.removeItem("compony");
   //   localStorage.removeItem("role");
   // }, []);
-const handleClick =()=> {
-  setIsSubmit(true)
+  const handleClick = () => {
+    setIsSubmit(true);
 
-  AuthLogin(registorData)
-      .then(res => {
-        console.log(res)
-        localStorage.setItem("authToken", res?.token);
-        localStorage.setItem("role", res?.user?.role?.name)
-          dispatch(isLogin())
-        navigate("/dashboard")
-      })
-  // setTimeout(() => {
-  //   setIsSubmit(false)
-  // },1500)
-}
+    AuthLogin(registorData).then((res) => {
+      console.log(res);
+      localStorage.setItem("authToken", res?.token);
+      localStorage.setItem("role", res?.user?.role?.name);
+      dispatch(isLogin());
+      navigate("/dashboard");
+    });
+    // setTimeout(() => {
+    //   setIsSubmit(false)
+    // },1500)
+  };
   return (
-      <div className={containerClassName}>
-        <div className="flex flex-column align-items-center justify-content-center">
-          {/*<img src={`/layout/images/logo-${layoutConfig.colorScheme === 'light' ? 'dark' : 'white'}.svg`} alt="Sakai logo" className="mb-5 w-6rem flex-shrink-0" />*/}
+    <div className={containerClassName}>
+      <div className="flex flex-column align-items-center justify-content-center">
+        {/*<img src={`/layout/images/logo-${layoutConfig.colorScheme === 'light' ? 'dark' : 'white'}.svg`} alt="Sakai logo" className="mb-5 w-6rem flex-shrink-0" />*/}
+        <div
+          style={{
+            borderRadius: "56px",
+            padding: "0.3rem",
+            background:
+              "linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)",
+          }}
+        >
           <div
-              style={{
-                borderRadius: '56px',
-                padding: '0.3rem',
-                background: 'linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)'
-              }}
+            className="w-full surface-card py-8 px-5 sm:px-8"
+            style={{ borderRadius: "53px" }}
           >
-            <div className="w-full surface-card py-8 px-5 sm:px-8" style={{ borderRadius: '53px' }}>
-              <div className="text-center mb-5">
-                <img src={Logo} alt="Image" height="50" className="mb-3" />
-                <div className="text-900 text-3xl font-medium mb-3">Welcome, Isabel!</div>
-                <span className="text-600 font-medium">Sign in to continue</span>
+            <div className="text-center mb-5">
+              <img src={Logo} alt="Image" height="50" className="mb-3" />
+              <div className="text-900 text-3xl font-medium mb-3">
+                Welcome, Isabel!
               </div>
+              <span className="text-600 font-medium">Sign in to continue</span>
+            </div>
 
-              <div>
-                <label htmlFor="login" className="block text-900 text-xl font-medium mb-2">
-                  {t('login')}
-                </label>
-                <InputText onChange={(e)=> {
-                  console.log(e.target.value)
-                  setRegistorData(old => ({
-                    ...old, phone:e.target.value
-                  }))
-                }} invalid={!Boolean(registorData.phone)} id="login" type="text" placeholder="Email address" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} value={registorData.phone} />
+            <div>
+              <label
+                htmlFor={t("login")}
+                className="block text-900 text-xl font-medium mb-2"
+              >
+                {t("login")}
+              </label>
+              <InputText
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setRegistorData((old) => ({
+                    ...old,
+                    phone: e.target.value,
+                  }));
+                }}
+                invalid={!Boolean(registorData.phone)}
+                id="login"
+                type="text"
+                placeholder="Email address"
+                className="w-full md:w-30rem mb-5"
+                style={{ padding: "1rem" }}
+                value={registorData.phone}
+              />
 
-                <label htmlFor="password1" className="block text-900 font-medium text-xl mb-2">
-                  {t('password')}
-                </label>
-                <Password toggleMask feedback={false} invalid={!Boolean(registorData.password)} inputId="password1" value={registorData.password} onChange={(e) => {
-                  setRegistorData(old => ({
-                    ...old, password:e.target.value
-                  }))
-                }} placeholder="Password" className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem"></Password>
-                  {/*<small>{error.password}</small>*/}
+              <label
+                htmlFor="password1"
+                className="block text-900 font-medium text-xl mb-2"
+              >
+                {t("password")}
+              </label>
+              <Password
+                toggleMask
+                feedback={false}
+                invalid={!Boolean(registorData.password)}
+                inputId="password1"
+                value={registorData.password}
+                onChange={(e) => {
+                  setRegistorData((old) => ({
+                    ...old,
+                    password: e.target.value,
+                  }));
+                }}
+                placeholder="Password"
+                className="w-full mb-5"
+                inputClassName="w-full p-3 md:w-30rem"
+              ></Password>
+              {/*<small>{error.password}</small>*/}
 
-                <div className="flex align-items-center justify-content-between mb-5 gap-5">
-
-                </div>
-                <Button severity="warning" disabled={!Boolean(registorData.phone&&registorData.password)} loading={isSubmit} label={t('submit')} onClick={handleClick} className="w-full p-3 text-xl"></Button>
-              </div>
+              <div className="flex align-items-center justify-content-between mb-5 gap-5"></div>
+              <Button
+                severity="warning"
+                disabled={!Boolean(registorData.phone && registorData.password)}
+                loading={isSubmit}
+                label={t("submit")}
+                onClick={handleClick}
+                className="w-full p-3 text-xl"
+              ></Button>
             </div>
           </div>
         </div>
       </div>
+    </div>
   );
 };
 
 export default LoginPage;
-

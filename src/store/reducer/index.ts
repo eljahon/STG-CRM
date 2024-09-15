@@ -1,22 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 export const Auth = createSlice({
-    name: 'auth',
-    initialState: {
-        isAuth: Boolean(localStorage.getItem('authToken'))
+  name: "auth",
+  initialState: {
+    isAuth: Boolean(localStorage.getItem("authToken")),
+  },
+  reducers: {
+    isLogin: (state) => {
+      state.isAuth = true;
     },
-    reducers: {
-        isLogin: (state) => {
-            state.isAuth = true
-        },
-        isLogout: (state) => {
-            state.isAuth =false
-            localStorage.removeItem('authToken')
-        },
+    isLogout: (state) => {
+      state.isAuth = false;
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("role");
     },
-})
+  },
+});
 
 // Action creators are generated for each case reducer function
-export const { isLogin,isLogout } = Auth.actions
+export const { isLogin, isLogout } = Auth.actions;
 
-export default Auth.reducer
+export default Auth.reducer;

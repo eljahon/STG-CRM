@@ -1,0 +1,121 @@
+.sidebar_box {
+  overflow-y: scroll;
+  width: 310px;
+  height: 608px;
+  background-color: #fff;
+  transition: all 0.5s ease;
+  padding: 1rem;
+  box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar_links {
+  padding: 8px 30px 8px 10px;
+  border-radius: 14px;
+  color: #4b5563;
+
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  font-size: 15px;
+  border: 3.5px solid transparent;
+
+  &:hover {
+    background-color: #f9fafb;
+    transition: all 0.3s ease;
+  }
+}
+
+.sidebar_child__box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-block: 10px;
+}
+
+.sidebar_child__links {
+  padding: 4px 30px 4px 10px;
+  border-radius: 14px;
+  color: #4b5563;
+
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  font-size: 15px;
+  border: 3.5px solid transparent;
+
+  &:hover {
+    background-color: #f9fafb;
+    transition: all 0.3s ease;
+  }
+}
+
+.sidebar_close__links {
+  padding: 10px 30px 10px 10px;
+  border-radius: 14px;
+  color: #4b5563;
+  width: 260px;
+  margin-left: auto;
+  margin-bottom: 1px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 0.5rem;
+  transition: all 0.5s ease;
+  font-weight: 400;
+  font-size: 15px;
+
+  &:hover {
+    background-color: #f9fafb;
+    transition: all 0.3s ease;
+  }
+}
+
+.sidebar_open__links {
+  padding: 10px 30px 10px 10px;
+  border-radius: 14px;
+  color: #6366f1;
+  width: 260px;
+  margin-left: auto;
+  margin-bottom: 1px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 0.5rem;
+  transition: all 0.5s ease;
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.sidebar_item__title {
+  color: #111827;
+}
+
+.active {
+  color: #6366f1;
+  border: 3.5px solid #c7d2fe;
+}
+
+.open_accordion {
+  grid-template-rows: 1;
+  opacity: 1;
+  transition: all 0.5s ease;
+}
+
+.close_accordion {
+  grid-template-rows: 0;
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+.content_accordion {
+  display: grid;
+  transition: all 0.5s ease;
+  overflow: hidden;
+  margin-left: 20px;
+}

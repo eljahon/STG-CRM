@@ -1,0 +1,31 @@
+.layout_main {
+  background-color: #f9fafb;
+  height: 665px;
+  display: flex;
+  column-gap: 30px;
+  padding: 30px;
+  transition: all 0.5s ease;
+}
+
+.content {
+  flex-grow: 1;
+  background-color: #3498db;
+  transition: all 0.5s ease;
+  box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  overflow-y: scroll;
+}
+
+.full_width {
+  width: 100%;
+}
+
+.with_sidebar {
+  width: calc(100% - 300px);
+  transition: all 0.5s ease;
+}
+
+.hidden_sidebar {
+  width: 0;
+  transition: all 0.5s ease;
+}

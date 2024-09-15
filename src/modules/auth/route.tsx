@@ -3,7 +3,7 @@ import SignUpPage from "./page/sign-up";
 
 export const authRoute = [
   {
-    url: "/auth/login",
+    to: "/auth/login",
     Element: LoginPage,
     label: "Login",
     icon: "",
@@ -12,7 +12,7 @@ export const authRoute = [
     hideIfchildern: false
   },
   {
-    url: "/auth/sign-up",
+    to: "/auth/sign-up",
     Element: SignUpPage,
     label: "SignUp",
     icon: "",
