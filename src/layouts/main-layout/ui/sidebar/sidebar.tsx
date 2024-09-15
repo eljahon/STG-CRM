@@ -22,7 +22,7 @@ export const Sidebar = () => {
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={` ${
-                  isOpen ? "sidebar_open__links" : "sidebar_close__links"
+                  isOpen ? "sidebar_open__links sidebar_links ml-2" : "sidebar_close__links sidebar_links ml-2"
                 }`}
               >
                 <div className="flex align-items-center column-gap-2">

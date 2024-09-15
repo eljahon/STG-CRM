@@ -1,5 +1,5 @@
 @import "primeflex/primeflex.scss";
-@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap");
+/* @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"); */
 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -8,23 +8,30 @@
   scroll-behavior: smooth;
   /*--primary-color: red;*/
   /*--bg-primary: red*/
+  --borderRadius: 12px;
+  --transitionDuration: 0.2s;
 }
 
 *,
 *::after,
 *::before {
   box-sizing: border-box;
-  margin: 0;
   padding: 0;
+  margin: 0;
+}
+
+button {
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+
+ul {
+  list-style: none;
 }
 
 a {
   text-decoration: none;
-}
-
-ul,
-ol {
-  list-style: none;
 }
 
 body {
@@ -38,12 +45,7 @@ body {
   margin: 0 auto;
   padding: 0 20px;
 }
-button {
-  cursor: pointer;
-  background-color: transparent;
-  outline: none;
-  border: none;
-}
+
 .sroll::-webkit-scrollbar {
   width: 0px;
 }
@@ -59,4 +61,26 @@ button {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #cfd3d7;
+}
+
+.p-input-icon-left > i,
+.p-input-icon-right > i,
+.p-input-icon-left > svg,
+.p-input-icon-right > svg,
+.p-input-icon-left > .p-input-prefix,
+.p-input-icon-right > .p-input-suffix {
+  right: 20px;
+}
+
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--card-shadow);
+  border-radius: var(--borderRadius);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }

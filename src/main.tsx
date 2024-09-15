@@ -9,7 +9,7 @@ import { store } from "./store/store.ts";
 
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 
-// import 'primereact/resources/themes/lara-light-teal/theme.css'; //theme
+import 'primereact/resources/themes/lara-light-teal/theme.css'; //theme
 import "primereact/resources/primereact.min.css"; //core css
 import "primeicons/primeicons.css"; //icons
 import "primeflex/primeflex.css"; // flex

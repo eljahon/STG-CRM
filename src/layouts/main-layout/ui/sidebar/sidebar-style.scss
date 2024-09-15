@@ -1,7 +1,11 @@
+.sidebar {
+  padding: 30px 0 0 30px;
+}
+
 .sidebar_box {
   overflow-y: scroll;
-  width: 310px;
-  height: 608px;
+  width: 20rem;
+  height: calc(100vh - 8rem);
   background-color: #fff;
   transition: all 0.5s ease;
   padding: 1rem;
@@ -9,7 +13,7 @@
 }
 
 .sidebar_links {
-  padding: 8px 30px 8px 10px;
+  padding: 10px 30px 10px 10px;
   border-radius: 14px;
   color: #4b5563;
 
@@ -31,13 +35,15 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding-block: 10px;
+  width: 100%;
+  // padding-block: 10px;
 }
 
 .sidebar_child__links {
   padding: 4px 30px 4px 10px;
   border-radius: 14px;
   color: #4b5563;
+  width: 100%;
 
   display: flex;
   align-items: center;
@@ -54,10 +60,9 @@
 }
 
 .sidebar_close__links {
-  padding: 10px 30px 10px 10px;
   border-radius: 14px;
   color: #4b5563;
-  width: 260px;
+  width: 100%;
   margin-left: auto;
   margin-bottom: 1px;
 
@@ -68,6 +73,7 @@
   transition: all 0.5s ease;
   font-weight: 400;
   font-size: 15px;
+  background-color: transparent;
 
   &:hover {
     background-color: #f9fafb;
@@ -76,10 +82,9 @@
 }
 
 .sidebar_open__links {
-  padding: 10px 30px 10px 10px;
   border-radius: 14px;
   color: #6366f1;
-  width: 260px;
+  width: 100%;
   margin-left: auto;
   margin-bottom: 1px;
 
@@ -90,6 +95,7 @@
   transition: all 0.5s ease;
   font-weight: 400;
   font-size: 15px;
+  background-color: transparent;
 }
 
 .sidebar_item__title {

@@ -24,7 +24,7 @@ export default function MainLayout() {
         )}
 
         <div
-          className={`content bg-white border-round-xl ${
+          className={`content p-2 pt-5 ${
             isSidebarVisible ? "with_sidebar" : "full_width"
           }`}
         >

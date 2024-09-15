@@ -5,7 +5,7 @@ export const DashboardRoute = [
     Element: Dashboard,
     icon: "pi pi-th-large",
     children: [],
-    label: "Dashboard",
+    label: "dashboard",
     meta: {
       isLoginIf: false,
       role: new Set(["superadmin"]),
