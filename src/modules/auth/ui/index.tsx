@@ -187,7 +187,7 @@ const LoginPage = () => {
                     phone: e.target.value,
                   }));
                 }}
-                invalid={!Boolean(registorData.phone)}
+                invalid={!registorData.phone}
                 id="login"
                 type="text"
                 placeholder="Email address"
@@ -205,7 +205,6 @@ const LoginPage = () => {
               <Password
                 toggleMask
                 feedback={false}
-                invalid={!Boolean(registorData.password)}
                 inputId="password1"
                 value={registorData.password}
                 onChange={(e) => {
@@ -223,7 +222,7 @@ const LoginPage = () => {
               <div className="flex align-items-center justify-content-between mb-5 gap-5"></div>
               <Button
                 severity="warning"
-                disabled={!Boolean(registorData.phone && registorData.password)}
+                disabled={!(registorData.phone && registorData.password)}
                 loading={isSubmit}
                 label={t("submit")}
                 onClick={handleClick}

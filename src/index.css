@@ -84,3 +84,50 @@ body {
     margin-bottom: 0;
   }
 }
+
+.active_status {
+  background-color: #2235fc;
+  padding: 4px 6px;
+  color: white;
+  letter-spacing: 1px;
+  border-radius: 10px;
+}
+
+.p-highlight {
+  background-color: #ebedf1;
+}
+
+.pagination_btn {
+  background-color: transparent;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #b39797;
+  transition: all 0.3s;
+
+  &:hover {
+    background-color: #f2ecec;
+    transition: all 0.2s;
+  }
+}
+
+.pagination_active__btn {
+  background-color: #f2ecec;
+  color: #b39797;
+}
+
+.pagination_controll__btn {
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  color: #b39797;
+  outline: none;
+
+  &:hover {
+    background-color: #f2ecec;
+  }
+}

@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import { filteredRoutes } from "../modules/index";
 import React, { Fragment } from "react";
 import { authRoute } from "../modules/auth/route";
-// import MainLayout from "../layout/main-layout/index";
 import Layout from "../layout/layout.tsx";
 interface Imeta {
   role: Set<string>;
@@ -41,7 +40,8 @@ export const AuthorizedRoutes = () => {
       {/* <Route path="*" element={<Loading />} /> */}
     </Routes>
   );
-};0
+};
+0;
 
 export const UnAuthorizedRoutes = () => (
   <Routes>

@@ -1,8 +1,9 @@
-import { Dashboard } from "./page";
-export const DashboardRoute = [
+import { Users } from "./page/users";
+
+export const UsersRoute = [
   {
-    to: "/dashboard",
-    Element: Dashboard,
+    to: "/users",
+    Element: Users,
     children: [],
     meta: {
       isLoginIf: false,
