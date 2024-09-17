@@ -1,44 +1,4 @@
 
-// import { Ripple } from "primereact/ripple";
-// import { classNames } from "primereact/utils";
-// import React, { useEffect, useContext } from "react";
-// import { CSSTransition } from "react-transition-group";
-// import { MenuContext } from "./context/menucontext";
-// import { AppMenuItemProps } from "../type";
-// import { Link, useLocation, useSearchParams } from "react-router-dom";
-// import { useTranslation } from "react-i18next";
-
-// const AppMenuitem = (props: AppMenuItemProps) => {
-//   const { pathname } = useLocation();
-//   const { t } = useTranslation();
-//   const nodeRef = React.useRef(null);
-//   const searchParams = useSearchParams();
-//   const { activeMenu, setActiveMenu } = useContext(MenuContext);
-//   const item = props.item;
-//   const key = props.parentKey
-//     ? props.parentKey + "-" + props.index
-//     : String(props.index);
-//   const isActiveRoute = item!.to && pathname === item!.to;
-//   const active = activeMenu === key || activeMenu.startsWith(key + "-");
-//   const onRouteChange = (url: string) => {
-//     if (item!.to && item!.to === url) {
-//       setActiveMenu(key);
-//     }
-//   };
-//
-//   useEffect(() => {
-//     onRouteChange(pathname);
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, [pathname, searchParams]);
-//
-//   const itemClick = (
-//     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-//   ) => {
-//     //avoid processing disabled items
-//     if (item!.disabled) {
-//       event.preventDefault();
-//       return;
-//     }
 import { Ripple } from 'primereact/ripple';
 import { classNames } from 'primereact/utils';
 import React, {useEffect, useContext, useRef} from 'react';
@@ -47,7 +7,6 @@ import { MenuContext } from './context/menucontext';
 import { AppMenuItemProps } from '../type';
 import {Link, useLocation, useSearchParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-
 const AppMenuitem = (props: AppMenuItemProps) => {
     const {pathname} = useLocation();
     const {t} = useTranslation()
@@ -56,7 +15,7 @@ const AppMenuitem = (props: AppMenuItemProps) => {
     const { activeMenu, setActiveMenu } = useContext(MenuContext);
     const item = props.item;
     const key = props.parentKey ? props.parentKey + '-' + props.index : String(props.index);
-    const isActiveRoute = item!.to && pathname === item!.to;
+    const isUrlCheck = pathname.split('/')
     const active = activeMenu === key || activeMenu.startsWith(key + '-');
     const onRouteChange = (url: string) => {
         if (item!.to && item!.to === url) {
@@ -141,7 +100,7 @@ const AppMenuitem = (props: AppMenuItemProps) => {
           target={item!.target}
           onClick={(e) => itemClick(e)}
           className={classNames(item!.class, "p-ripple", {
-            "active-route": isActiveRoute,
+            "active-route": isUrlCheck.includes(item!.name),
           })}
           tabIndex={0}
         >

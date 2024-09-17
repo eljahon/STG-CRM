@@ -8,15 +8,20 @@ const AppMenu = () => {
   const model: AppMenuItem[] = [
     {
       items: [
-        { label: "dashboard", icon: "pi pi-fw pi-home", to: "/dashboard" },
-        { label: "users", icon: "pi pi-fw pi-users", to: "/users" },
+        { label: "dashboard", icon: "pi pi-fw pi-chart-line", to: "/dashboard", name: 'dashboard' },
+        { label: "zone", icon: "pi pi-fw pi-map-marker", to: "/zone", name: 'zone' },
+        { label: "maps", icon: "pi pi-fw  pi-map", to: "/maps" , name: 'map'},
+        { label: "employees", icon: "pi pi-fw pi-users", to: "/employees", name: 'employees' },
+        { label: "cars", icon: "pi pi-fw  pi-car", to: "/cars", name: 'cars' },
+        { label: "salary_plan", icon: "pi pi-fw  pi-calendar", to: "/cars", name:'salaryPlan' },
+        { label: "notifcations", icon: "pi pi-fw  pi-bell", to: "/notifcations" , name: 'notifcations'},
       ],
     },
     {
       items: [
         {
-          label: "Auth",
-          icon: "pi pi-fw pi-user",
+          label: "warehouse",
+          icon: "pi pi-fw pi-home",
           items: [
             {
               label: "Login",
@@ -34,26 +39,31 @@ const AppMenu = () => {
               to: "/auth/access",
             },
           ],
-        },
+        }
+      ],
+    },
+    {
+      items: [
         {
-          label: "Crud",
-          icon: "pi pi-fw pi-pencil",
-          to: "/pages/crud",
-        },
-        {
-          label: "Timeline",
-          icon: "pi pi-fw pi-calendar",
-          to: "/pages/timeline",
-        },
-        {
-          label: "Not Found",
-          icon: "pi pi-fw pi-exclamation-circle",
-          to: "/pages/notfound",
-        },
-        {
-          label: "Empty",
-          icon: "pi pi-fw pi-circle-off",
-          to: "/pages/empty",
+          label: "repair",
+          icon: "pi pi-fw pi-cog",
+          items: [
+            {
+              label: "Login",
+              icon: "pi pi-fw pi-sign-in",
+              to: "/auth/login",
+            },
+            {
+              label: "Error",
+              icon: "pi pi-fw pi-times-circle",
+              to: "/auth/error",
+            },
+            {
+              label: "Access Denied",
+              icon: "pi pi-fw pi-lock",
+              to: "/auth/access",
+            },
+          ],
         },
       ],
     },

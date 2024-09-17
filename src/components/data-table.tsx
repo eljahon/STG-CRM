@@ -50,6 +50,9 @@ export const DynamicDataTable:React.FC<DynamicDataTableProps> = ({column,totalRe
       </div>
     );
   };
+  function dataKey(item) {
+    return item.id+Math.random()*1000
+  }
   return (
     <div>
       {loading ? (
@@ -60,13 +63,13 @@ export const DynamicDataTable:React.FC<DynamicDataTableProps> = ({column,totalRe
               size={'small'}
               footer={<Paginator first={first} rows={rows} totalRecords={totalRecords} onPageChange={onPage} rowsPerPageOptions={[5,10,15,20,25,30,35,40]}/>}
             value={datas}
-            dataKey="id"
+            dataKey={dataKey}
             tableStyle={{ minWidth: "50rem" }}
           >
             {column?.map((col, i) => (
               <Column
                 style={{ width: 600 }}
-                key={i}
+                key={i+Math.random()*1000}
                 {...col}
               />
             ))}

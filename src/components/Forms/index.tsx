@@ -46,8 +46,10 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
     formHelpers.createFormSchema(fields);
   const handleSubmit = async (values: any, formikHelper: any) => {
     const formValues = formHelpers.getFormValues(values, fields, isFormData);
+
     setLoader(true);
-    if (id == "new" || !id) {
+    if (id == "new") {
+      console.log(formValues, '==>>>', id)
       await AddData(url, formValues)
         .then((res: any) => {
           if (res?.status == "200" || res?.status == "201") {
@@ -95,6 +97,7 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
       validationSchema={validationSchema}
       validateOnMount={validateOnMount}
       onSubmit={async (value: any, formikHelper: any) => {
+        console.log(value)
         if (customData) {
           isFunction(onSubmit)
             ? onSubmit(customData(value))

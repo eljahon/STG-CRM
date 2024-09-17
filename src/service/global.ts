@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
-import api from "./api";
 import qs from "qs";
+import api from "./api.ts";
 
 export const GetAllData = async (url: string, query?: any) => {
   try {
@@ -29,14 +29,6 @@ export const GetByIdData = async (url: string, id: any, query?: any) => {
 export const AddData = async (url: string, data: any) => {
   try {
     const response = await api.post(`/${url}`, data);
-    return response;
-  } catch (error: any) {
-    handleError(error);
-  }
-};
-export const AddidData = async (url: string, id: any, data: any) => {
-  try {
-    const response = await api.post(`/${url}/${id}`, data);
     return response;
   } catch (error: any) {
     handleError(error);

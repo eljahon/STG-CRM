@@ -2,7 +2,7 @@ import {DynamicDataTable, RowDataType} from "../../../components/data-table";
 import { useGetUsers } from "../service/query/useGetUsers";
 import {Tag} from 'primereact/tag'
 import React, {useCallback, useState} from "react";
-import {useNavigate, useSearchParams} from "react-router-dom";
+import {useSearchParams} from "react-router-dom";
 import TheBreadcrumb from "../../../components/Breadcrumb/TheBreadcrumb.tsx";
 import {useTranslation} from "react-i18next";
 import {Button} from "primereact/button";
@@ -20,18 +20,15 @@ export interface UsersColumnTypes {
   body?: (items:RowDataType) => React.JSX.Element
 }
 export interface IPARAM {
-  key:string, value: string,method:string, isPage?:boolean
+  key:string, value: string,method:string
 }
-export interface IFILTER { limit: number; page: number, search:string,role_id: string }
-export const Users = () => {
-   const navigator = useNavigate()
+export const Maps = () => {
   const {t} = useTranslation()
   const [params, setParams] = useSearchParams()
-  const [filter, setFilter] = useState<IFILTER>({
+  const [filter, setFilter] = useState<{ limit: number; page: number, search:string }>({
     limit: 10,
     page: params.get('page') ? Number(params.get('page')) : 1,
-    search: params.get('search')|| '',
-    role_id: params.get('role_id')|| ''
+    search: params.get('search')|| ''
   });
   const [filters,setFilters] = useState<{search: string|undefined, role_id: string|undefined}>({search:params?.get('search') ? '' + params?.get('search') : undefined, role_id: params?.get('role_id') ? ""+params.get('role_id') : undefined
 } )
@@ -51,10 +48,8 @@ export const Users = () => {
       }},
   ];
    const routerPush =(param:IPARAM) => {
-     const {key, value, method,isPage=false} = param;
-
+     const {key, value, method} = param
      const newParams = new URLSearchParams(params)
-     if(isPage) newParams.set('page', '1')
      if(method === 'add') newParams.set(key, ''+value)
      if(method === 'del') newParams.delete(key)
      setParams(newParams)
@@ -69,21 +64,20 @@ export const Users = () => {
   const onPage = (pages:{first:number, page: number}) => {
     const {page} = pages;
     setFilter(old => ({...old, page:page+1}))
-    routerPush({key: 'page', value: ''+(page+1), method: 'add', isPage: true})
+    routerPush({key: 'page', value: ''+(page+1), method: 'add'})
   }
 
   const handleSearch = useCallback(
       debounce((query) => {
-        routerPush({key: 'search', value: query? query : undefined, method: query ?  'add' : 'del', isPage: true})
+        routerPush({key: 'search', value: query? query : undefined, method: query ?  'add' : 'del'})
         setFilter(old => ({...old, search: query ? query : undefined}))
       }, 1500),
       []
   );
   const handleRoleChange =(query:any) => {
     const {value} = query
-    routerPush({key: 'role_id', value: value ? value : undefined, method: value ? 'add' : 'del', isPage: true})
+    routerPush({key: 'search', value: value ? value : undefined, method: value ? 'add' : 'del'})
     setFilters(old => ({...old, role_id: value ? value : undefined}))
-    setFilter(old => ({...old, role_id: value ?? undefined}))
   }
 
   const handleInputChange = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -93,12 +87,12 @@ export const Users = () => {
 
   return (
     <div>
-<TheBreadcrumb model={[{label: t('employees'), template: () => <span className="text-primary">{t('employees')}</span>}]}/>
+<TheBreadcrumb model={[{label: t('users'), template: () => <span className="text-primary">{t('users')}</span>}]}/>
       <div className='card mt-2'>
         <div className="flex justify-content-between mb-2">
           <div>
             <div className="col-12 mb-2 lg:col-8 lg:mb-0 flex gap-1">
-              <Dropdown showClear value={filters.role_id}  options={userRoleList} optionLabel="name"
+              <Dropdown value={filters.role_id}  options={userRoleList} optionLabel="name"
                         optionValue="id"
                         onChange={handleRoleChange}
                         placeholder={t('role')} className="w-full  md:w-26rem p-inputtext-sm" />
@@ -109,7 +103,7 @@ export const Users = () => {
             </div>
           </div>
           <div>
-            <Button onClick={() => navigator('/employees/new')} size="small" icon="pi pi-plus" severity='success' label={t('add')}/>
+            <Button size="small" icon="pi pi-plus" severity='success' label={t('add')}/>
           </div>
         </div>
         <DynamicDataTable
