@@ -1,4 +1,4 @@
-@import "primeflex/primeflex.scss";
+/*@import "primeflex/primeflex.scss";*/
 /* @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap"); */
 
 :root {
@@ -20,11 +20,6 @@
 /*  margin: 0;*/
 /*}*/
 
-button {
-  cursor: pointer;
-  outline: none;
-  border: none;
-}
 
 ul {
   list-style: none;
@@ -71,63 +66,8 @@ body {
 .p-input-icon-right > .p-input-suffix {
   right: 20px;
 }
-
-.card {
-  background: var(--surface-card);
-  border: 1px solid var(--surface-border);
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: var(--card-shadow);
-  border-radius: var(--borderRadius);
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.active_status {
-  background-color: #2235fc;
-  padding: 4px 6px;
-  color: white;
-  letter-spacing: 1px;
-  border-radius: 10px;
-}
-
-.p-highlight {
-  background-color: #ebedf1;
-}
-
-.pagination_btn {
+.p-datatable.p-datatable-sm
+.p-datatable-footer{
   background-color: transparent;
-  width: 35px;
-  height: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  cursor: pointer;
-  color: #b39797;
-  transition: all 0.3s;
-
-  &:hover {
-    background-color: #f2ecec;
-    transition: all 0.2s;
-  }
 }
 
-.pagination_active__btn {
-  background-color: #f2ecec;
-  color: #b39797;
-}
-
-.pagination_controll__btn {
-  width: 40px;
-  height: 40px;
-  background-color: transparent;
-  color: #b39797;
-  outline: none;
-
-  &:hover {
-    background-color: #f2ecec;
-  }
-}

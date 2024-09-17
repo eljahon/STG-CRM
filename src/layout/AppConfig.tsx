@@ -51,7 +51,9 @@ const AppConfig = (props: AppConfigProps) => {
   };
 
   const _changeTheme = (theme: string, colorScheme: string) => {
+    console.log(theme)
     changeTheme?.(layoutConfig.theme, theme, "theme-css", () => {
+      console.log(theme)
       setLayoutConfig((prevState: LayoutConfig) => ({
         ...prevState,
         theme,

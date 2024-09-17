@@ -4,11 +4,13 @@ import React, { useContext, useEffect, useRef } from "react";
 import { classNames } from "primereact/utils";
 import AppSidebar from "./AppSidebar";
 import AppTopbar from "./AppTopbar";
+import '../styles/layout/layout.scss'
 import { LayoutContext } from "./context/layoutcontext";
 // import { PrimeReactContext } from "primereact/api";
 import { LayoutState, AppTopbarRef } from "../types";
 
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
+import AppConfig from "./AppConfig.tsx";
 
 const Layout = () => {
   const { layoutConfig, layoutState, setLayoutState } =
@@ -142,6 +144,7 @@ const Layout = () => {
           <div className="layout-main">
             <Outlet />
           </div>
+          {/*<AppConfig/>*/}
         </div>
         <div className="layout-mask"></div>
       </div>

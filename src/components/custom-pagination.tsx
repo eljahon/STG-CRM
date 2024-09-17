@@ -16,7 +16,7 @@ export const CustomPagination: React.FC<PaginationProps> = ({
   filterSet,
   total,
 }) => {
-  const totalPages = Math.ceil(total / filter.limit);
+  const totalPages = Math.ceil(total / filter?.limit);
 
   const handlePageClick = (pageNumber: number) => {
     filterSet({ ...filter, page: pageNumber });
@@ -65,7 +65,7 @@ export const CustomPagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <div className="flex align-items-center column-gap-3 justify-content-end mr-5 mt-4">
+    <div className="flex align-items-center bg-transparent column-gap-3 justify-content-end mr-5 mt-4">
       <Button
         className="pagination_controll__btn"
         icon="pi pi-angle-left"
@@ -98,7 +98,7 @@ export const CustomPagination: React.FC<PaginationProps> = ({
         className="pagination_controll__btn"
         icon="pi pi-angle-right"
         rounded
-        disabled={total <= page * filter.limit}
+        disabled={total <= page * filter?.limit}
         onClick={nextButton}
       ></Button>
     </div>

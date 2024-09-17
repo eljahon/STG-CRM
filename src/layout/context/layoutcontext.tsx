@@ -12,6 +12,7 @@ export const LayoutProvider = ({ children }: ChildContainerProps) => {
         theme: 'lara-light-indigo',
         scale: 14
     });
+    console.log(layoutConfig, 'config')
 
     const [layoutState, setLayoutState] = useState<LayoutState>({
         staticMenuDesktopInactive: false,

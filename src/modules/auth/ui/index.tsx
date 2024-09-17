@@ -221,8 +221,6 @@ const LoginPage = () => {
 
               <div className="flex align-items-center justify-content-between mb-5 gap-5"></div>
               <Button
-                severity="warning"
-                disabled={!(registorData.phone && registorData.password)}
                 loading={isSubmit}
                 label={t("submit")}
                 onClick={handleClick}

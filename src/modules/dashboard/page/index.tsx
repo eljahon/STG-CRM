@@ -4,7 +4,7 @@ import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { Menu } from "primereact/menu";
 import { useContext, useEffect, useRef, useState } from "react";
-import { ProductService } from "../../../service/ProductService";
+import { ProductService } from "../../../demo/service/ProductService";
 import { LayoutContext } from "../../../layout/context/layoutcontext";
 import { Demo } from "../../../types";
 import { ChartData, ChartOptions } from "chart.js";
@@ -104,7 +104,10 @@ export const Dashboard = () => {
   };
 
   useEffect(() => {
-    ProductService.getProductsSmall().then((data) => setProducts(data));
+    ProductService.getProductsSmall().then((data) => {
+      console.log(data, 'l======>>>>>>>')
+      setProducts(data)
+    });
   }, []);
 
   useEffect(() => {
