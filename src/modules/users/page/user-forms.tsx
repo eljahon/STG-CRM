@@ -16,6 +16,7 @@ import { UseQueryResult } from "react-query";
 import { Dropdown } from "primereact/dropdown";
 import { userRoleList } from "../../../constants/index.ts";
 import { RoleSelect } from "../components/role-select.tsx";
+import { Skeleton } from "primereact/skeleton";
 
 interface UsersByIdType {
   created_by: null;
@@ -38,7 +39,6 @@ export const UserForms = () => {
     UsersByIdType,
     unknown
   >;
-  console.log(data);
 
   const InputCompoente = (props) => {
     const { form, field, placeholder } = props;
@@ -47,16 +47,22 @@ export const UserForms = () => {
     };
     return (
       <>
-        <InputText
-          type={field?.name === "password" ? "password" : "text"}
-          className="p-inputtext-sm w-full"
-          placeholder={placeholder}
-          invalid={form.errors[field.name]}
-          onChange={handleChange}
-          name={field?.name}
-          value={field?.value || data?.[field?.name] || ""}
-        />
-        <ControlError form={form} field={field} />
+        {isLoading ? (
+          <Skeleton width="100%" height="3rem" />
+        ) : (
+          <>
+            <InputText
+              type={field?.name === "password" ? "password" : "text"}
+              className="p-inputtext-sm w-full"
+              placeholder={placeholder}
+              invalid={form.errors[field.name]}
+              onChange={handleChange}
+              name={field?.name}
+              value={field?.value || data?.[field?.name] || ""}
+            />
+            <ControlError form={form} field={field} />
+          </>
+        )}
       </>
     );
   };
@@ -69,11 +75,17 @@ export const UserForms = () => {
 
     return (
       <>
-        <UploadeImage
-          editData={data}
-          succsessImage={succsessUpload}
-          errorImage={toast.error}
-        />
+        {isLoading ? (
+          <Skeleton width="100%" height="3rem" />
+        ) : (
+          <>
+            <UploadeImage
+              editData={data}
+              succsessImage={succsessUpload}
+              errorImage={toast.error}
+            />
+          </>
+        )}
       </>
     );
   };
