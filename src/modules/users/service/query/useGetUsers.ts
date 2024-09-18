@@ -5,16 +5,15 @@ import { UsersGetDataTypes } from "../../types/user-types";
 interface IFilter {
   limit: number;
   page: number;
-  search: string,
-    role_id: string
+  search: string;
+  role_id: string;
 }
 
 export const useGetUsers = (arg: IFilter) => {
   const { limit, page, search, role_id } = arg;
-    console.log(role_id, 'arg ==>>')
 
   return useQuery({
-    queryKey: ["users", page, search,role_id],
+    queryKey: ["users", page, search, role_id],
     queryFn: () =>
       api
         .get<UsersGetDataTypes>("/user", {

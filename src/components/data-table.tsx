@@ -1,39 +1,53 @@
 import React from "react";
 import { DataTable } from "primereact/datatable";
-import {Column, ColumnProps} from "primereact/column";
+import { Column, ColumnProps } from "primereact/column";
 import { Button } from "primereact/button";
 import { TableDataSkleton } from "./table-data-skleton";
-import {Paginator} from "primereact/paginator";
+import { Paginator } from "primereact/paginator";
+import { useTranslation } from "react-i18next";
+import { Skeleton } from "primereact/skeleton";
 export interface RowDataType {
   created_by: null;
   full_name: string;
   id: string;
   logo: string;
   phone: string;
-  role: {id: string, name: string} ;
+  role: { id: string; name: string };
   status: string;
 }
 interface DynamicDataTableProps {
   column: ColumnProps[];
-  datas: RowDataType[]|undefined;
-  first:number,
-  onPage:(pages:{first:number, page: number, rows: number})=> void,
-  totalRecords: number,
-  rows: number,
+  datas: RowDataType[] | undefined;
+  first: number;
+  onPage: (pages: { first: number; page: number; rows: number }) => void;
+  totalRecords: number;
+  rows: number;
   onEdit: (rowData: RowDataType) => void;
   onDelete: (rowData: RowDataType) => void;
   loading: boolean;
+  loadingDelete?: boolean;
 }
-export const DynamicDataTable:React.FC<DynamicDataTableProps> = ({column,totalRecords,rows, onPage,first, datas, onEdit, onDelete, loading}) => {
-
-
-
+export const DynamicDataTable: React.FC<DynamicDataTableProps> = ({
+  column,
+  totalRecords,
+  rows,
+  onPage,
+  first,
+  datas,
+  onEdit,
+  onDelete,
+  loading,
+  loadingDelete,
+}) => {
+  const { t } = useTranslation();
   const actionTemplate = (rowData: RowDataType) => {
     return (
       <div className="flex column-gap-2">
         <Button
           style={{ width: 40, height: 40 }}
-          rounded outlined severity="success"
+          rounded
+          outlined
+          severity="success"
           icon="pi pi-pencil"
           size="small"
           className=" p-button-success"
@@ -44,15 +58,18 @@ export const DynamicDataTable:React.FC<DynamicDataTableProps> = ({column,totalRe
           icon="pi pi-trash"
           className=" p-button-danger"
           size="small"
-          rounded outlined severity="danger"
+          rounded
+          outlined
+          severity="danger"
           onClick={() => onDelete(rowData)}
         />
       </div>
     );
   };
   function dataKey(item) {
-    return item.id+Math.random()*1000
+    return item.id + Math.random() * 1000;
   }
+
   return (
     <div>
       {loading ? (
@@ -60,8 +77,16 @@ export const DynamicDataTable:React.FC<DynamicDataTableProps> = ({column,totalRe
       ) : (
         <div>
           <DataTable
-              size={'small'}
-              footer={<Paginator first={first} rows={rows} totalRecords={totalRecords} onPageChange={onPage} rowsPerPageOptions={[5,10,15,20,25,30,35,40]}/>}
+            size={"small"}
+            footer={
+              <Paginator
+                first={first}
+                rows={rows}
+                totalRecords={totalRecords}
+                onPageChange={onPage}
+                rowsPerPageOptions={[5, 10, 15, 20, 25, 30, 35, 40]}
+              />
+            }
             value={datas}
             dataKey={dataKey}
             tableStyle={{ minWidth: "50rem" }}
@@ -69,11 +94,20 @@ export const DynamicDataTable:React.FC<DynamicDataTableProps> = ({column,totalRe
             {column?.map((col, i) => (
               <Column
                 style={{ width: 600 }}
-                key={i+Math.random()*1000}
+                key={i + Math.random() * 1000}
                 {...col}
               />
             ))}
-            <Column header="Action" body={actionTemplate} />
+            <Column
+              header={
+                loadingDelete ? (
+                  <Skeleton width="80px" height="22px" />
+                ) : (
+                  t("action")
+                )
+              }
+              body={actionTemplate}
+            />
           </DataTable>
         </div>
       )}
