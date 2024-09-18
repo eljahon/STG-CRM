@@ -1,8 +1,11 @@
 import { InputText } from "primereact/inputtext";
 import { MultiSelect, MultiSelectChangeEvent } from "primereact/multiselect";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { UsersGetDataTypes } from "../../../modules/users/types/user-types";
+import { debounce, set } from "lodash";
+// import { useSearchParams } from "react-router-dom";
+// import { IPARAM } from "../../../modules/users/page/users";
 
 interface CustomMultiSelectProps {
   url: string;
@@ -11,13 +14,15 @@ interface CustomMultiSelectProps {
 export const CustomMultiSelect: React.FC<CustomMultiSelectProps> = (props) => {
   const { url } = props;
   const { t } = useTranslation();
-  const [selectedCities, setSelectedCities] = useState<null>(null);
+  const [selectedEmployees, setSelectedEmployees] = useState<null>(null);
   const [fetchData, setFetchData] = useState<UsersGetDataTypes | null>(null);
+  const [search, setSearch] = useState("");
+  //   const [params, setParams] = useSearchParams();
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `https://api.stg-enterprise.com/api/v1/${url}`,
+        `https://api.stg-enterprise.com/api/v1/${url}?search=${search}&limit=5`,
         {
           method: "GET",
           headers: {
@@ -30,7 +35,7 @@ export const CustomMultiSelect: React.FC<CustomMultiSelectProps> = (props) => {
       setFetchData(data);
     };
     fetchData();
-  }, [url]);
+  }, [url, search]);
 
   const fetchDataMap = fetchData?.data.map((item) => ({
     name: item?.full_name,
@@ -44,8 +49,8 @@ export const CustomMultiSelect: React.FC<CustomMultiSelectProps> = (props) => {
           <div className="my-2 w-full px-2">
             <span className="p-input-icon-right w-full">
               <InputText
-                //   value={filters.search}
-                //   onChange={handleInputChange}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
                 className="p-inputtext-sm h-full w-full"
                 type="text"
                 placeholder={t("search")}
@@ -54,16 +59,15 @@ export const CustomMultiSelect: React.FC<CustomMultiSelectProps> = (props) => {
             </span>
           </div>
         )}
-        value={selectedCities}
+        value={selectedEmployees}
         onChange={(e: MultiSelectChangeEvent) =>
-          e.value.length <= 4 && setSelectedCities(e.value)
+          e.value.length <= 4 && setSelectedEmployees(e.value)
         }
         options={fetchDataMap}
         optionLabel="name"
         filter
         placeholder="Select Users"
         maxSelectedLabels={3}
-        selectionLimit={4}
         className="w-full md:w-20rem"
       />
     </div>

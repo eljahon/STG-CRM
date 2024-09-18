@@ -1,7 +1,7 @@
 import { DynamicDataTable, RowDataType } from "../../../components/data-table";
 import { useGetUsers } from "../service/query/useGetUsers";
 import { Tag } from "primereact/tag";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import TheBreadcrumb from "../../../components/Breadcrumb/TheBreadcrumb.tsx";
 import { useTranslation } from "react-i18next";
@@ -131,6 +131,7 @@ export const Users = () => {
     if (method === "del") newParams.delete(key);
     setParams(newParams);
   };
+  
   const editUsers = (userData: RowDataType) => {
     navigator(`/employees/${userData.id}`);
   };
