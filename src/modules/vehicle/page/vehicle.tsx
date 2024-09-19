@@ -11,7 +11,7 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { ColumnProps } from "primereact/column";
 import {debounce, get} from "lodash";
-import {userRoleList, zoneType} from "../../../constants";
+import { zoneType} from "../../../constants";
 import { Dropdown } from "primereact/dropdown";
 import { queryClient } from "../../../service/api.ts";
 import { toast } from "react-toastify";

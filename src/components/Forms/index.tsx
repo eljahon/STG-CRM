@@ -4,7 +4,7 @@ import { isFunction } from "lodash";
 import { formHelpers } from "../formHelpers.ts";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { AddData, UpdateData, UpdateDataOne } from "../../service/global.ts";
+import { AddData, UpdateData } from "../../service/global.ts";
 interface IFORMCONTAINER {
   url: string;
   formik?: FormikProps<any>;
