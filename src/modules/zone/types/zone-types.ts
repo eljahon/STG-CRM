@@ -1,11 +1,10 @@
-export interface UsersGetDataTypes {
-  full_name: any;
+export interface IZONEGETDATATYPES {
   data: [
     {
       created_by: null;
-      full_name: string;
+      name: string;
       id: string;
-      logo: string;
+      type: string;
       phone: string;
       role: { id: string; name: string };
       status: string;

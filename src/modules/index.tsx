@@ -20,3 +20,4 @@ const rolename = localStorage.getItem("role") || "superadmin";
 export const filteredRoutes = routes.filter((el) =>
   el?.meta?.role?.has(rolename)
 );
+console.log(filteredRoutes, 'filteredRoutes')

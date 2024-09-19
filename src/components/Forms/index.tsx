@@ -49,8 +49,7 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
 
     setLoader(true);
     if (id == "new") {
-      console.log(formValues, '==>>>', id)
-      await AddData(url, formValues)
+      await AddData(url, isFunction(customData) ? customData(formValues) : formValues)
         .then((res: any) => {
           if (res?.status == "200" || res?.status == "201") {
             formikHelper.resetForm();
@@ -64,20 +63,8 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
           onFinal();
           setLoader();
         });
-    } else if (id == "old") {
-      await UpdateDataOne(url, formValues)
-        .then((res: any) => {
-          if (res?.status == "200" || res?.status == "201") {
-            toast.success("seccessfully update");
-            onSuccess(res);
-          }
-        })
-        .catch((errors) => {
-          onError(errors);
-        })
-        .finally(() => onFinal());
-    } else {
-      await UpdateData(url, formValues, id)
+    }  else {
+      await UpdateData(url, isFunction(customData) ? customData(formValues) :formValues, id)
         .then((res: any) => {
           if (res?.status == "200" || res?.status == "201") {
             onSuccess(res);

@@ -8,15 +8,15 @@ import React, { useState } from "react";
 import { ControlError } from "../../../components/ControlError/ControlError.tsx";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { StatudsSelect } from "../components/status-select.tsx";
+import { StatudsSelect } from "../../../components/Forms/Fields/Status-Select.tsx";
 import { useParams } from "react-router-dom";
-import UploadeImage from "../components/uploade-image.tsx";
 import { useGetUsersById } from "../service/query/useGetUsersById.ts";
 import { UseQueryResult } from "react-query";
 import { Dropdown } from "primereact/dropdown";
 import { userRoleList } from "../../../constants/index.ts";
-import { RoleSelect } from "../components/role-select.tsx";
+import { RoleSelect, UploadeImage, CustomInputText } from "../../../components/Forms/Fields";
 import { Skeleton } from "primereact/skeleton";
+import {get} from "lodash";
 
 interface UsersByIdType {
   created_by: null;
@@ -40,32 +40,6 @@ export const UserForms = () => {
     unknown
   >;
 
-  const InputCompoente = (props) => {
-    const { form, field, placeholder } = props;
-    const handleChange = (option: React.ChangeEvent<HTMLInputElement>) => {
-      form?.setFieldValue(field?.name, option.target.value);
-    };
-    return (
-      <>
-        {isLoading ? (
-          <Skeleton width="100%" height="3rem" />
-        ) : (
-          <>
-            <InputText
-              type={field?.name === "password" ? "password" : "text"}
-              className="p-inputtext-sm w-full"
-              placeholder={placeholder}
-              invalid={form.errors[field.name]}
-              onChange={handleChange}
-              name={field?.name}
-              value={field?.value || data?.[field?.name] || ""}
-            />
-            <ControlError form={form} field={field} />
-          </>
-        )}
-      </>
-    );
-  };
 
   const ImageUpload = (props) => {
     const { form, field } = props;
@@ -103,7 +77,7 @@ export const UserForms = () => {
         model={[
           {
             template: () => (
-              <span className="text-primary">{t("employees-create")}</span>
+              <span className="text-primary">{t("employees")} {id === 'new' ?t('create') : t('update')}</span>
             ),
           },
         ]}
@@ -121,37 +95,42 @@ export const UserForms = () => {
               name: "full_name",
               validations: [{ type: "required" }],
               validationType: "string",
+              value: get(data, 'full_name')
             },
             {
               name: "password",
               validations: [{ type: "required" }],
               validationType: "string",
+              value: get(data, 'password')
             },
             {
               name: "phone",
               validations: [{ type: "phone" }],
               validationType: "string",
+              value: get(data, 'phone')
             },
             {
               name: "status",
               validations: [{ type: "required" }],
               validationType: "string",
-              value: data?.status,
+              value: get(data, 'status'),
             },
             {
               name: "role_id",
               validations: [{ type: "required" }],
               validationType: "string",
-              value: data?.role?.id,
+              value: get(data, 'role.id'),
             },
             {
               name: "logo",
               validations: [{ type: "required" }],
               validationType: "string",
+              value: get(data, 'logo')
             },
           ]}
         >
           {(formik) => {
+            console.log(formik)
             return (
               <>
                 <div className="user_form__box">
@@ -162,7 +141,7 @@ export const UserForms = () => {
                     <Field
                       id={"full_name"}
                       {...formik}
-                      component={InputCompoente}
+                      component={CustomInputText}
                       name="full_name"
                       placeholder={t("fullName")}
                     />
@@ -174,7 +153,7 @@ export const UserForms = () => {
                     <Field
                       id={"password"}
                       {...formik}
-                      component={InputCompoente}
+                      component={CustomInputText}
                       name="password"
                       placeholder={t("password")}
                     />
@@ -186,7 +165,7 @@ export const UserForms = () => {
                     <Field
                       id={"phone"}
                       {...formik}
-                      component={InputCompoente}
+                      component={CustomInputText}
                       name="phone"
                       placeholder={t("phone")}
                     />
@@ -214,6 +193,7 @@ export const UserForms = () => {
                         {...formik}
                         component={RoleSelect}
                         name="role_id"
+                        options={userRoleList}
                         placeholder={t("role")}
                         isLoading={isLoading}
                       />

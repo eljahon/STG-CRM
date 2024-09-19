@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { Upload } from "../../../service/upload";
+import { Upload } from "../../../service/upload.ts";
 import { Skeleton } from "primereact/skeleton";
 import { Button } from "primereact/button";
 import { toast } from "react-toastify";
@@ -11,7 +11,7 @@ interface FileUploadProps {
   editData?: any;
 }
 
-const UploadeImage: React.FC<FileUploadProps> = ({
+export const UploadeImage: React.FC<FileUploadProps> = ({
   succsessImage,
   errorImage,
   editData,
@@ -124,5 +124,3 @@ const UploadeImage: React.FC<FileUploadProps> = ({
     </div>
   );
 };
-
-export default UploadeImage;

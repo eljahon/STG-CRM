@@ -10,9 +10,9 @@ const AppMenu = () => {
       items: [
         { label: "dashboard", icon: "pi pi-fw pi-chart-line", to: "/dashboard", name: 'dashboard' },
         { label: "zone", icon: "pi pi-fw pi-map-marker", to: "/zone", name: 'zone' },
-        { label: "maps", icon: "pi pi-fw  pi-map", to: "/maps" , name: 'map'},
+        { label: "maps", icon: "pi pi-fw  pi-map", to: "/maps" , name: 'maps'},
         { label: "employees", icon: "pi pi-fw pi-users", to: "/employees", name: 'employees' },
-        { label: "cars", icon: "pi pi-fw  pi-car", to: "/vehicle", name: 'cars' },
+        { label: "cars", icon: "pi pi-fw  pi-car", to: "/vehicle", name: 'vehicle' },
         { label: "salary_plan", icon: "pi pi-fw  pi-calendar", to: "/cars", name:'salaryPlan' },
         { label: "notifcations", icon: "pi pi-fw  pi-bell", to: "/notifcations" , name: 'notifcations'},
       ],
@@ -24,17 +24,17 @@ const AppMenu = () => {
           icon: "pi pi-fw pi-home",
           items: [
             {
-              label: "Login",
+              label: "login",
               icon: "pi pi-fw pi-sign-in",
               to: "/auth/login",
             },
             {
-              label: "Error",
+              label: "error",
               icon: "pi pi-fw pi-times-circle",
               to: "/auth/error",
             },
             {
-              label: "Access Denied",
+              label: "access-denied",
               icon: "pi pi-fw pi-lock",
               to: "/auth/access",
             },
@@ -54,12 +54,12 @@ const AppMenu = () => {
               to: "/auth/login",
             },
             {
-              label: "Error",
+              label: "error",
               icon: "pi pi-fw pi-times-circle",
               to: "/auth/error",
             },
             {
-              label: "Access Denied",
+              label: "access-denied",
               icon: "pi pi-fw pi-lock",
               to: "/auth/access",
             },

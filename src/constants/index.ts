@@ -34,5 +34,6 @@ export const userRoleList = [
   {
     id: "f015278c-36aa-43bd-8c1a-e39dab42cf0",
     name: "manager",
-  },
+  }
 ];
+export  const zoneType =[{id: 'ekg', name: 'Yuklovchi'}, {id: 'dump', name: "To'kuchi"}]

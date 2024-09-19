@@ -5,6 +5,7 @@ const createYupSchema = (field: any) => {
   const { validationType = "string", validations = [], fields = [] } = field;
   let validator = (yup as any)[validationType]();
   validations.forEach(({ type, params }: any) => {
+    console.log(type, params, 'type or params')
     switch (type) {
       case "typeError":
         validator = validator.typeError(params || `Invalid ${validationType}`);

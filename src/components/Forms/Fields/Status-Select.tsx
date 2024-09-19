@@ -1,14 +1,19 @@
 import { Dropdown } from "primereact/dropdown";
-import { ControlError } from "../../../components/ControlError/ControlError";
-import { userRoleList } from "../../../constants";
+import { ControlError } from "../../ControlError/ControlError.tsx";
 import { Skeleton } from "primereact/skeleton";
 
-export const RoleSelect = (props) => {
+const statusList = [
+  { id: "active", name: "Active" },
+  { id: "inactive", name: "Inactive" },
+];
+
+export const StatudsSelect = (props) => {
   const { form, field, placeholder, isLoading } = props;
 
   const handleOnChage = (event: React.ChangeEvent<HTMLInputElement>) => {
     form.setFieldValue(field?.name, event.target.value);
   };
+
   return (
     <>
       {isLoading ? (
@@ -20,10 +25,9 @@ export const RoleSelect = (props) => {
             value={field?.value}
             placeholder={placeholder}
             onChange={handleOnChage}
-            options={userRoleList}
+            options={statusList}
             optionLabel={"name"}
             optionValue={"id"}
-            defaultValue={field?.value}
           />
           <ControlError form={form} field={field} />
         </>
