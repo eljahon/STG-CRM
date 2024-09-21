@@ -4,66 +4,48 @@ import { useTranslation } from "react-i18next";
 import { Upload } from "../../../service/upload.ts";
 import { Skeleton } from "primereact/skeleton";
 import { Button } from "primereact/button";
-import { toast } from "react-toastify";
+import {Image} from "primereact/image";
+import {FormikProps, FieldInputProps} from "formik";
 interface FileUploadProps {
-  succsessImage: (url: string) => void;
-  errorImage: (url: string) => void;
-  editData?: any;
+ form: FormikProps<any>,
+  field: FieldInputProps<any>
 }
 
 export const UploadeImage: React.FC<FileUploadProps> = ({
-  succsessImage,
-  errorImage,
-  editData,
+    form, field
 }) => {
   const { t } = useTranslation();
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
   const [uploadLoading, setUploadLoading] = useState(false);
 
   const { mutate, isLoading } = Upload();
 
-  const handleFileChange = (event: { target: { files: File[] } }) => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       setUploadLoading(true);
-      const file = event.target.files[0];
-      setSelectedFile(file);
-
+      const file = event.target.files;
       const formData = new FormData();
       if (file) {
-        formData.append("file", file);
-
+        formData.append("file", file[0]);
         mutate(formData, {
           onSuccess: (res) => {
-            succsessImage(res.data.id);
+            form.setFieldValue(field?.name, res.data.id)
           },
-          onError: (res) => {
-            errorImage(res.message);
+          onError: () => {
+            form.setFieldValue(field?.name, '')
           },
         });
-      }
-
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreview(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        setPreview(null);
       }
       setUploadLoading(false);
     } catch (error) {
       setUploadLoading(false);
-      toast.add({
-        type: "error",
-      });
+      // toast.add({type: "error",});
     }
   };
 
   const handleRemoveFile = () => {
-    setSelectedFile(null);
-    setPreview(null);
+    form.setFieldValue(field?.name, '')
+    // setSelectedFile(null);
+    // setPreview(null);
   };
 
   return (
@@ -83,44 +65,33 @@ export const UploadeImage: React.FC<FileUploadProps> = ({
         className="hidden"
         onChange={handleFileChange}
       />
-      {selectedFile && (
         <div>
           {isLoading ? (
             <Skeleton className="mt-2" width="300px" height="60px" />
           ) : (
-            <div className="view_upload__img">
-              <div className="flex align-items-center column-gap-2">
-                {preview && (
-                  <img
-                    src={preview}
-                    alt="Preview"
-                    className="selected_image shadow-2 border-round"
-                  />
-                )}
-                <div>{selectedFile.name.slice(0, 10)}...</div>
-              </div>
 
-              <Button
-                className="view_img__delete"
-                rounded
-                icon="pi pi-times-circle"
-                severity="danger"
-                onClick={handleRemoveFile}
-              ></Button>
-            </div>
+                field?.value && <div className="view_upload__img">
+                  <div className="flex align-items-center column-gap-2">
+                    <Image
+                        width={'80px'}
+                        height={'60px'}
+                        src={`http://91.107.222.142:9000/stg/${field?.value}`}
+                        preview
+                        alt="Preview"
+                        className="selected_image shadow-2 border-round"
+                    />
+                  </div>
+
+                  <Button
+                      className="view_img__delete"
+                      rounded
+                      icon="pi pi-times-circle"
+                      severity="danger"
+                      onClick={handleRemoveFile}
+                  ></Button>
+                </div>
           )}
         </div>
-      )}
-
-      {editData?.logo && !selectedFile && (
-        <div className="mt-2">
-          <img
-            src={`http://91.107.222.142:9000/stg/${editData?.logo}`}
-            alt="Preview"
-            className="w-6rem h-5rem shadow-2 border-round"
-          />
-        </div>
-      )}
     </div>
   );
 };

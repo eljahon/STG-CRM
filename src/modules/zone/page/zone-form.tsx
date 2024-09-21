@@ -13,7 +13,10 @@ import {zoneType} from "../../../constants";
 import {GoogleMaps} from "../../../components/GoogleMaps/Google-Maps.tsx";
 import {CustomMultiSelect} from "../../../components/Forms/Fields/Multi-Select.tsx";
 import {useFetchOne} from "../../../hooks/useFetchOne.ts";
-const operatorIds:{ekg: string, dump: string} ={
+import {UseQueryResult} from "react-query";
+interface IOPERATOR {ekg: string, dump: string}
+
+const operatorIds:IOPERATOR={
     ekg: 'f015278c-36aa-43bd-8c1a-e39dab42cf06',
     dump:'f015278c-36aa-43bd-8c1a-e39dab42cf07'
 
@@ -33,7 +36,7 @@ export const ZoneForms = () => {
     const [latLng, setLatLng] = useState<{latitude: number, longitude: number}>();
     const { id } = useParams();
 
-    const { data, isLoading } = useFetchOne({url: 'zone', id:id, key: 'zone'}) as UseQueryResult<
+    const { data, isLoading } = useFetchOne({url: 'zone', id:id as string, key: 'zone'}) as UseQueryResult<
         UsersByIdType,
         unknown
     >;
@@ -58,7 +61,7 @@ export const ZoneForms = () => {
                     },
                 ]}
             />
-            <div className='my-2'>{!isLoading&&<GoogleMaps markers={[{lat: get(data, 'location.latitude'), lng: get(data, 'location.longitude')}]} height={50} width={100} onMarkerChange={onMarkerChange}/>}</div>
+            <div className='my-2'>{!isLoading&&<GoogleMaps markers={[{lat: Number(get(data, 'location.latitude')), lng: Number(get(data, 'location.longitude'))}]} height={50} width={100} onMarkerChange={onMarkerChange}/>}</div>
             <div className="card mt-2 w-1/2">
                 <div>
                     <FormContainer
@@ -68,7 +71,7 @@ export const ZoneForms = () => {
                         onSuccess={createEmployeeSuccess}
                         setLoader={setLoading}
                         url={"zone"}
-                        customData={(values) => ({...values, location: latLng ?? get(data, 'location')})}
+                        customData={(values:any) => ({...values, location: latLng ?? get(data, 'location')})}
                         fields={[
                             {
                                 name: "name",
@@ -92,7 +95,7 @@ export const ZoneForms = () => {
                                 name: "operators",
                                 // validations: [{type: ""}],
                                 validationType: "array",
-                                value: get(data, 'operators')?.map(el => el.id)
+                                value: get(data, 'operators', [])?.map(({id}) => id)
                             },
                         ]}
                     >
@@ -180,9 +183,9 @@ export const ZoneForms = () => {
                                                         customFilter={() => formik.values}
                                                         name="operators"
                                                         url={'user'}
-                                                        param={{role_id: operatorIds[formik.values.type], not_assigned_to_zone: true}}
+                                                        param={{role_id: get(operatorIds, `${formik?.values?.type}`, []), not_assigned_to_zone: true}}
                                                         optionLabel={'full_name'}
-                                                        optionsProp={get(data, 'operators')?.map(el => ({id: el.id, full_name: el.full_name}))}
+                                                        optionsProp={get(data, 'operators', [])?.map(({id, full_name}) => ({id, full_name}))}
                                                         placeholder={t("operators")}
                                                         isLoading={isLoading}
                                                     />

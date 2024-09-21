@@ -10,7 +10,8 @@ export interface IGOOGLEMAP {
     isMarkerAdd?: boolean,
     onMarkerChange?: (lat:number, lng: number) => void,
     markers?: latlgn[],
-    width: number,
-    height: number
+    isRoute?: boolean,
+    width?: number,
+    height?: number
 }
 export  interface IGOOGLEEVENT{x:number, y:number, lat:number, lng: number, event:React.ChangeEvent<HTMLInputElement>}

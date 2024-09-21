@@ -5,10 +5,12 @@ import { formHelpers } from "../formHelpers.ts";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AddData, UpdateData } from "../../service/global.ts";
+import { useTranslation } from "react-i18next";
 interface IFORMCONTAINER {
   url: string;
   formik?: FormikProps<any>;
   formProps?: any;
+  subUrl?: string;
   children: (formik: FormikProps<any>) => ReactNode;
   params?: any;
   isFormData?: boolean;
@@ -38,18 +40,18 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
   onSubmit,
   loaderGlob,
   setLoader,
+  subUrl,
   validateOnMount = false,
   ...formProps
 }) => {
   const { id } = useParams();
+  const {t} = useTranslation();
   const { initialValues, validationSchema } =
     formHelpers.createFormSchema(fields);
   const handleSubmit = async (values: any, formikHelper: any) => {
     const formValues = formHelpers.getFormValues(values, fields, isFormData);
-
-    setLoader(true);
     if (id == "new") {
-      await AddData(url, isFunction(customData) ? customData(formValues) : formValues)
+      await AddData(subUrl ? `${url}/${subUrl}` : url, isFunction(customData) ? customData(formValues) : formValues)
         .then((res: any) => {
           if (res?.status == "200" || res?.status == "201") {
             formikHelper.resetForm();
@@ -57,18 +59,20 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
           }
         })
         .catch((errors) => {
-          onError(errors);
+         isFunction(onError)&&onError(errors);
+          toast.error(errors.message);
+          // (errors.message, 'error =====>')
         })
         .finally(() => {
           onFinal();
           setLoader();
         });
     }  else {
-      await UpdateData(url, isFunction(customData) ? customData(formValues) :formValues, id)
+      await UpdateData(url,isFunction(customData) ? customData(formValues) : formValues, id, subUrl)
         .then((res: any) => {
           if (res?.status == "200" || res?.status == "201") {
             onSuccess(res);
-            toast.success("seccessfully update");
+            toast.success(t(`${url}`)+  " " + t('successfully') + " " + t('update'));
           }
         })
         .catch((errors) => {
@@ -84,16 +88,10 @@ export const FormContainer: FC<IFORMCONTAINER> = ({
       validationSchema={validationSchema}
       validateOnMount={validateOnMount}
       onSubmit={async (value: any, formikHelper: any) => {
-        console.log(value)
-        if (customData) {
           isFunction(onSubmit)
-            ? onSubmit(customData(value))
-            : await handleSubmit(customData(value), formikHelper);
-        } else {
-          isFunction(onSubmit)
-            ? onSubmit(value)
+          ? onSubmit( isFunction(customData) ? customData(value) : value)
             : await handleSubmit(value, formikHelper);
-        }
+       
       }}
       enableReinitialize={true}
     >

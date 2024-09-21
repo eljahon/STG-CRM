@@ -37,3 +37,7 @@ export const userRoleList = [
   }
 ];
 export  const zoneType =[{id: 'ekg', name: 'Yuklovchi'}, {id: 'dump', name: "To'kuchi"}]
+export const zoneTypeId = [{}]
+
+export  const modelTypes =[{id: 'tonly', name: 'Tonly'}, {id: 'avtogreder', name: 'Avtogreder'},{id: 'vodovoz', name: 'Vodovoz'},{id: 'pogruzchik', name: 'Pogruzchik'}]
+export const statusList = [{id: 'active', name: 'Active'}, {id: 'inactive', name: 'Inactive'}]

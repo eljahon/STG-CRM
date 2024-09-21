@@ -5,7 +5,7 @@ import { UsersRoute } from "./users/route.ts";
 import { ZoneRoute } from "./zone/route.ts";
 import { MapsRoute } from "./maps/route.ts";
 import { VehicleRoute } from "./vehicle/route.ts";
-
+import { SalaryPlanRoute } from "./salary-plan/route.ts";
 const routes = [
   ...DashboardRoute,
   ...FormRoute,
@@ -14,6 +14,7 @@ const routes = [
   ...ZoneRoute,
   ...MapsRoute,
   ...VehicleRoute,
+  ...SalaryPlanRoute,
 ];
 const rolename = localStorage.getItem("role") || "superadmin";
 

@@ -1,29 +1,33 @@
 import React from "react";
-import { DataTable } from "primereact/datatable";
+import { DataTable, DataTableValue } from "primereact/datatable";
 import { Column, ColumnProps } from "primereact/column";
 import { Button } from "primereact/button";
 import { TableDataSkleton } from "./table-data-skleton";
 import { Paginator } from "primereact/paginator";
 import { useTranslation } from "react-i18next";
 import { Skeleton } from "primereact/skeleton";
-export interface RowDataType {
-  created_by: null;
-  full_name: string;
-  id: string;
-  logo: string;
-  phone: string;
-  role: { id: string; name: string };
-  status: string;
+import { isFunction } from "lodash";
+import noData from "../assets/noData.png"
+const EmptyMessage:React.FC<{message:string}> = ({message}) => {
+  return (
+    <div className="flex justify-content-center items-center h-full">
+      <div className="flex flex-column align-items-center">
+      <span className="text-primary"><b>{message}</b></span>
+        <img width="200" height="200" src={noData} alt="no data" />
+      </div>
+    </div>
+  )
 }
 interface DynamicDataTableProps {
   column: ColumnProps[];
-  datas: RowDataType[] | undefined;
+  datas: DataTableValue[] | undefined;
   first: number;
-  onPage: (pages: { first: number; page: number; rows: number }) => void;
+  onPage?: (pages: { first: number; page: number; rows: number }) => void;
   totalRecords: number;
   rows: number;
-  onEdit: (rowData: RowDataType) => void;
-  onDelete: (rowData: RowDataType) => void;
+  onEdit?: (rowData: DataTableValue) => void;
+  onDelete?: (rowData: DataTableValue) => void;
+  onView?: (rowData: DataTableValue) => void;
   loading: boolean;
   loadingDelete?: boolean;
 }
@@ -36,14 +40,25 @@ export const DynamicDataTable: React.FC<DynamicDataTableProps> = ({
   datas,
   onEdit,
   onDelete,
+  onView,
   loading,
   loadingDelete,
 }) => {
   const { t } = useTranslation();
-  const actionTemplate = (rowData: RowDataType) => {
+  const actionTemplate = (rowData: DataTableValue) => {
     return (
       <div className="flex column-gap-2">
-        <Button
+        {isFunction(onView)&& <Button
+          style={{ width: 40, height: 40 }}
+          icon="pi pi-eye"
+          className=" p-button-info"
+          size="small"
+          rounded
+          outlined
+          severity="info"
+          onClick={() => onView(rowData)}
+        />}
+        {isFunction(onEdit) && <Button
           style={{ width: 40, height: 40 }}
           rounded
           outlined
@@ -52,8 +67,8 @@ export const DynamicDataTable: React.FC<DynamicDataTableProps> = ({
           size="small"
           className=" p-button-success"
           onClick={() => onEdit(rowData)}
-        />
-        <Button
+        />}
+        {isFunction(onDelete) && <Button
           style={{ width: 40, height: 40 }}
           icon="pi pi-trash"
           className=" p-button-danger"
@@ -62,13 +77,14 @@ export const DynamicDataTable: React.FC<DynamicDataTableProps> = ({
           outlined
           severity="danger"
           onClick={() => onDelete(rowData)}
-        />
+        />}
+      
       </div>
     );
   };
-  function dataKey(item) {
-    return item.id + Math.random() * 1000;
-  }
+  // function dataKey(item: DataTableValue):string {
+  //   return item.id + Math.random() * 1000;
+  // }
 
   return (
     <div>
@@ -78,8 +94,9 @@ export const DynamicDataTable: React.FC<DynamicDataTableProps> = ({
         <div>
           <DataTable
             size={"small"}
+            emptyMessage={<EmptyMessage message={t("noData")}/>}
             footer={
-              <Paginator
+              isFunction(onPage) &&totalRecords > 0 && <Paginator
                 first={first}
                 rows={rows}
                 totalRecords={totalRecords}
@@ -88,7 +105,7 @@ export const DynamicDataTable: React.FC<DynamicDataTableProps> = ({
               />
             }
             value={datas}
-            dataKey={dataKey}
+            dataKey={'id'}
             tableStyle={{ minWidth: "50rem" }}
           >
             {column?.map((col, i) => (
@@ -98,7 +115,7 @@ export const DynamicDataTable: React.FC<DynamicDataTableProps> = ({
                 {...col}
               />
             ))}
-            <Column
+           { (isFunction(onDelete) || isFunction(onEdit) || isFunction(onView) )&& <Column
               header={
                 loadingDelete ? (
                   <Skeleton width="80px" height="22px" />
@@ -107,7 +124,7 @@ export const DynamicDataTable: React.FC<DynamicDataTableProps> = ({
                 )
               }
               body={actionTemplate}
-            />
+            />}
           </DataTable>
         </div>
       )}

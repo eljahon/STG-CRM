@@ -4,19 +4,20 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import api from "../../../service/api.ts";
 import { ControlError } from "../../ControlError/ControlError.tsx";
-import { FormikProps } from "formik";
+import {FieldInputProps, FormikProps} from "formik";
 import { Skeleton } from "primereact/skeleton";
+import {get} from "lodash";
 
 interface CustomMultiSelectProps {
   url: string;
-  param: { id: string };
+  param: any;
   optionLabel: string;
   optionValue: string;
   placeholder: string;
   optionsProp: any;
   isLoading: boolean;
   form: FormikProps<any>;
-  field: FormikProps<any>;
+  field: FieldInputProps<any>;
   customFilter: () => FormikProps<any>;
 }
 
@@ -78,7 +79,7 @@ export const CustomMultiSelect: React.FC<CustomMultiSelectProps> = (props) => {
                 </span>
               </div>
             )}
-            value={field?.value}
+            value={get(field, 'value')}
             onChange={(e: MultiSelectChangeEvent) =>
               form.setFieldValue(field?.name, e.value)
             }

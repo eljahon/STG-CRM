@@ -33,7 +33,7 @@ export const LazySelect: React.FC<CustomMultiSelectProps> = (props) => {
       const { data } = await api.get(`/${url}`, { params: { ...param } });
       console.log(data);
       if (data.data.length) {
-        const _data = [...optionsList, ...data!.data];
+        const _data:any = [...optionsList, ...data!.data];
         optionsList = data.data;
         setOptionData(_data);
       }
@@ -42,7 +42,7 @@ export const LazySelect: React.FC<CustomMultiSelectProps> = (props) => {
     }
   };
 
-  const onLazyLoad = (event) => {
+  const onLazyLoad = () => {
     setLoading(true);
 
     if (loadLazyTimeout.current) {
@@ -50,10 +50,7 @@ export const LazySelect: React.FC<CustomMultiSelectProps> = (props) => {
     }
 
     //imitate delay of a backend call
-    loadLazyTimeout.current = setTimeout(() => {
-      setLoading(false);
-    }, Math.random() * 1000 + 250);
-  };
+  }
 
   return (
     <Dropdown

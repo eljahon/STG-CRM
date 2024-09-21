@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 import qs from "qs";
 import api from "./api.ts";
+import { get } from "lodash";
 
 export const GetAllData = async (url: string, query?: any) => {
   try {
@@ -31,13 +32,15 @@ export const AddData = async (url: string, data: any) => {
     const response = await api.post(`/${url}`, data);
     return response;
   } catch (error: any) {
+    console.log(error, 'error =====>');
     handleError(error);
+    throw  Error(get(error, 'response.data.error', 'error not given'))
   }
 };
 
-export const UpdateData = async (url: string, data: any, id: any) => {
+export const UpdateData = async (url: string, data: any, id: any, subUrl?: string) => {
   try {
-    const response = await api.put(`/${url}/${id}`, data);
+    const response = await api.put(subUrl ? `/${url}/${id}/${subUrl}`: `/${url}/${id}`, data);
     return response;
   } catch (error: any) {
     handleError(error);

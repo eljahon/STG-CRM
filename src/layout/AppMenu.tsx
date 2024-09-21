@@ -13,7 +13,7 @@ const AppMenu = () => {
         { label: "maps", icon: "pi pi-fw  pi-map", to: "/maps" , name: 'maps'},
         { label: "employees", icon: "pi pi-fw pi-users", to: "/employees", name: 'employees' },
         { label: "cars", icon: "pi pi-fw  pi-car", to: "/vehicle", name: 'vehicle' },
-        { label: "salary_plan", icon: "pi pi-fw  pi-calendar", to: "/cars", name:'salaryPlan' },
+        { label: "salary_plan", icon: "pi pi-fw  pi-calendar", to: "/salary-plan", name:'salary-plan' },
         { label: "notifcations", icon: "pi pi-fw  pi-bell", to: "/notifcations" , name: 'notifcations'},
       ],
     },

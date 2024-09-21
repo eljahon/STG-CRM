@@ -1,9 +1,9 @@
 import {get} from "lodash";
 import React from "react";
-import {FormikProps} from "formik";
+import {FieldInputProps, FormikProps} from "formik";
 interface ControlErro{
     form: FormikProps<any>,
-    field: FormikProps<{name: string}>
+    field: FieldInputProps<any>
 }
 export const ControlError:React.FC<ControlErro> = ({ form, field }) => {
     return (

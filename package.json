@@ -10,7 +10,8 @@
     "build:prod": "tsc && vite build --mode production",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview:dev": "vite --mode development preview",
-    "preview:prod": "vite --mode production preview"
+    "preview:prod": "vite --mode production preview",
+    "start": "vite --mode development"
   },
   "dependencies": {
     "@pbe/react-yandex-maps": "^1.2.5",
@@ -19,6 +20,7 @@
     "@types/react-toastify": "^4.1.0",
     "axios": "^1.6.8",
     "chart.js": "^4.4.4",
+    "dayjs": "^1.11.13",
     "dotenv": "^16.4.5",
     "formik": "^2.4.6",
     "google-map-react": "^2.2.1",

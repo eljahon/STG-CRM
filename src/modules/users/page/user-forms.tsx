@@ -1,21 +1,17 @@
 import TheBreadcrumb from "../../../components/Breadcrumb/TheBreadcrumb.tsx";
 import { useTranslation } from "react-i18next";
-import { InputText } from "primereact/inputtext";
 import { FormContainer } from "../../../components/Forms";
 import { Field } from "formik";
 import { Button } from "primereact/button";
-import React, { useState } from "react";
-import { ControlError } from "../../../components/ControlError/ControlError.tsx";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { StatudsSelect } from "../../../components/Forms/Fields/Status-Select.tsx";
 import { useParams } from "react-router-dom";
 import { useGetUsersById } from "../service/query/useGetUsersById.ts";
 import { UseQueryResult } from "react-query";
-import { Dropdown } from "primereact/dropdown";
 import { userRoleList } from "../../../constants/index.ts";
 import { RoleSelect, UploadeImage, CustomInputText } from "../../../components/Forms/Fields";
-import { Skeleton } from "primereact/skeleton";
 import {get} from "lodash";
 
 interface UsersByIdType {
@@ -39,30 +35,6 @@ export const UserForms = () => {
     UsersByIdType,
     unknown
   >;
-
-
-  const ImageUpload = (props) => {
-    const { form, field } = props;
-    const succsessUpload = (url: string) => {
-      form.setFieldValue(field?.name, url);
-    };
-
-    return (
-      <>
-        {isLoading ? (
-          <Skeleton width="100%" height="3rem" />
-        ) : (
-          <>
-            <UploadeImage
-              editData={data}
-              succsessImage={succsessUpload}
-              errorImage={toast.error}
-            />
-          </>
-        )}
-      </>
-    );
-  };
 
   const createEmployeeSuccess = () => {
     navigator("/employees");
@@ -206,7 +178,7 @@ export const UserForms = () => {
                     <Field
                       id={"logo"}
                       {...formik}
-                      component={ImageUpload}
+                      component={UploadeImage}
                       name="logo"
                       placeholder="logo"
                     />

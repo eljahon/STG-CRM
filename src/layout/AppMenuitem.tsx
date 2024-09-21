@@ -10,7 +10,7 @@ import {useTranslation} from "react-i18next";
 const AppMenuitem = (props: AppMenuItemProps) => {
     const {pathname} = useLocation();
     const {t} = useTranslation()
-    const nodeRef = useRef()
+    const nodeRef = useRef<HTMLUListElement>(null)
     const searchParams = useSearchParams();
     const { activeMenu, setActiveMenu } = useContext(MenuContext);
     const item = props.item;
@@ -100,7 +100,7 @@ const AppMenuitem = (props: AppMenuItemProps) => {
           target={item!.target}
           onClick={(e) => itemClick(e)}
           className={classNames(item!.class, "p-ripple", {
-            "active-route": isUrlCheck.includes(item!.name),
+            "active-route": isUrlCheck.includes(item!.name as string),
           })}
           tabIndex={0}
         >

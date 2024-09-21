@@ -1,15 +1,15 @@
+// export const SalaryPlanInfoForm = () => {
+//   return <div>SalaryPlanInfoForm</div>
+// }
 import TheBreadcrumb from "../../../components/Breadcrumb/TheBreadcrumb.tsx";
 import { useTranslation } from "react-i18next";
 import { FormContainer } from "../../../components/Forms";
 import { Field } from "formik";
 import { Button } from "primereact/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams,useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
 import {get} from "lodash";
-import {StatudsSelect, CustomInputText, UploadeImage} from "../../../components/Forms/Fields";
-// import {modelTypes} from "../../../constants"
-import {CustomMultiSelect} from "../../../components/Forms/Fields/Multi-Select.tsx";
+import {StatudsSelect, CustomInputNumber} from "../../../components/Forms/Fields";
 import {useFetchOne} from "../../../hooks/useFetchOne.ts";
 import {useFetchAll} from "../../../hooks/useFetchAll.ts";
 import {UseQueryResult} from "react-query";
@@ -31,24 +31,18 @@ interface UsersByIdType {
     status?: string;
 }
 
-export const VehicleForm = () => {
+export const SalaryPlanInfoForm = () => {
     const navigator = useNavigate();
     const { t } = useTranslation();
     const { id } = useParams();
-
-    const { data, isLoading } = useFetchOne({url: 'vehicle',id: `${id}`, key: 'vehicle'}) as UseQueryResult<
+     const [searchParams, setSearchParams] =useSearchParams()
+    const { data, isLoading } = useFetchOne({url: 'salary-plan',id: `${id}`, subUrl: `detail/${searchParams.get('salary_plan_id')}`, key: 'vehicle'}) as UseQueryResult<
         UsersByIdType,
         unknown
     >;
     const ekgZone = useFetchAll({url:'zone', key: 'zone_ekg', params: {type: 'ekg'}})
     const dumpZone = useFetchAll({url:'zone', key: 'dump_ekg', params: {type: 'dump'}})
 
-    const createEmployeeSuccess = () => {
-        navigator("/vehicle");
-        {
-            id === "new" && toast.success("Zone created successfully");
-        }
-    };
 
 
     return (
@@ -57,7 +51,12 @@ export const VehicleForm = () => {
                 model={[
                     {
                         template: () => (
-                            <span className="text-primary">{t("car")} {id === 'new' ? t('create') :t('update')}</span>
+                            <span className="text-primary">{t("salary_plan")} {id === 'new' ? t('create') :t('update')}</span>
+                        ),
+                    },
+                    {
+                        template: () => (
+                            <span className="text-primary">{t("detail")} {id === 'new' ? t('create') :t('update')}</span>
                         ),
                     },
                 ]}
@@ -65,43 +64,28 @@ export const VehicleForm = () => {
             <div className="card mt-2 w-1/2">
                 <div>
                     <FormContainer
-                        onError={() => {
-
-                            toast.error("Something went wrong");
-                        }}
-                        onSuccess={createEmployeeSuccess}
-                        customData={(value:any) => ({...value, model: 'tonly'})}
-                        url={"vehicle"}
+                      
+                        onSuccess={()=> navigator(-1)}
+                        url={`salary-plan`}
+                        subUrl={id === 'new' ? `${searchParams.get('salary_plan_id')}/detail` : `detail/${searchParams.get('salary_plan_id')}`}
                         fields={[
                             {
-                                name: "drivers",
-                                validations: [{type: "required"}],
-                                validationType: "array",
-                                value: get(data, 'drivers', []).map((el:IDIRVERS) => el.id)
-                            },
-                            {
-                                name: "status",
+                                name: "dump_zone_id",
                                 validations: [{type: "required"}],
                                 validationType: "string",
-                                value: get(data, 'status'),
+                                value: get(data, 'dump_zone.id'),
                             },
                             {
-                                name: "dump_zone",
+                                name: "ekg_zone_id",
                                 validations: [{type: "required"}],
                                 validationType: "string",
-                                value: get(data, 'dump_zone'),
+                                value: get(data, 'ekg_zone.id'),
                             },
                             {
-                                name: "ekg_zone",
+                                name: "price_per_ride",
                                 validations: [{type: "required"}],
-                                validationType: "string",
-                                value: get(data, 'ekg_zone'),
-                            },
-                            {
-                                name: "number",
-                                validations: [{type: "required"}],
-                                validationType: "string",
-                                value: get(data, 'number'),
+                                validationType: "number",
+                                value: get(data, 'price_per_ride'),
                             },
                             {
                                 name: "logo",
@@ -111,59 +95,24 @@ export const VehicleForm = () => {
                         ]}
                     >
                         {(formik) => {
-                            // console.log(formik)
                             return (
                                 <>
                                     <div className="user_form__box">
+                               
                                         <div>
-                                            <>
-                                                <label htmlFor={"drivers"} className="block">
-                                                    {t("drivers")} :
-                                                </label>
-                                                <Field
-                                                    id={"drivers"}
-                                                    {...formik}
-                                                    component={CustomMultiSelect}
-                                                    customFilter={() => formik.values}
-                                                    name="drivers"
-                                                    url={'user'}
-                                                    param={{
-                                                        role_id: 'f015278c-36aa-43bd-8c1a-e39dab42cf04',
-                                                        not_assigned_to_vehicle: true
-                                                    }}
-                                                    optionLabel={'full_name'}
-                                                    optionsProp={get(data, 'drivers')}
-                                                    placeholder={t("operators")}
-                                                    isLoading={isLoading}
-                                                />
-                                            </>
-                                        </div>
-                                        <div>
-                                            <label htmlFor={"number"} className="block">
-                                                {t("number")} :
+                                            <label htmlFor={"price_per_ride"} className="block">
+                                                {t("price_per_ride")} :
                                             </label>
                                             <Field
-                                                id={"number"}
+                                                id={"price_per_ride"}
                                                 {...formik}
-                                                component={CustomInputText}
-                                                name="number"
-                                                placeholder={t("number")}
+                                                component={CustomInputNumber}
+                                                name="price_per_ride"
+                                                placeholder={t("price_per_ride")}
                                                 isLoading={isLoading}
                                             />
                                         </div>
-                                        <div>
-                                            <label htmlFor={"status"} className="block">
-                                                {t("status")} :
-                                            </label>
-                                            <Field
-                                                id={"status"}
-                                                {...formik}
-                                                component={StatudsSelect}
-                                                name="status"
-                                                placeholder={t("status")}
-                                                isLoading={isLoading}
-                                            />
-                                        </div>
+                                    
 
 
                                         <div>
@@ -174,7 +123,7 @@ export const VehicleForm = () => {
                                                 id={"ekg_zone"}
                                                 {...formik}
                                                 component={StatudsSelect}
-                                                name="ekg_zone"
+                                                name="ekg_zone_id"
                                                 optionsProp={get(ekgZone, 'data.zones')}
                                                 placeholder={t("ekg_zone")}
                                                 isLoading={isLoading}
@@ -188,7 +137,7 @@ export const VehicleForm = () => {
                                                 id={"dump_zone"}
                                                 {...formik}
                                                 component={StatudsSelect}
-                                                name="dump_zone"
+                                                name="dump_zone_id"
                                                 optionsProp={get(dumpZone, 'data.zones')}
                                                 placeholder={t("dump_zone")}
                                                 isLoading={isLoading}
@@ -222,19 +171,7 @@ export const VehicleForm = () => {
                                         {/*    </>*/}
                                         {/*</div>*/}
 
-                                        <div>
-                                            <label htmlFor={"logo"} className="block">
-                                                {t("logo")} :
-                                            </label>
-                                            <Field
-                                                id={"logo"}
-                                                {...formik}
-                                                component={UploadeImage}
-                                                name="logo"
-                                                isLoading={isLoading}
-                                                placeholder="logo"
-                                            />
-                                        </div>
+                            
                                     </div>
                                     <Button loading={formik.isSubmitting} type="submit" label="submit"/>
                                 </>

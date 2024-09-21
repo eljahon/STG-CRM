@@ -1,7 +1,7 @@
-import { DynamicDataTable, RowDataType } from "../../../components/data-table";
+import { DynamicDataTable} from "../../../components/data-table";
 import { useGetUsers } from "../service/query/useGetUsers";
 import { Tag } from "primereact/tag";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import TheBreadcrumb from "../../../components/Breadcrumb/TheBreadcrumb.tsx";
 import { useTranslation } from "react-i18next";
@@ -14,13 +14,14 @@ import { Dropdown } from "primereact/dropdown";
 import { useDeleteUsers } from "../service/mutation/useDeleteUsers.ts";
 import { queryClient } from "../../../service/api.ts";
 import { toast } from "react-toastify";
+import { DataTableValue } from "primereact/datatable";
 
 export interface UsersColumnTypes {
   field: string;
   header: string;
   selectionMode?: string | undefined;
   headerStyle: object;
-  body?: (items: RowDataType) => React.JSX.Element;
+  body?: (items: DataTableValue) => React.JSX.Element;
 }
 export interface IPARAM {
   key: string;
@@ -131,11 +132,11 @@ export const Users = () => {
     if (method === "del") newParams.delete(key);
     setParams(newParams);
   };
-  const editUsers = (userData: RowDataType) => {
+  const editUsers = (userData: DataTableValue) => {
     navigator(`/employees/${userData.id}`);
   };
 
-  const deleteUsers = (userData: RowDataType) => {
+  const deleteUsers = (userData: DataTableValue) => {
     mutate(userData.id, {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["users"] });

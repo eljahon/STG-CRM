@@ -8,7 +8,7 @@ import { ProductService } from "../../../demo/service/ProductService";
 import { LayoutContext } from "../../../layout/context/layoutcontext";
 import { Demo } from "../../../types";
 import { ChartData, ChartOptions } from "chart.js";
-import { LazySelect } from "../../../components/Forms/Fields/Lazy-Select";
+// import { LazySelect } from "../../../components/Forms/Fields/Lazy-Select";
 
 const lineData: ChartData = {
   labels: ["January", "February", "March", "April", "May", "June", "July"],
@@ -105,7 +105,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     ProductService.getProductsSmall().then((data) => {
-      setProducts(data);
+      setProducts(data as Demo.Product[]);
     });
   }, []);
 
@@ -127,7 +127,7 @@ export const Dashboard = () => {
   return (
     <div>
       <div>
-        <LazySelect url="user"/>
+        {/* <LazySelect url="user"/> */}
       </div>
       <div className="grid">
         <div className="col-12 lg:col-6 xl:col-3">

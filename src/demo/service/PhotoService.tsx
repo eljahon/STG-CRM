@@ -1,4 +1,4 @@
-import { Demo } from '@/types';
+import { Demo } from '../../type';
 
 export const PhotoService = {
     getImages() {

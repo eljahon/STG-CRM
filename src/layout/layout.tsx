@@ -10,7 +10,6 @@ import { LayoutContext } from "./context/layoutcontext";
 import { LayoutState, AppTopbarRef } from "../types";
 
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
-import AppConfig from "./AppConfig.tsx";
 
 const Layout = () => {
   const { layoutConfig, layoutState, setLayoutState } =

@@ -1,4 +1,4 @@
-import { DynamicDataTable, RowDataType } from "../../../components/data-table";
+import { DynamicDataTable} from "../../../components/data-table";
 import { Tag } from "primereact/tag";
 import React, { useCallback, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { ColumnProps } from "primereact/column";
-import { debounce } from "lodash";
+import { debounce, get } from "lodash";
 import {zoneType} from "../../../constants";
 import { Dropdown } from "primereact/dropdown";
 import { queryClient } from "../../../service/api.ts";
@@ -17,6 +17,7 @@ import {Dialog} from "primereact/dialog";
 import {Image} from "primereact/image";
 import {useDeleteOne} from "../../../hooks/useDeleteOne.ts";
 import {useFetchAll} from "../../../hooks/useFetchAll.ts";
+import { DataTableValue } from "primereact/datatable";
 export interface IPARAM {
     key: string;
     value?: string;
@@ -34,7 +35,7 @@ export const Zone = () => {
     const navigator = useNavigate();
     const { t } = useTranslation();
     const [params, setParams] = useSearchParams();
-    const [itemZone, setItemZone] = useState({name: ''})
+    const [itemZone, setItemZone] = useState<DataTableValue>()
     const [filter, setFilter] = useState<IFILTERZONE>({
         limit: 10,
         page: params.get("page") ? Number(params.get("page")) : 1,
@@ -103,12 +104,12 @@ export const Zone = () => {
         if (method === "del") newParams.delete(key);
         setParams(newParams);
     };
-    const editUsers = (userData: RowDataType) => {
+    const editUsers = (userData: DataTableValue) => {
         navigator(`/zone/form/${userData.id}`);
     };
 
     const deleteUsers = () => {
-        mutate(itemZone?.id, {
+        mutate(get(itemZone, 'id') as string, {
             onSuccess: () => {
                 queryClient.invalidateQueries({ queryKey: ["zone"] });
                 toast.success("zone deleted successfully");
@@ -127,7 +128,7 @@ export const Zone = () => {
             <Button label="Yes" icon="pi pi-check" text onClick={() => deleteUsers()} />
         </>
     );
-    const itemZoneDelete = (item: RowDataType) => {
+    const itemZoneDelete = (item: DataTableValue) => {
         setItemZone(item)
         setDeleteProductDialog(true)
     }
@@ -223,7 +224,7 @@ export const Zone = () => {
                         <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                         {itemZone && (
                             <span>
-                                    {t('you-want-to-delete')} {itemZone.name&&<b>{itemZone!.name}</b>}?
+                                    {t('you-want-to-delete')} {<b>{get(itemZone, 'name', '')}</b>}?
                                 </span>
                         )}
                     </div>

@@ -4,16 +4,16 @@ interface IFETCHONE <K>{
     params?: K,
     key: string,
     url: string,
-    id: string
+    id: string,
+    subUrl?: string
 }
 export const useFetchOne = <T, K>(arg:IFETCHONE<K>) => {
-    const {id, url, key, params} = arg
+    const {id, url, key, params, subUrl} = arg
     return (
         id !== "new" &&
-        // eslint-disable-next-line react-hooks/rules-of-hooks
         useQuery({
             queryKey: [`${key}`, id, url, params],
-            queryFn: () => api.get<T>(`/${url}/${id}`).then((res) => res.data),
+            queryFn: () => api.get<T>(subUrl ? `/${url}/${id}/${subUrl}` : `/${url}/${id}`).then((res) => res.data),
         })
     );
 };

@@ -1,10 +1,7 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SplitButton } from 'primereact/splitbutton';
 import { Button } from 'primereact/button';
-import styles from './index.module.scss';
-import { classNames } from 'primereact/utils';
-
 const ButtonDemo = () => {
     const [loading1, setLoading1] = useState(false);
     const [loading2, setLoading2] = useState(false);

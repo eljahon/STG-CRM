@@ -1,6 +1,6 @@
 import React from "react";
 import {Skeleton} from "primereact/skeleton";
-import {InputText} from "primereact/inputtext";
+import {InputNumber, InputNumberChangeEvent} from "primereact/inputnumber";
 import {ControlError} from "../../ControlError/ControlError.tsx";
 import {FieldInputProps, FormikProps} from "formik";
 interface IINPUT {
@@ -9,10 +9,11 @@ interface IINPUT {
     placeholder: string,
     isLoading: boolean
 }
-export const CustomInputText:React.FC<IINPUT> = (props) => {
+export const CustomInputNumber:React.FC<IINPUT> = (props) => {
     const { form, field, placeholder, isLoading } = props;
-    const handleChange = (option: React.ChangeEvent<HTMLInputElement>) => {
-        form?.setFieldValue(field?.name, option.target.value);
+    const handleChange = (option:InputNumberChangeEvent) => {
+        
+        form?.setFieldValue(field?.name, option.value);
     };
     return (
         <>
@@ -20,9 +21,8 @@ export const CustomInputText:React.FC<IINPUT> = (props) => {
                 <Skeleton width="100%" height="3rem" />
             ) : (
                 <>
-                    <InputText
-                        type={field?.name === "password" ? "password" : "text"}
-                        className="p-inputtext-sm w-full"
+                    <InputNumber
+                        className="p-inputnumber-sm w-full"
                         placeholder={placeholder}
                         invalid={Boolean(form.errors[field.name])}
                         onChange={handleChange}
