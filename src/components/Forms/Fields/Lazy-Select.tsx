@@ -18,7 +18,6 @@ interface CustomMultiSelectProps {
 export const LazySelect: React.FC<CustomMultiSelectProps> = (props) => {
   const { url } = props;
   const [selectedItem, setSelectedItem] = useState(null);
-  const items = useRef(Array.from({ length: 100000 }));
   const [loading, setLoading] = useState(false);
   const loadLazyTimeout = useRef();
   const [optionData, setOptionData] = useState([]);
